@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/HomeView.vue'
+// import HomeView from '../views/DashboardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,24 +19,32 @@ const router = createRouter({
     // },
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue')
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue'),
+      label: 'Dashboard',
     },
     {
-      path: '/navItem',
-      name: 'navItem',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/NavItem.vue')
+      path: '/youTube',
+      name: 'youTube',
+      component: () => import('../views/NavItemView.vue'),
+      meta: {label: 'YouTube',},
     },
     {
-      path: '/nav-item',
-      name: 'nav-item',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/NavItem.vue')
+      path: '/twitter',
+      name: 'twitter',
+      component: () => import('../views/NavItemView.vue'),
+      meta: {label: 'Twitter',},
+    },
+    {
+      path: '/twitch',
+      name: 'twitch',
+      component: () => import('../views/NavItemView.vue'),
+      meta: {label: 'Twitch',},
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
     },
 
   ]

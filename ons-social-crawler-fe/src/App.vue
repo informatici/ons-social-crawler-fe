@@ -2,7 +2,9 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Header from "@/components/HeaderComponent.vue"
 import SideBar from "@/components/SideBar.vue"
-// import HelloWorld from './components/HelloWorld.vue'
+import FooterComponent from "@/components/FooterComponent.vue"
+import LoginView from "@/views/LoginView.vue"
+// import HelloWorld from '@/components/HelloWorld.vue'
 
 </script>
 
@@ -14,7 +16,7 @@ import SideBar from "@/components/SideBar.vue"
       <div class="page">
         <RouterView />
       </div>
-      <footer class="footer">footer</footer>
+      <FooterComponent />
     </div>
 
   </div>
@@ -49,24 +51,19 @@ import SideBar from "@/components/SideBar.vue"
 
 .wrapper {
   display: flex;
+  position: relative;
 
   .drawer {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    //background-color: rgb(240, 240, 240);
 
     .page {
       flex: 1;
-      background-color: lightgrey;
+      padding: 1rem;
     }
-
-    .footer {
-      min-height: 3rem;
-      background-color: lightblue;
-    }
-
-
   }
 }
 

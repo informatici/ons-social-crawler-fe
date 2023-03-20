@@ -9,9 +9,11 @@ import UserMenu from "@/components/UserMenu.vue"
 </template>
 
 <style lang="scss">
+$header-height: var(--header-height);
+$sidebar-padding: var(--sidebar-padding);
 .header {
-  background-color: green;
-  height: var(--header-height);
+  background-color: var(--secondary-color);
+  height: calc($header-height + $sidebar-padding);
 
   display: flex;
   justify-content: flex-end;

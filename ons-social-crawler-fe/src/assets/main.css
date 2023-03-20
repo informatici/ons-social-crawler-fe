@@ -1,2 +1,25 @@
 @import './base.css';
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+
+body {
+    min-width: 576px;
+}
+
+ul {
+    list-style: none;
+}
+
+router-link, a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.item--active {
+
+}
+
+/* page:START */
+.page-container {
+    padding: .9rem 0;
+}
+/* page:END */
