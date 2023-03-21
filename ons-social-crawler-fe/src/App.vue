@@ -62,7 +62,7 @@ import LoginView from "@/views/LoginView.vue"
 
     .page {
       flex: 1;
-      padding: 1rem;
+      padding: 1rem var(--drawer-paddingX);
     }
   }
 }

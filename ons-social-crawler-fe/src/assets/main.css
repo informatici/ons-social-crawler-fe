@@ -23,3 +23,10 @@ router-link, a {
     padding: .9rem 0;
 }
 /* page:END */
+
+
+@media screen and (max-width: 768px) {
+    :root {
+        font-size: 14px;
+    }
+}

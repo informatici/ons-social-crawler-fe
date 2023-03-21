@@ -16,7 +16,7 @@ year = year.getFullYear()
 .footer {
   $paddingY: 1rem;
   min-height: 3rem;
-  padding: $paddingY;
+  padding: $paddingY var(--drawer-paddingX);
 
   &::before {
     content: "";
@@ -34,7 +34,7 @@ year = year.getFullYear()
     gap: 1rem;
   }
 
-  @media screen and (max-width: 728px) {
+  @media screen and (max-width: 768px) {
     .legal-info {
       flex-direction: column;
       gap: 0;

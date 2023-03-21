@@ -9,6 +9,7 @@ const sidebarStore = useSidebarStore()
 </script>
 <template>
   <div :class="['sidebar', sidebarStore.isSidebarOpen ? 'sidebar--open' : '']" @click="sidebarStore.toggleSidebarStatus">
+    <div class="arrow"></div>
     <section class="logo section-top">
       <div class="logo-image-container">
         <router-link :to="{name: 'dashboard'}">
