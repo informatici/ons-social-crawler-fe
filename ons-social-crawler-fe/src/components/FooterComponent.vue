@@ -1,0 +1,47 @@
+<script setup>
+let year = new Date()
+year = year.getFullYear()
+</script>
+<template>
+  <footer class="footer">
+    <div class="legal-info">
+      <p> Copyright © {{ year }}. All rights reserved.</p>
+      <p><router-link to="#">Privacy</router-link> e <router-link to="#">Cookie</router-link>.</p>
+    </div>
+  </footer>
+</template>
+
+<style lang="scss">
+
+.footer {
+  $paddingY: 1rem;
+  min-height: 3rem;
+  padding: $paddingY var(--drawer-paddingX);
+
+  &::before {
+    content: "";
+    display: block;
+    background-color: #eee;
+    width: 100%;
+    height: .15rem;
+    //margin: 0 auto;
+    top: -$paddingY;
+  }
+
+  .legal-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  @media screen and (max-width: 992px) {
+    .legal-info {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+}
+</style>
+
+
+
