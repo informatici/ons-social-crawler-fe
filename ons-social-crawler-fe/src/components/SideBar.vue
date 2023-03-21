@@ -2,6 +2,7 @@
 import {ref, onMounted} from "vue";
 import NavList from "@/components/NavList.vue"
 import {useSidebarStore} from "../stores/sidebar";
+import LogoComponent from "@/components/LogoComponent.vue";
 
 const sidebarStore = useSidebarStore()
 
@@ -14,11 +15,7 @@ const sidebarStore = useSidebarStore()
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"/></svg>
     </div>
     <section class="logo section-top">
-      <div class="logo-image-container">
-        <router-link :to="{name: 'dashboard'}">
-          <img class="logo-image" src="/odiare-logo.jpeg" alt="logo">
-        </router-link>
-      </div>
+      <LogoComponent />
     </section>
     <section class="nav">
       <NavList />
@@ -96,26 +93,6 @@ $header-height: var(--header-height);
     align-items: center;
     justify-content: center;
     position: relative;
-
-    .logo-image-container {
-      height: 80%;
-      transition: transform .1s;
-
-      &:active {
-        transform: scale(.9);
-        transition: transform .05s;
-      }
-
-      &:hover {
-        opacity: .95;
-      }
-
-      .logo-image {
-        height: 100%;
-        width: auto;
-        border-radius: 4px;
-      }
-    }
   }
 
   .section-top::after {
@@ -129,6 +106,7 @@ $header-height: var(--header-height);
     bottom: 0;
     left: calc((100% - $width) / 2);
     //transform: translateY(-50%);
+    transition: .25s;
   }
 
   //.logo-bottom {
@@ -154,14 +132,19 @@ $header-height: var(--header-height);
     flex: 0 0 3rem;
     min-height: 100vh;
 
-    .logo {
-      .logo-image {
-        visibility: hidden;
-      }
-    }
-
     .sidebar__arrow {
       visibility: visible;
+    }
+
+
+    .logo-image {
+      visibility: hidden;
+    }
+
+
+    .section-top::after {
+      width: 0;
+      transition: .25s;
     }
   }
 }

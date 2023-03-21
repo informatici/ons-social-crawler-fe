@@ -7,7 +7,6 @@ import LoginView from "@/views/LoginView.vue"
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 </script>
-
 <template>
   <div class="wrapper">
     <SideBar />
