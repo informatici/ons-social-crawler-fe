@@ -125,7 +125,7 @@ $header-height: var(--header-height);
   //}
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
   .sidebar {
     transition: .25s;
     min-width: 3rem;

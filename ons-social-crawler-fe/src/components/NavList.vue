@@ -145,7 +145,7 @@ $paddingX: .7rem;
   display: inline !important;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
   .nav-item--active::after,
   .nav-item:hover::after {
     content: "";

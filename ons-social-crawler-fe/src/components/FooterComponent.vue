@@ -34,7 +34,7 @@ year = year.getFullYear()
     gap: 1rem;
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 992px) {
     .legal-info {
       flex-direction: column;
       gap: 0;

@@ -34,8 +34,10 @@ $sidebar-padding: var(--sidebar-padding);
       height: calc(80% - $sidebar-padding);
     }
   }
+}
 
-  @media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
+  .header {
     .section-central {
       .logo-image-container {
         //visibility: visible;
