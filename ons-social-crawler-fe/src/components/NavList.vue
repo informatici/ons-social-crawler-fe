@@ -7,8 +7,6 @@ import { useRoute } from 'vue-router'
 const sidebarStore = useSidebarStore()
 const route = useRoute()
 
-console.debug('#c: ', route.name);
-
 const navList = ref([
   {
     label: "Dashboard",
