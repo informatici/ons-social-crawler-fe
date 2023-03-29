@@ -1,12 +1,12 @@
 steps:
-- name: "gcr.io/cloud-builders/npm:node-18"
+- name: "gcr.io/cloud-builders/npm:node-18.12.0"
   dir: ons-social-crawler-fe
   args: ["install"]  
   id: NPM_INSTALL
   env:
   - 'VITE_APP_API_URL=http://127.0.0.1:8088'
 
-- name: "gcr.io/cloud-builders/npm:node-18"
+- name: "gcr.io/cloud-builders/npm:node-18.12.0"
   dir: ons-social-crawler-fe
   args: [run,  build]
   id: NPM_BUILD
