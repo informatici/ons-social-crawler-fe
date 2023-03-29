@@ -1,23 +1,11 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import Header from "@/components/HeaderComponent.vue"
-import SideBar from "@/components/SideBar.vue"
-import FooterComponent from "@/components/FooterComponent.vue"
-import LoginView from "@/views/LoginView.vue"
+
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 </script>
 <template>
-  <div class="wrapper">
-    <SideBar />
-    <div class="drawer">
-      <Header />
-      <div class="page">
-        <RouterView />
-      </div>
-      <FooterComponent />
-    </div>
-  </div>
+  <router-view />
 <!--  <header>-->
 <!--    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />-->
 
