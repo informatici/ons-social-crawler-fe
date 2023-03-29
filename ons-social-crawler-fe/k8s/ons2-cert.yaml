@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ons2-cert
+spec:
+  domains:
+    - 34-95-74-41.nip.io

@@ -1,0 +1,35 @@
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: ons2-fe-config
+spec:
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: managed-cert-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ons2-fe
+    networking.gke.io/managed-certificates: ons2-cert
+    kubernetes.io/ingress.class: "gce"
+    networking.gke.io/v1beta1.FrontendConfig: ons2-fe-config
+spec:
+  defaultBackend:
+    service:
+      name: ons2-fe
+      port:
+        number: 80
+  rules: 
+  - host: 34-95-74-41.nip.io
+    http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: ons2-fe
+            port:
+              number: 80
