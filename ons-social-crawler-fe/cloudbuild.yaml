@@ -1,15 +1,18 @@
 steps:
 - name: "gcr.io/cloud-builders/npm:node-18"
-  args: ["install"]
+  dir: ons-social-crawler-fe
+  args: ["install"]  
   id: NPM_INSTALL
   env:
   - 'VITE_APP_API_URL=http://127.0.0.1:8088'
 
 - name: "gcr.io/cloud-builders/npm:node-18"
+  dir: ons-social-crawler-fe
   args: [run,  build]
   id: NPM_BUILD
 
 - name: 'gcr.io/cloud-builders/docker'
+  dir: ons-social-crawler-fe
   args:
     - 'build'
     - '--tag=gcr.io/ons-hatespeech-detector-2/ons2-fe:$TAG_NAME'
@@ -18,15 +21,18 @@ steps:
   id: BUILD_FE_IMAGE
 
 - name: 'gcr.io/cloud-builders/docker'
+  dir: ons-social-crawler-fe
   args: ['push', 'gcr.io/ons-hatespeech-detector-2/ons2-fe:$TAG_NAME']
   id: PUSH_FE
 
 - name: 'gcr.io/cloud-builders/docker'
+  dir: ons-social-crawler-fe
   args: ['push', 'gcr.io/ons-hatespeech-detector-2/ons2-fe:latest']
   id: PUSH_FE_LATEST
 
 ################ START DEPLOY ##################
 - name: 'gcr.io/cloud-builders/gke-deploy:stable'
+  dir: ons-social-crawler-fe
   args:
   - run
   - --filename=k8s/deployment.yaml
