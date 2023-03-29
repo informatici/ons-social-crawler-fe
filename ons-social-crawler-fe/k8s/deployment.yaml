@@ -8,7 +8,7 @@ spec:
      maxSurge: 1
      maxUnavailable: 0
    type: RollingUpdate
- replicas: 1
+ replicas: 3
  selector:
    matchLabels:
      app: ons2-fe
@@ -19,7 +19,7 @@ spec:
    spec:
      containers:
        - name: ons2-fe
-         image: gcr.io/ons-hatespeech-detector-2/ons2-fe
+         image: gcr.io/ons-hatespeech-detector-2/ons2-fe:latest
          resources:
            limits:
              cpu: 100m
