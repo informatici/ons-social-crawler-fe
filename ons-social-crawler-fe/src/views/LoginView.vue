@@ -1,4 +1,14 @@
 <script setup>
+import {useRouter} from "vue-router";
+import {useAuthStore} from "../stores/auth";
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const signIn = () => {
+  authStore.login()
+  router.push({path: "/"})
+}
 </script>
 <template>
   <div class="login-overlay">
@@ -14,9 +24,9 @@
           <input class="input" type="password" name="password" id="password" placeholder="Password">
           <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
-            <router-link :to="{name: 'dashboard'}" style="display: block; width: 100%;">
-              <button class="login__submit btn btn-primary">Log in</button>
-            </router-link>
+<!--            <router-link :to="{name: 'dashboard'}" style="display: block; width: 100%;">-->
+              <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
+<!--            </router-link>-->
           </div>
         </form>
       </div>
