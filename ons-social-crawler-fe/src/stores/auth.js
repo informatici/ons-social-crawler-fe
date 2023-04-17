@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
   function setAuth(authUser) {
     isAuthenticated.value = true
     user.value = authUser.user
+    localStorage.setItem("userName", user.value?.displayName)
     // errors.value = {}
     JwtService.saveToken(user.value.accessToken)
   }
@@ -30,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(credentials = {}) {
     try {
-      const res = await signInWithEmailAndPassword(auth, 'mario.rossi@dev-ons.com', '123456')
+      const res = await signInWithEmailAndPassword(auth, credentials?.email.value, credentials?.password.value)
       setAuth(res)
     } catch (error) {
       setError(error)
