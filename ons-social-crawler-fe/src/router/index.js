@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // import HomeView from '../views/DashboardView.vue'
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,58 +20,57 @@ const router = createRouter({
     // },
     {
       path: '/',
-      redirect: "/dashboard",
+      redirect: '/dashboard',
       component: () => import('../layouts/main-layout/MainLayout.vue'),
       meta: {
-        middleware: "auth",
+        middleware: 'auth'
       },
       children: [
         {
           path: '/dashboard',
           name: 'dashboard',
           component: () => import('../views/DashboardView.vue'),
-          meta: {label: 'Dashboard',},
+          meta: { label: 'Dashboard' }
           // label: 'Dashboard'
         },
         {
           path: '/youTube',
           name: 'youTube',
           component: () => import('../views/NavItemView.vue'),
-          meta: {label: 'YouTube',},
+          meta: { label: 'YouTube' }
         },
         {
           path: '/twitter',
           name: 'twitter',
           component: () => import('../views/NavItemView.vue'),
-          meta: {label: 'Twitter',},
+          meta: { label: 'Twitter' }
         },
         {
           path: '/twitch',
           name: 'twitch',
           component: () => import('../views/NavItemView.vue'),
-          meta: {label: 'Twitch',},
-        },
+          meta: { label: 'Twitch' }
+        }
         // {
         //   path: '/login',
         //   name: 'login',
         //   component: () => import('../views/LoginView.vue'),
         // },
-      ],
+      ]
     },
     {
-      path: "/",
-      component: () => import("../layouts/AuthLayout.vue"),
+      path: '/',
+      component: () => import('../layouts/AuthLayout.vue'),
       // component: () => import("@/views/LoginView.vue"),
       children: [
         {
-          path: "/login",
-          name: "login",
-          component: () =>
-              import("../views/LoginView.vue"),
+          path: '/login',
+          name: 'login',
+          component: () => import('../views/LoginView.vue'),
           meta: {
-            pageTitle: "Sign In",
-          },
-        },
+            pageTitle: 'Sign In'
+          }
+        }
         // {
         //   path: "/sign-up",
         //   name: "sign-up",
@@ -90,8 +89,8 @@ const router = createRouter({
         //     pageTitle: "Password reset",
         //   },
         // },
-      ],
-    },
+      ]
+    }
 
     // {
     //   path: "/",
@@ -120,13 +119,11 @@ const router = createRouter({
     //   path: "/:pathMatch(.*)*",
     //   redirect: "/404",
     // },
-
-
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
   // const configStore = useConfigStore();
 
   // current page view title
@@ -136,26 +133,25 @@ router.beforeEach((to, from, next) => {
   // configStore.resetLayoutConfig();
 
   // verify auth token before each page change
-  //  authStore.verifyAuth();
+  await authStore.verifyAuth()
 
   // before page access check if page requires authentication
-  if (to.meta.middleware == "auth") {
+  if (to.meta.middleware == 'auth') {
     if (authStore.isAuthenticated) {
-      next();
+      next()
     } else {
-      next({ name: "login" });
+      next({ name: 'login' })
     }
   } else {
-    next();
+    next()
   }
-  // next();
 
   // Scroll page to top on every route change
-  // window.scrollTo({
-  //   top: 0,
-  //   left: 0,
-  //   behavior: "smooth",
-  // });
-});
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
+})
 
 export default router
