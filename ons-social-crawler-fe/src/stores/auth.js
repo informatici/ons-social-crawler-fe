@@ -1,178 +1,67 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
-import ApiService from "../core/services/ApiService";
-// import JwtService from "@/core/services/JwtService";
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import ApiService from '../core/services/ApiService'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { auth } from '../firebase/config'
+import JwtService from '@/core/services/JwtService'
 
-//
-// export const useAuthStore = defineStore({
-//   id: 'auth',
-//   state: () => ({
-//     errors: {},
-//     user: {},
-//     isAuthenticated: false,
-//   }),
-//   actions: {
-//     setAuth(authUser) {
-//       this.isAuthenticated = true;
-//       this.user = authUser;
-//       this.errors = {};
-//       // JwtService.saveToken(user.value.api_token);
-//     },
-//
-//     setError(error) {
-//       this.errors = { ...error };
-//     },
-//
-//     purgeAuth() {
-//       this.isAuthenticated = false;
-//       this.user = {};
-//       this.errors = [];
-//       // JwtService.destroyToken();
-//     },
-//
-//     login(credentials) {
-//       // return ApiService.post("login", credentials)
-//       //     .then(({ data }) => {
-//       //       setAuth(data);
-//       //     })
-//       //     .catch(({ response }) => {
-//       //       setError(response.data.errors);
-//       //     });
-//     },
-//
-//     logout() {
-//       this.purgeAuth();
-//     },
-// //
-// // function register(credentials) {
-// //   return ApiService.post("register", credentials)
-// //     .then(({ data }) => {
-// //       setAuth(data);
-// //     })
-// //     .catch(({ response }) => {
-// //       setError(response.data.errors);
-// //     });
-// // }
-// //
-// // function forgotPassword(email: string) {
-// //   return ApiService.post("forgot_password", email)
-// //     .then(() => {
-// //       setError({});
-// //     })
-// //     .catch(({ response }) => {
-// //       setError(response.data.errors);
-// //     });
-// // }
-//
-//     verifyAuth() {
-//       // if (JwtService.getToken()) {
-//       //   ApiService.setHeader();
-//       //   ApiService.post("verify_token", { api_token: JwtService.getToken() })
-//       //     .then(({ data }) => {
-//       //       setAuth(data);
-//       //     })
-//       //     .catch(({ response }) => {
-//       //       setError(response.data.errors);
-//       //       purgeAuth();
-//       //     });
-//       // } else {
-//       //   purgeAuth();
-//       // }
-//
-//       this.purgeAuth()
-//     }
-//
-// }
-// })
-
-
-export const useAuthStore = defineStore("auth", () => {
-  const errors = ref({});
-  const user = ref({});
-  // const isAuthenticated = ref(!!JwtService.getToken());
-  const isAuthenticated = ref(true);
+export const useAuthStore = defineStore('auth', () => {
+  // const errors = ref({})
+  const user = ref({})
+  const isAuthenticated = ref(!!JwtService.getToken())
 
   function setAuth(authUser) {
-    isAuthenticated.value = true;
-    user.value = authUser;
-    errors.value = {};
-    // JwtService.saveToken(user.value.api_token);
+    isAuthenticated.value = true
+    user.value = authUser.user
+    // errors.value = {}
+    JwtService.saveToken(user.value.accessToken)
   }
 
-  function setError(error) {
-    errors.value = { ...error };
-  }
+  // function setError(error) {
+  //   errors.value = { ...error }
+  // }
 
   function purgeAuth() {
-    isAuthenticated.value = false;
-    user.value = {};
-    errors.value = [];
-    // JwtService.destroyToken();
+    isAuthenticated.value = false
+    user.value = {}
+    // errors.value = []
+    JwtService.destroyToken()
   }
 
-  function login(credentials = {}) {
-    setAuth(credentials)
-
-    // return ApiService.post("login", credentials)
-    //   .then(({ data }) => {
-    //     setAuth(data);
-      // })
-      // .catch(({ response }) => {
-      //   setError(response.data.errors);
-      // });
+  async function login(credentials = {}) {
+    try {
+      const res = await signInWithEmailAndPassword(auth, 'mario.rossi@dev-ons.com', '123456')
+      setAuth(res)
+    } catch (error) {
+      setError(error)
+    }
   }
 
-  function logout() {
-    purgeAuth();
+  async function logout() {
+    await signOut(auth)
+    purgeAuth()
   }
-  //
-  // function register(credentials) {
-  //   return ApiService.post("register", credentials)
-  //     .then(({ data }) => {
-  //       setAuth(data);
-  //     })
-  //     .catch(({ response }) => {
-  //       setError(response.data.errors);
-  //     });
-  // }
-  //
-  // function forgotPassword(email: string) {
-  //   return ApiService.post("forgot_password", email)
-  //     .then(() => {
-  //       setError({});
-  //     })
-  //     .catch(({ response }) => {
-  //       setError(response.data.errors);
-  //     });
-  // }
 
-  function verifyAuth() {
-    // if (JwtService.getToken()) {
-    //   ApiService.setHeader();
-    //   ApiService.post("verify_token", { api_token: JwtService.getToken() })
-    //     .then(({ data }) => {
-    //       setAuth(data);
-    //     })
-    //     .catch(({ response }) => {
-    //       setError(response.data.errors);
-    //       purgeAuth();
-    //     });
-    // } else {
-    //   purgeAuth();
-    // }
-
-    // purgeAuth()
+  async function verifyAuth() {
+    if (JwtService.getToken()) {
+      try {
+        ApiService.setHeader()
+        await ApiService.post('auth/verify')
+      } catch {
+        // setError(response.data.errors)
+        purgeAuth()
+      }
+    } else {
+      purgeAuth()
+    }
   }
 
   return {
-    errors,
+    // errors,
     user,
     isAuthenticated,
     login,
     logout,
-    // register,
-    // forgotPassword,
-    verifyAuth,
-  };
-});
-
+    verifyAuth
+  }
+})

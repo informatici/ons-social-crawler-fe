@@ -1,13 +1,18 @@
 <script setup>
-import {useRouter} from "vue-router";
-import {useAuthStore} from "../stores/auth";
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const signIn = () => {
-  authStore.login()
-  router.push({path: "/"})
+const signIn = async () => {
+  await authStore.login()
+
+  if (authStore.isAuthenticated) {
+    router.push({ path: '/' })
+  } else {
+    alert('Error')
+  }
 }
 </script>
 <template>
@@ -17,20 +22,25 @@ const signIn = () => {
         <h1>Log In</h1>
         <p>Effettua il login</p>
       </div>
-      <hr class="login__separator">
+      <hr class="login__separator" />
       <div class="login__main">
-        <form action="#" method="POST"  v-on:submit.prevent="console.log('form stopped')">
-          <input class="input" type="email" name="email" id="email" placeholder="Email">
-          <input class="input" type="password" name="password" id="password" placeholder="Password">
+        <form action="#" method="POST" v-on:submit.prevent="console.log('form stopped')">
+          <input class="input" type="email" name="email" id="email" placeholder="Email" />
+          <input
+            class="input"
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+          />
           <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
-<!--            <router-link :to="{name: 'dashboard'}" style="display: block; width: 100%;">-->
-              <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
-<!--            </router-link>-->
+            <!--            <router-link :to="{name: 'dashboard'}" style="display: block; width: 100%;">-->
+            <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
+            <!--            </router-link>-->
           </div>
         </form>
       </div>
-
     </div>
   </div>
 </template>
@@ -50,7 +60,7 @@ const signIn = () => {
   .login {
     width: 25rem;
     min-height: 19rem;
-    border-radius: .3rem;
+    border-radius: 0.3rem;
     background-color: white;
     padding: 2.2rem 1.5rem;
 
@@ -62,7 +72,7 @@ const signIn = () => {
 
     .login__separator {
       border: none;
-      height: .07rem;
+      height: 0.07rem;
       background-color: lightgrey;
       margin: 1.5rem 0;
     }
@@ -74,7 +84,7 @@ const signIn = () => {
         height: 2.2rem;
         border: 1px solid #aaa;
         border-radius: 4px;
-        padding: 0 .5rem;
+        padding: 0 0.5rem;
       }
 
       .input:not(.input:last-of-type) {
@@ -82,35 +92,33 @@ const signIn = () => {
       }
 
       .login__forgot {
-        font-size: .9rem;
+        font-size: 0.9rem;
       }
-
     }
 
     .login__actions {
-
       .login__submit {
         border: none;
         border-radius: 6px;
         background-color: var(--primary-color);
         color: white;
         font-size: 1rem;
-        padding: .7rem 1.5rem;
+        padding: 0.7rem 1.5rem;
         font-weight: 500;
-        letter-spacing: .05rem;
+        letter-spacing: 0.05rem;
         margin-top: 1.5rem;
         cursor: pointer;
         width: 100%;
 
-        transition: transform .1s;
+        transition: transform 0.1s;
         &:active {
-          transform: scale(.9);
-          transition: transform .05s;
+          transform: scale(0.9);
+          transition: transform 0.05s;
         }
 
         &:hover {
           //color: var(--secondary-color);
-          opacity: .90;
+          opacity: 0.9;
         }
       }
     }

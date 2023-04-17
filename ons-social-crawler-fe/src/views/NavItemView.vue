@@ -23,7 +23,8 @@ const total = computed(() => {
 <template>
   <main class="page-container">
     <h1>{{ route?.meta?.label }}</h1>
-    <div v-for="(twit, ix) in twitter" :key="ix">{{ twit.name }}</div>
+    <!-- <div v-for="(twit, ix) in twitter" :key="ix">{{ twit.name }}</div> -->
+    Total {{ total }}
   </main>
 </template>
 <style lang="scss"></style>
