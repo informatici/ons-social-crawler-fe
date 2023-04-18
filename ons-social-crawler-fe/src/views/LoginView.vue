@@ -14,7 +14,7 @@ const signIn = async () => {
     await authStore.login({email, password})
 
     if (authStore.isAuthenticated) {
-      router.push({ path: '/' })
+      router.push({ path: '/twitter' })
     } else {
       alert('Error')
     }

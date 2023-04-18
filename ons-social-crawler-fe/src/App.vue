@@ -24,9 +24,32 @@ import { RouterLink, RouterView } from 'vue-router'
 <style lang="scss">
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+.swal2-container {
+  .btn-primary {
+    color: white;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .swal2-actions {
+    gap: 1rem;
+  }
+}
+
 #app {
   font-size: 16px;
   font-family: sans-serif;
+
+  .btn-primary {
+    color: white;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+
+  .text-primary {
+    color: var(--primary-color) !important;
+  }
+
 }
 
 * {
