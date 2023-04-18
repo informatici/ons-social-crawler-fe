@@ -13,34 +13,37 @@ import LogoComponent from "@/components/LogoComponent.vue";
 </template>
 
 <style lang="scss">
-$header-height: var(--header-height);
-$sidebar-padding: var(--sidebar-padding);
-.header {
-  background-color: var(--secondary-color);
-  height: calc($header-height + $sidebar-padding);
+#app {
+  $header-height: var(--header-height);
+  $sidebar-padding: var(--sidebar-padding);
 
-  display: flex;
-  justify-content: flex-end;
+  .header {
+    background-color: var(--secondary-color);
+    height: calc($header-height + $sidebar-padding);
 
-  .section-central {
-    flex: 1;
-    padding-left: 1.9rem;
+    display: flex;
+    justify-content: flex-end;
 
-    .logo-image-container {
-      visibility: hidden;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-      height: calc(80% - $sidebar-padding);
+    .section-central {
+      flex: 1;
+      padding-left: 1.9rem;
+
+      .logo-image-container {
+        visibility: hidden;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        height: calc(80% - $sidebar-padding);
+      }
     }
   }
-}
 
-@media screen and (max-width: 992px) {
-  .header {
-    .section-central {
-      .logo-image-container {
-        //visibility: visible;
+  @media screen and (max-width: 992px) {
+    .header {
+      .section-central {
+        .logo-image-container {
+          //visibility: visible;
+        }
       }
     }
   }

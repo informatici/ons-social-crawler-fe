@@ -50,6 +50,12 @@ const router = createRouter({
           name: 'twitch',
           component: () => import('../views/NavItemView.vue'),
           meta: { label: 'Twitch' }
+        },
+        {
+          path: '/settings',
+          name: 'settings',
+          component: () => import('../views/SettingsView.vue'),
+          meta: { label: 'Impostazioni' }
         }
         // {
         //   path: '/login',

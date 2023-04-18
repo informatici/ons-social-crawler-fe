@@ -12,32 +12,34 @@ year = year.getFullYear()
 </template>
 
 <style lang="scss">
+#app {
 
-.footer {
-  $paddingY: 1rem;
-  min-height: 3rem;
-  padding: $paddingY var(--drawer-paddingX);
+  .footer {
+    $paddingY: 1rem;
+    min-height: 3rem;
+    padding: $paddingY var(--drawer-paddingX);
 
-  &::before {
-    content: "";
-    display: block;
-    background-color: #eee;
-    width: 100%;
-    height: .15rem;
-    //margin: 0 auto;
-    top: -$paddingY;
-  }
+    &::before {
+      content: "";
+      display: block;
+      background-color: #eee;
+      width: 100%;
+      height: .15rem;
+      //margin: 0 auto;
+      top: -$paddingY;
+    }
 
-  .legal-info {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  @media screen and (max-width: 992px) {
     .legal-info {
-      flex-direction: column;
-      gap: 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    @media screen and (max-width: 992px) {
+      .legal-info {
+        flex-direction: column;
+        gap: 0;
+      }
     }
   }
 }
