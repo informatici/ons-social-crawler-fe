@@ -28,7 +28,10 @@ import { isArray } from '@vue/shared'
 // })
 const route = useRoute()
 const data = ref([])
+const selectedId = ref('')
+
 const init = async () => {
+  selectedId.value = ''
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
   console.debug('#c data: ', data.value)
@@ -64,7 +67,6 @@ const headerConfig = ref([
   // },
 ])
 const { operationConfirm, warningAlert, dangerAlert } = alert()
-const selectedId = ref(0)
 
 const getRoles = (roles) => {
   return isArray(roles) ? roles.join(', ') : ''
@@ -106,7 +108,19 @@ onMounted(async () => {
 <template>
   <main class="page-container">
     <h1>{{ route?.meta?.label }}</h1>
-    <!--    &lt;!&ndash; <div v-for="(twit, ix) in twitter" :key="ix">{{ twit.name }}</div> &ndash;&gt;-->
+    <div class="row pb-3">
+      <div class="col-6"></div>
+      <div class="col-6 text-end">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_user_edit"
+        >
+          Aggiungi Utente
+        </button>
+      </div>
+    </div>
     <DigiTable
       :data="data"
       :header="headerConfig"

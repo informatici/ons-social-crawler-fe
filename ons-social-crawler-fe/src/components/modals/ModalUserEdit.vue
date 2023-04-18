@@ -26,7 +26,7 @@
           </div>
 
           <div class="modal-body">
-            <div class="row gy-5">
+            <div class="row gy-3">
               <div class="col-12 col-md-6">
                 <label for="name" class="form-label required">{{
                   $t('entities.users.fullName')
@@ -76,7 +76,7 @@
                 </div>
               </div> -->
 
-              <div class="d-none d-md-block col-md-6" />
+              <!-- <div class="d-none d-md-block col-md-6" /> -->
               <!-- per mandare a capo le passwords (todo:intanto che decidiamo se usare le classi row) -->
 
               <div class="col-12 col-md-6" v-if="!isEdit">
@@ -180,7 +180,7 @@ export default defineComponent({
       password: Yup.string().when('id', {
         is: () => isEdit.value,
         then: (schema) => schema.notRequired(),
-        otherwise: (schema) => schema.required(t('common.requiredField'))
+        otherwise: (schema) => schema.min(6).required(t('common.requiredField'))
       }),
       passwordConfirmation: Yup.string().when('id', {
         is: () => isEdit.value,
