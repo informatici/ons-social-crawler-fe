@@ -29,7 +29,7 @@ const sidebarStore = useSidebarStore()
 </template>
 
 <style lang="scss">
-$sidebar-opened-width: 10rem;
+$sidebar-opened-width: auto;
 $sidebar-padding: var(--sidebar-padding);
 $header-height: var(--header-height);
 .sidebar {
@@ -38,7 +38,7 @@ $header-height: var(--header-height);
   flex: 0 1 $sidebar-opened-width;
   background-color: var(--primary-color);
   min-height: 100vh;
-  padding: $sidebar-padding;
+  padding: $sidebar-padding 1rem;
   position: relative;
 
   .logo {
@@ -127,9 +127,10 @@ $header-height: var(--header-height);
 
 @media screen and (max-width: 992px) {
   .sidebar {
+    padding: $sidebar-padding .3rem;
     transition: .25s;
     min-width: 3rem;
-    flex: 0 0 3rem;
+    flex: 0 0 3.5rem;
     min-height: 100vh;
 
     .sidebar__arrow {
@@ -151,6 +152,7 @@ $header-height: var(--header-height);
 
 .sidebar--open {
   flex: 0 0 $sidebar-opened-width !important;
+  padding: $sidebar-padding 1rem;
 }
 
 </style>
