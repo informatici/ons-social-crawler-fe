@@ -32,15 +32,16 @@
                 <label for="name" class="form-label required">{{
                   $t("entities.users.fullName")
                 }}</label>
-                <Field
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  name="name"
-                  :placeholder="$t('common.insertValue')"
-                  :class="{ 'is-invalid': errors.name }"
-                />
-                <div class="invalid-feedback">{{ errors.name }}</div>
+<!--                <Field-->
+<!--                  type="text"-->
+<!--                  class="form-control"-->
+<!--                  id="name"-->
+<!--                  name="name"-->
+<!--                  :placeholder="$t('common.insertValue')"-->
+<!--                  :class="{ 'is-invalid': errors.name }"-->
+<!--                />-->
+<!--                <div class="invalid-feedback">{{ errors.name }}</div>-->
+                <input type="text" />
               </div>
               <div class="col-12 col-md-6">
                 <label for="email" class="form-label required">{{
@@ -58,9 +59,9 @@
               </div>
 
               <div class="col-12 col-md-6">
-<!--                <label for="roles" class="form-label required">{{-->
-<!--                    $t("entities.users.crmUserRoles")-->
-<!--                  }}</label>-->
+                <label for="roles" class="form-label required">{{
+                    $t("entities.users.crmUserRoles")
+                  }}</label>
 <!--                <Field-->
 <!--                    type="text"-->
 <!--                    class="form-control"-->
@@ -68,15 +69,15 @@
 <!--                    name="roles"-->
 <!--                    v-slot="{ field }"-->
 <!--                >-->
-<!--                  <DigiSelect-->
-<!--                      :field="field"-->
-<!--                      :options="userRoles"-->
-<!--                      value-prop="ID"-->
-<!--                      label="RoleName"-->
-<!--                      track-by="RoleName"-->
-<!--                      mode="tags"-->
-<!--                      :is-invalid="errors.roles"-->
-<!--                  />-->
+                  <DigiSelect
+                      :field="field"
+                      :options="userRoles"
+                      value-prop="ID"
+                      label="RoleName"
+                      track-by="RoleName"
+                      mode="tags"
+                      :is-invalid="errors.roles"
+                  />
 <!--                </Field>-->
 <!--                <div class="invalid-feedback">-->
 <!--                  {{ errors.roles }}-->
@@ -180,13 +181,13 @@ export default defineComponent({
     });
 
     const validationSchema = Yup.object().shape({
-        // name: Yup.string().required(t("common.requiredField")),
-        // email: Yup.string().email().required(t("common.requiredField")),
-        // roles: Yup.array().min(1, t("common.requiredField")), // uso .min(1) al posto di .required() perché è un array
-        // password: Yup.string()
-        //     .when('id', { is: () => isEdit.value, then: schema => schema.notRequired(), otherwise: schema => schema.required(t("common.requiredField")) }),
-        // passwordConfirmation: Yup.string()
-        //     .when('id', { is: () => isEdit.value, then: schema => schema.notRequired(), otherwise: schema => schema.required(t("common.requiredField")).oneOf([Yup.ref("password")], t("common.passwordsDoNotMatch")) }),
+        name: Yup.string().required(t("common.requiredField")),
+        email: Yup.string().email().required(t("common.requiredField")),
+        roles: Yup.array().min(1, t("common.requiredField")), // uso .min(1) al posto di .required() perché è un array
+        password: Yup.string()
+            .when('id', { is: () => isEdit.value, then: schema => schema.notRequired(), otherwise: schema => schema.required(t("common.requiredField")) }),
+        passwordConfirmation: Yup.string()
+            .when('id', { is: () => isEdit.value, then: schema => schema.notRequired(), otherwise: schema => schema.required(t("common.requiredField")).oneOf([Yup.ref("password")], t("common.passwordsDoNotMatch")) }),
       });
 
     const onSubmit = async (values) => {

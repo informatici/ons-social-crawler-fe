@@ -24,16 +24,20 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style lang="scss">
-:root {
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+#app {
   font-size: 16px;
   font-family: sans-serif;
 }
 
-* {
+#app * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
+#app {
 
 .wrapper {
   display: flex;
@@ -51,6 +55,7 @@ import { RouterLink, RouterView } from 'vue-router'
       padding: 1rem var(--drawer-paddingX);
     }
   }
+}
 }
 
 

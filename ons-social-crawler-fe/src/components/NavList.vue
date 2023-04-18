@@ -56,17 +56,17 @@ const navList = ref([
 </template>
 
 <style lang="scss">
-.nav-list {
+#app .nav-list {
   margin-top: 2.5rem;
   position: relative;
 }
 
-.nav-item-link {
+#app .nav-item-link {
   text-decoration: none;
 }
 
 $paddingX: .7rem;
-.nav-item {
+#app .nav-item {
   padding: .4rem $paddingX;
   display: inline-flex;
   justify-content: flex-start;
@@ -129,7 +129,7 @@ $paddingX: .7rem;
 
 }
 
-.nav-item--active::after {
+#app .nav-item--active::after {
   content: "";
   visibility: visible;
   background-color: var(--secondary-color);
@@ -142,16 +142,16 @@ $paddingX: .7rem;
   left: $paddingX;
 }
 
-.nav-item__text--d-none {
+#app .nav-item__text--d-none {
   display: none !important;
 }
-.nav-item__text--d-inline {
+#app .nav-item__text--d-inline {
   display: inline !important;
 }
 
 @media screen and (max-width: 992px) {
-  .nav-item--active::after,
-  .nav-item:hover::after {
+  #app .nav-item--active::after,
+  #app .nav-item:hover::after {
     content: "";
     visibility: visible;
     background-color: var(--secondary-color);
@@ -165,7 +165,7 @@ $paddingX: .7rem;
     transition: width 0s !important;
   }
 
-  .nav-item__text {
+  #app .nav-item__text {
     display: none;
   }
 

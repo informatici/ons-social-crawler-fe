@@ -39,84 +39,88 @@ const signOut = () => {
 </template>
 
 <style lang="scss">
-$header-height: var(--header-height);
-$sidebar-padding: var(--sidebar-padding);
-.user-menu {
-  width: 10rem;
-  height: $header-height + $sidebar-padding;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+#app {
+  $header-height: var(--header-height);
+  $sidebar-padding: var(--sidebar-padding);
 
-  .user-menu__button {
-    // circle
-    //$size: calc($header-height/100*75);
-    //background-color: var(--primary-color);
-    //color: white;
-    //width: $size;
-    //height: $size;
-    //border-radius: 50%;
-    //display: flex;
-    //align-items: center;
-    //justify-content: center;
-    //font-weight: 600;
-    //font-size: calc($header-height/100*30);
-    //letter-spacing: .1rem;
-    //cursor: pointer;
-
-    // square
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 4px;
-    padding: 0.15rem 1rem;
+  .user-menu {
+    width: 10rem;
+    height: $header-height + $sidebar-padding;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: calc($header-height/100 * 30);
-    letter-spacing: 0.1rem;
-    cursor: pointer;
-    transition: transform 0.1s;
-    &:active {
-      transform: scale(0.9);
-      transition: transform 0.05s;
-    }
+    position: relative;
 
-    &:hover {
-      //color: var(--secondary-color);
-      opacity: 0.9;
-    }
-  }
-}
+    .user-menu__button {
+      // circle
+      //$size: calc($header-height/100*75);
+      //background-color: var(--primary-color);
+      //color: white;
+      //width: $size;
+      //height: $size;
+      //border-radius: 50%;
+      //display: flex;
+      //align-items: center;
+      //justify-content: center;
+      //font-weight: 600;
+      //font-size: calc($header-height/100*30);
+      //letter-spacing: .1rem;
+      //cursor: pointer;
 
-.user-menu__options {
-  position: absolute;
-  top: calc($header-height - 0.5rem);
-  right: 3rem;
-  background-color: white;
-  box-shadow: 0px 3px 5px 1px lightgrey;
-  //width: 10rem;
-  border-radius: 4px;
-  padding: 1rem 1.5rem;
-
-  .options-item {
-    display: flex;
-    gap: 0.7rem;
-    align-items: center;
-    cursor: pointer;
-    z-index: 1;
-
-    .options-item__image {
-      width: 1rem;
-      height: auto;
+      // square
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 4px;
+      padding: 0.15rem 1rem;
       display: flex;
       align-items: center;
-    }
-
-    .options-item__text {
+      justify-content: center;
       font-weight: 600;
-      color: #666666;
+      font-size: calc($header-height / 100 * 30);
+      letter-spacing: 0.1rem;
+      cursor: pointer;
+      transition: transform 0.1s;
+
+      &:active {
+        transform: scale(0.9);
+        transition: transform 0.05s;
+      }
+
+      &:hover {
+        //color: var(--secondary-color);
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .user-menu__options {
+    position: absolute;
+    top: calc($header-height - 0.5rem);
+    right: 3rem;
+    background-color: white;
+    box-shadow: 0px 3px 5px 1px lightgrey;
+    //width: 10rem;
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+
+    .options-item {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1;
+
+      .options-item__image {
+        width: 1rem;
+        height: auto;
+        display: flex;
+        align-items: center;
+      }
+
+      .options-item__text {
+        font-weight: 600;
+        color: #666666;
+      }
     }
   }
 }
