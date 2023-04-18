@@ -34,26 +34,26 @@
   </tbody>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref, watch, useSlots } from "vue";
 
 export default defineComponent({
   name: "table-body-row",
   components: {},
   props: {
-    header: { type: Array as () => Array<any>, required: true },
-    data: { type: Array as () => Array<any>, required: true },
+    header: { type: Array, required: true },
+    data: { type: Array, required: true },
     currentlySelectedItems: { type: Array, required: false, default: () => [] },
     checkboxEnabled: { type: Boolean, required: false, default: false },
     checkboxLabel: {
-      type: String as () => string,
+      type: String,
       required: false,
       default: "id",
     },
   },
   emits: ["on-select"],
   setup(props, { emit }) {
-    const selectedItems = ref<Array<any>>([]);
+    const selectedItems = ref([]);
     const slots = useSlots();
 
     watch(

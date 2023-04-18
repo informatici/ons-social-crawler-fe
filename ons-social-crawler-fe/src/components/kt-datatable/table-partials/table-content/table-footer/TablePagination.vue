@@ -126,10 +126,7 @@ export default defineComponent({
     });
 
     const pages = computed(() => {
-      const range: Array<{
-        name: number;
-        isDisabled: boolean;
-      }> = [];
+      const range = [];
 
       for (let i = startPage.value; i <= endPage.value; i += 1) {
         range.push({
@@ -154,7 +151,7 @@ export default defineComponent({
     const onClickPreviousPage = () => {
       emit("page-change", props.currentPage - 1);
     };
-    const onClickPage = (page: number) => {
+    const onClickPage = (page) => {
       emit("page-change", page);
     };
     const onClickNextPage = () => {
@@ -163,7 +160,7 @@ export default defineComponent({
     const onClickLastPage = () => {
       emit("page-change", props.totalPages);
     };
-    const isPageActive = (page: number) => {
+    const isPageActive = (page) => {
       return props.currentPage === page;
     };
 

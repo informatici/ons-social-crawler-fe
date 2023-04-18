@@ -17,7 +17,7 @@
     </label>
     <div>
       <span class="fs-6 text-gray-800"
-        >{{ $t("common.totalRows") }}:
+        >{{ "common.totalRows" }}:
         <span class="fw-bold text-primary">{{ total }}</span></span
       >
     </div>
@@ -29,7 +29,7 @@ import {
   defineComponent,
   ref,
   onMounted,
-  type WritableComputedRef,
+  // type WritableComputedRef,
   computed,
 } from "vue";
 
@@ -56,11 +56,11 @@ export default defineComponent({
       inputItemsPerPage.value = props.itemsPerPage;
     });
 
-    const itemsCountInTable: WritableComputedRef<number> = computed({
-      get(): number {
+    const itemsCountInTable = computed({
+      get() {
         return props.itemsPerPage;
       },
-      set(value: number): void {
+      set(value) {
         emit("update:itemsPerPage", value);
       },
     });

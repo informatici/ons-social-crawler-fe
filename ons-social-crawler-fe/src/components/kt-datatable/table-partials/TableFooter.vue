@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import TableItemsPerPageSelect from "@/components/kt-datatable/table-partials/table-content/table-footer/TableItemsPerPageSelect.vue";
 import TablePagination from "./table-content/table-footer/TablePagination.vue";
 import {
@@ -24,7 +24,7 @@ import {
   defineComponent,
   onMounted,
   ref,
-  type WritableComputedRef,
+  // type WritableComputedRef,
   watch,
 } from "vue";
 
@@ -75,16 +75,16 @@ export default defineComponent({
       inputItemsPerPage.value = props.itemsPerPage;
     });
 
-    const pageChange = (newPage: number) => {
+    const pageChange = (newPage) => {
       page.value = newPage;
       emit("page-change", page.value);
     };
 
-    const itemsCountInTable: WritableComputedRef<number> = computed({
-      get(): number {
+    const itemsCountInTable = computed({
+      get() {
         return props.itemsPerPage;
       },
-      set(value: number): void {
+      set(value) {
         inputItemsPerPage.value = value;
         emit("update:itemsPerPage", value);
       },

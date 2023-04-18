@@ -14,7 +14,7 @@
         </div>
       </th>
       <template v-for="(column, i) in header" :key="i">
-        <th 
+        <th
           @click="onSort(column.columnLabel, column.sortEnabled)"
           :style="{
             minWidth: column.columnMinWidth ? `${column.columnMinWidth}px` : '0',
@@ -36,9 +36,9 @@
   </thead>
 </template>
 
-<script lang="ts">
+<script>
 import { computed, defineComponent, ref, watch } from "vue";
-import type { Sort } from "@/components/kt-datatable/table-partials/models";
+// import type { Sort } from "@/components/kt-datatable/table-partials/models";
 
 export default defineComponent({
   name: "table-head-row",
@@ -47,17 +47,17 @@ export default defineComponent({
     checkboxEnabled: { type: Boolean, required: false, default: false },
     sortLabel: { type: String, required: false, default: null },
     sortOrder: {
-      type: String as () => "asc" | "desc",
+      // type: String as () => "asc" | "desc",
       required: false,
       default: "asc",
     },
-    header: { type: Array as () => Array<any>, required: true },
+    header: { type: Array, required: true },
   },
   emits: ["on-select", "on-sort"],
   components: {},
   setup(props, { emit }) {
-    const checked = ref<boolean>(false);
-    const columnLabelAndOrder = ref<Sort>({
+    const checked = ref(false);
+    const columnLabelAndOrder = ref({
       label: props.sortLabel,
       order: props.sortOrder,
     });
@@ -73,7 +73,7 @@ export default defineComponent({
       emit("on-select", checked.value);
     };
 
-    const onSort = (label: string, sortEnabled: boolean) => {
+    const onSort = (label, sortEnabled) => {
       if (sortEnabled) {
         if (columnLabelAndOrder.value.label === label) {
           if (columnLabelAndOrder.value.order === "asc") {

@@ -38,12 +38,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref, watch, onMounted } from "vue";
 import TableHeadRow from "@/components/kt-datatable/table-partials/table-content/table-head/TableHeadRow.vue";
 import TableBodyRow from "@/components/kt-datatable/table-partials/table-content/table-body/TableBodyRow.vue";
 import Loading from "@/components/kt-datatable/table-partials/Loading.vue";
-import type { Sort } from "@/components/kt-datatable/table-partials/models";
+// import type { Sort } from "@/components/kt-datatable/table-partials/models";
 
 export default defineComponent({
   name: "table-body",
@@ -53,7 +53,7 @@ export default defineComponent({
     emptyTableText: { type: String, default: "No data found" },
     sortLabel: { type: String, required: false, default: null },
     sortOrder: {
-      type: String as () => "asc" | "desc",
+      // type: String as () => "asc" | "desc",
       required: false,
       default: "asc",
     },
@@ -68,9 +68,9 @@ export default defineComponent({
     Loading,
   },
   setup(props, { emit }) {
-    const selectedItems = ref<Array<unknown>>([]);
-    const allSelectedItems = ref<Array<unknown>>([]);
-    const check = ref<boolean>(false);
+    const selectedItems = ref([]);
+    const allSelectedItems = ref([]);
+    const check = ref(false);
 
     watch(
       () => props.data,
@@ -79,7 +79,7 @@ export default defineComponent({
         allSelectedItems.value = [];
         check.value = false;
         // eslint-disable-next-line
-        props.data.forEach((item: any) => {
+        props.data.forEach((item) => {
           if (item[props.checkboxLabel]) {
             allSelectedItems.value.push(item[props.checkboxLabel]);
           }
@@ -88,7 +88,7 @@ export default defineComponent({
     );
 
     // eslint-disable-next-line
-    const selectAll = (checked: any) => {
+    const selectAll = (checked) => {
       check.value = checked;
       if (checked) {
         selectedItems.value = [
@@ -100,15 +100,15 @@ export default defineComponent({
     };
 
     //eslint-disable-next-line
-    const itemsSelect = (value: any) => {
+    const itemsSelect = (value) => {
       selectedItems.value = [];
       //eslint-disable-next-line
-      value.forEach((item:any) => {
+      value.forEach((item) => {
         if (!selectedItems.value.includes(item)) selectedItems.value.push(item);
       });
     };
 
-    const onSort = (sort: Sort) => {
+    const onSort = (sort) => {
       emit("on-sort", sort);
     };
 
@@ -126,7 +126,7 @@ export default defineComponent({
       allSelectedItems.value = [];
       check.value = false;
       // eslint-disable-next-line
-      props.data.forEach((item: any) => {
+      props.data.forEach((item) => {
         if (item[props.checkboxLabel]) {
           allSelectedItems.value.push(item[props.checkboxLabel]);
         }

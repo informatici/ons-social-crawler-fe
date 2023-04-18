@@ -24,7 +24,7 @@ const signIn = async () => {
       </div>
       <hr class="login__separator" />
       <div class="login__main">
-        <form action="#" method="POST" v-on:submit.prevent="console.log('form stopped')">
+        <form action="#" method="POST" v-on:submit.prevent="">
           <input class="input" type="email" name="email" id="email" placeholder="Email" />
           <input
             class="input"
