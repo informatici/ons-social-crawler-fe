@@ -17,8 +17,7 @@
     </label>
     <div>
       <span class="fs-6 text-gray-800"
-        >{{ "common.totalRows" }}:
-        <span class="fw-bold text-primary">{{ total }}</span></span
+        >{{ $t('common.totalRows') }}: <span class="fw-bold text-primary">{{ total }}</span></span
       >
     </div>
   </div>
@@ -30,44 +29,44 @@ import {
   ref,
   onMounted,
   // type WritableComputedRef,
-  computed,
-} from "vue";
+  computed
+} from 'vue'
 
 export default defineComponent({
-  name: "table-items-per-page-select",
+  name: 'table-items-per-page-select',
   components: {},
   props: {
     itemsPerPage: { type: Number, default: 10 },
     itemsPerPageDropdownEnabled: {
       type: Boolean,
       required: false,
-      default: true,
+      default: true
     },
     total: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
-  emits: ["update:itemsPerPage"],
+  emits: ['update:itemsPerPage'],
   setup(props, { emit }) {
-    const inputItemsPerPage = ref(10);
+    const inputItemsPerPage = ref(10)
 
     onMounted(() => {
-      inputItemsPerPage.value = props.itemsPerPage;
-    });
+      inputItemsPerPage.value = props.itemsPerPage
+    })
 
     const itemsCountInTable = computed({
       get() {
-        return props.itemsPerPage;
+        return props.itemsPerPage
       },
       set(value) {
-        emit("update:itemsPerPage", value);
-      },
-    });
+        emit('update:itemsPerPage', value)
+      }
+    })
 
     return {
-      itemsCountInTable,
-    };
-  },
-});
+      itemsCountInTable
+    }
+  }
+})
 </script>
