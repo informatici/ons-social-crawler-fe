@@ -8,14 +8,17 @@ import JwtService from '@/core/services/JwtService'
 export const useAuthStore = defineStore('auth', () => {
   // const errors = ref({})
   const user = ref({})
+  const userRoles = ref([])
   const isAuthenticated = ref(!!JwtService.getToken())
 
-  function setAuth(authUser, userRoles) {
+  function setRoles(res) {
+    userRoles.value = res?.user ?? []
+  }
+
+  function setAuth(authUser) {
     isAuthenticated.value = true
     user.value = authUser.user
-    console.debug('#c au: ', userRoles);
-    localStorage.setItem("userName", user.value?.displayName)
-    // errors.value = {}
+    localStorage.setItem('userName', user.value?.displayName)
     JwtService.saveToken(user.value.accessToken)
   }
 
@@ -26,16 +29,18 @@ export const useAuthStore = defineStore('auth', () => {
   function purgeAuth() {
     isAuthenticated.value = false
     user.value = {}
-    // errors.value = []
+    window.localStorage.removeItem('userName')
     JwtService.destroyToken()
   }
 
   async function login(credentials = {}) {
     try {
-      const res = await signInWithEmailAndPassword(auth, credentials?.email.value, credentials?.password.value)
-      const tokenResult = await auth.currentUser.getIdTokenResult();
-      const userRoles = tokenResult?.claims?.user ?? [];
-      setAuth(res, userRoles)
+      const res = await signInWithEmailAndPassword(
+        auth,
+        credentials?.email.value,
+        credentials?.password.value
+      )
+      setAuth(res)
     } catch (error) {
       setError(error)
     }
@@ -50,19 +55,21 @@ export const useAuthStore = defineStore('auth', () => {
     if (JwtService.getToken()) {
       try {
         ApiService.setHeader()
-        await ApiService.post('auth/verify')
-      } catch {
+        const res = await ApiService.post('auth/verify')
+        setRoles(res.data)
+      } catch (err) {
         // setError(response.data.errors)
-        purgeAuth()
+        await logout()
       }
     } else {
-      purgeAuth()
+      await logout()
     }
   }
 
   return {
     // errors,
     user,
+    userRoles,
     isAuthenticated,
     login,
     logout,
