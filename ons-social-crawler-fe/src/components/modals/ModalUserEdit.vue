@@ -175,12 +175,12 @@ export default defineComponent({
 
     const validationSchema = Yup.object().shape({
       name: Yup.string().required(t('common.requiredField')),
-      email: Yup.string().email().required(t('common.requiredField')),
+      email: Yup.string().email(t('common.validEmail')).required(t('common.requiredField')),
       // roles: Yup.array().min(1, t('common.requiredField')), // uso .min(1) al posto di .required() perché è un array
       password: Yup.string().when('id', {
         is: () => isEdit.value,
         then: (schema) => schema.notRequired(),
-        otherwise: (schema) => schema.min(6).required(t('common.requiredField'))
+        otherwise: (schema) => schema.min(6, t('entities.users.passwordMinLength')).required(t('common.requiredField'))
       }),
       passwordConfirmation: Yup.string().when('id', {
         is: () => isEdit.value,

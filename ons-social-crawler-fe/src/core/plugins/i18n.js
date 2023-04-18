@@ -11,17 +11,18 @@ const messages = {
         email: 'E-mail',
         roles: 'Roles',
         password: 'Password',
-        passwordConfirmation: 'Password Confirmation',
+        passwordConfirmation: 'Conferma Password',
         fullName: 'Nome Cognome',
-        crmUserRoles: 'User Roles'
+        crmUserRoles: 'User Roles',
+        passwordMinLength: 'La password deve contenere almeno 6 caratteri',
       }
     },
     common: {
       search: 'Search',
       confirm: 'Conferma',
       close: 'Chiudi',
-      insertValue: 'Insert value',
-      requiredField: 'Required field',
+      insertValue: 'Inserisci valore',
+      requiredField: 'Campo obbligatorio',
       ok: 'Ok',
       operationconfirm: 'Operation succesfully complete!',
       cancel: 'Annulla',
@@ -37,8 +38,8 @@ const messages = {
       okLong: 'Ok, got it!',
       signinOk: 'You have successfully logged in!',
       signinError: 'Something is not right',
-      validEmail: 'Email must be a valid email',
-      passwordsDoNotMatch: 'Passwords do not match',
+      validEmail: 'L\'email deve essere valida',
+      passwordsDoNotMatch: 'Le password non corrispondono',
       totalRows: 'Total Rows',
       selectDate: 'Select a date'
     },
