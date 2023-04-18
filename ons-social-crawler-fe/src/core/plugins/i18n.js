@@ -1,6 +1,49 @@
 import { createI18n } from 'vue-i18n'
 
 const messages = {
+  it: {
+    entities: {
+      users: {
+        add: 'Aggiungi',
+        edit: 'Modifica Utente',
+        detail: 'User Detail',
+        name: 'User',
+        email: 'E-mail',
+        roles: 'Roles',
+        password: 'Password',
+        passwordConfirmation: 'Password Confirmation',
+        fullName: 'Nome Cognome',
+        crmUserRoles: 'User Roles'
+      }
+    },
+    common: {
+      search: 'Search',
+      confirm: 'Conferma',
+      close: 'Chiudi',
+      insertValue: 'Insert value',
+      requiredField: 'Required field',
+      ok: 'Ok',
+      operationconfirm: 'Operation succesfully complete!',
+      cancel: 'Annulla',
+      confirmMessage: 'Questa azione non è reversibile. Sei sicuro di voler procedere?',
+      yes: 'Yes',
+      no: 'No',
+      signout: 'Sign Out',
+      signin: 'Sign In',
+      email: 'Email',
+      continue: 'Continue',
+      password: 'Password',
+      tryAgain: 'Try again!',
+      okLong: 'Ok, got it!',
+      signinOk: 'You have successfully logged in!',
+      signinError: 'Something is not right',
+      validEmail: 'Email must be a valid email',
+      passwordsDoNotMatch: 'Passwords do not match',
+      totalRows: 'Total Rows',
+      selectDate: 'Select a date'
+    },
+
+  },
   en: {
     entities: {
       assets: {
@@ -331,7 +374,7 @@ const messages = {
 
 const i18n = createI18n({
   legacy: false,
-  locale: 'en',
+  locale: 'it',
   globalInjection: true,
   messages
 })

@@ -1,19 +1,19 @@
 import { useAuthStore } from '@/stores/auth'
 import Swal from 'sweetalert2'
-// import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import { useRouter } from 'vue-router'
 
 export default function alert() {
-  // const { t } = useI18n();
+  const { t } = useI18n();
   const router = useRouter()
   const store = useAuthStore()
 
   const operationConfirm = () => {
     return Swal.fire({
-      text: 'common.operationconfirm',
+      text: t('common.operationconfirm'),
       icon: 'success',
       buttonsStyling: false,
-      confirmButtonText: 'common.ok',
+      confirmButtonText: t('common.ok'),
       customClass: {
         confirmButton: 'btn fw-bold btn-light-primary'
       }
@@ -41,14 +41,14 @@ export default function alert() {
     }
   }
 
-  const warningAlert = (title, showCancelButton = true, confirmButtonText = 'common.confirm') => {
+  const warningAlert = (title, showCancelButton = true, confirmButtonText = t('common.confirm')) => {
     return Swal.fire({
       text: title,
       icon: 'warning',
       buttonsStyling: false,
       showCancelButton,
       confirmButtonText,
-      cancelButtonText: 'common.cancel',
+      cancelButtonText: t('common.cancel'),
       customClass: {
         confirmButton: 'btn fw-bold btn-primary',
         cancelButton: 'btn fw-bold btn-light'

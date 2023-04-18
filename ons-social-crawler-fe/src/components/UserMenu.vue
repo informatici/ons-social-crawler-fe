@@ -62,6 +62,12 @@ const displayUserName = computed(() => {
   $sidebar-padding: var(--sidebar-padding);
 
   .user-menu {
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     width: 10rem;
     height: $header-height + $sidebar-padding;
     display: flex;
