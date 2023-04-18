@@ -1,0 +1,228 @@
+<template>
+  <div class="dataTables_wrapper dt-bootstrap4 no-footer">
+    <TableContent
+      @on-items-select="onItemSelect"
+      @on-sort="onSort"
+      :header="header"
+      :data="dataToDisplay"
+      :checkboxEnabled="checkboxEnabled"
+      :checkboxLabel="checkboxLabel"
+      :empty-table-text="emptyTableText"
+      :sort-label="sortLabel"
+      :sort-order="sortOrder"
+      :loading="loading"
+    >
+      <template v-for="(_, name) in $slots" v-slot:[name]="{ row: item }">
+        <slot :name="name" :row="item" />
+      </template>
+    </TableContent>
+    <TableFooter
+      @page-change="pageChange"
+      :current-page="currentPage"
+      v-model:itemsPerPage="itemsInTable"
+      :count="totalItems"
+      :total="totalRows"
+      :items-per-page-dropdown-enabled="itemsPerPageDropdownEnabled"
+    />
+  </div>
+</template>
+
+<script>
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import TableContent from "@/components/kt-datatable/table-partials/table-content/TableContent.vue";
+import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vue";
+// import { Sort } from "@/components/kt-datatable/table-partials/models";
+import arraySort from "array-sort";
+
+export default defineComponent({
+  name: "kt-datatable",
+  props: {
+    header: { type: Array, required: true },
+    data: { type: Array, required: true },
+    itemsPerPage: { type: Number, default: 10 },
+    itemsPerPageDropdownEnabled: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    checkboxEnabled: { type: Boolean, required: false, default: false },
+    checkboxLabel: { type: String, required: false, default: "id" },
+    total: { type: Number, required: false },
+    loading: { type: Boolean, required: false, default: false },
+    sortLabel: { type: String, required: false, default: null },
+    // sortOrder: {
+    //   type: String () => "asc" | "desc",
+    //   required: false,
+    //   default: "asc",
+    // },
+    emptyTableText: { type: String, required: false, default: "No data found" },
+    cPage: { type: Number, required: false, default: 1 },
+    search: { type: String, required: false },
+    // eslint-disable-next-line vue/require-valid-default-prop
+    searchedFields: { type: Array, required: false, default: [] },
+  },
+  emits: [
+    "page-change",
+    "on-sort",
+    "on-items-select",
+    "on-items-per-page-change",
+  ],
+  components: {
+    TableContent,
+    TableFooter,
+  },
+  setup(props, { emit }) {
+    const currentPage = ref(props.cPage);
+    const itemsInTable = ref(props.itemsPerPage);
+    const tableData = ref([]);
+
+    const init = (value) => {
+      tableData.value = value;
+    };
+
+    const searchingFunc = (obj, value) => {
+      value = value.toLowerCase();
+      for (let field of props.searchedFields) {
+        let key = field;
+        let name = "";
+        let fieldValue = "";
+
+        if (typeof field === "object") {
+          key = field.key;
+          name = field.name;
+
+          if (Array.isArray(obj[key])) {
+            // per DigiSelect mode "multiple" o "tags"
+            obj[key].forEach(
+              (item) => (fieldValue += `${item?.[name].toLowerCase()} `)
+            );
+          } else {
+            // per DigiSelect mode "single"
+            fieldValue = ("" + obj[key]?.[name]).toLowerCase();
+          }
+        } else {
+          // per tutti i campi non DigiSelect
+          fieldValue = ("" + obj[key]).toLowerCase();
+        }
+
+        if (fieldValue.indexOf(value) != -1) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    const filterData = (val) => {
+      currentPage.value = 1;
+      tableData.value = [];
+      if (val !== "") {
+        let results = [];
+        for (let j = 0; j < props.data.length; j++) {
+          if (searchingFunc(props.data[j], val)) {
+            results.push(props.data[j]);
+          }
+        }
+        tableData.value = results;
+      } else {
+        tableData.value = props.data;
+      }
+    };
+
+    watch(
+      () => itemsInTable.value,
+      (val) => {
+        currentPage.value = 1;
+        emit("on-items-per-page-change", val);
+      }
+    );
+
+    watch(
+      () => props.data,
+      (val) => {
+        // init(val);
+        filterData(props.search);
+      }
+    );
+
+    watch(
+      () => props.search,
+      (val) => {
+        filterData(val);
+      }
+    );
+
+    const pageChange = (page) => {
+      currentPage.value = page;
+      emit("page-change", page);
+    };
+
+    const dataToDisplay = computed(() => {
+      if (tableData.value) {
+        if (tableData.value.length <= itemsInTable.value) {
+          return tableData.value;
+        } else {
+          let sliceFrom = (currentPage.value - 1) * itemsInTable.value;
+          return tableData.value.slice(
+            sliceFrom,
+            sliceFrom + itemsInTable.value
+          );
+        }
+      }
+      return [];
+    });
+
+    const totalItems = computed(() => {
+      if (tableData.value) {
+        if (tableData.value.length <= itemsInTable.value) {
+          return props.total;
+        } else {
+          return tableData.value.length;
+        }
+      }
+      return 0;
+    });
+
+    /*
+    const onSort = (sort: Sort) => {
+      emit("on-sort", sort);
+    };
+    */
+    const sonSortort = (sort) => {
+      const reverse = sort.order === "asc";
+      if (sort.label) {
+        arraySort(tableData.value, sort.label, { reverse });
+      }
+    };
+    const onSort = (sort) => {
+      sonSortort(sort);
+    };
+
+    //eslint-disable-next-line
+    const onItemSelect = (selectedItems) => {
+      emit("on-items-select", selectedItems);
+    };
+
+    const totalRows = computed(() => {
+      if (tableData.value) {
+        return tableData.value.length;
+      }
+      return 0;
+    });
+
+    onMounted(async () => {
+      init(props.data);
+    });
+
+    return {
+      pageChange,
+      dataToDisplay,
+      onSort,
+      onItemSelect,
+      itemsInTable,
+      totalItems,
+      totalRows,
+      currentPage,
+    };
+  },
+});
+</script>
