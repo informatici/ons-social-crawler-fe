@@ -15,6 +15,13 @@ year = year.getFullYear()
 #app {
 
   .footer {
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     $paddingY: 1rem;
     min-height: 3rem;
     padding: $paddingY var(--drawer-paddingX);

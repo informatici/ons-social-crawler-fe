@@ -14,10 +14,17 @@ import LogoComponent from "@/components/LogoComponent.vue";
 
 <style lang="scss">
 #app {
+
   $header-height: var(--header-height);
   $sidebar-padding: var(--sidebar-padding);
 
   .header {
+    //
+    //* {
+    //  box-sizing: border-box;
+    //  margin: 0;
+    //  padding: 0;
+    //}
     background-color: var(--secondary-color);
     height: calc($header-height + $sidebar-padding);
 

@@ -11,6 +11,9 @@ import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import alert from '@/core/helpers/alert'
 import { showModal } from '@/core/helpers/dom'
 import { isArray } from '@vue/shared'
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 // const twitter = ref([])
 //
@@ -78,7 +81,7 @@ const openItem = (uid, modal) => {
 }
 
 const deleteItem = async (uid) => {
-  warningAlert('common.confirmMessage').then(async (res) => {
+  warningAlert(t('common.confirmMessage')).then(async (res) => {
     if (res.isConfirmed) {
       // loading.show();
       try {
