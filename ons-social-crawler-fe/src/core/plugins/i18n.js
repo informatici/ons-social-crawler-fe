@@ -38,7 +38,7 @@ const messages = {
       okLong: 'Ok, got it!',
       signinOk: 'You have successfully logged in!',
       signinError: 'Something is not right',
-      validEmail: 'L\'email deve essere valida',
+      validEmail: 'L\'email deve avere un formato valido',
       passwordsDoNotMatch: 'Le password non corrispondono',
       totalRows: 'Total Rows',
       selectDate: 'Select a date'
