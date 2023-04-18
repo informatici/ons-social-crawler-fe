@@ -1,18 +1,27 @@
 <script setup>
+import {ref} from "vue";
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const signIn = async () => {
-  await authStore.login()
+const email = ref("")
+const password = ref("")
 
-  if (authStore.isAuthenticated) {
-    router.push({ path: '/' })
+const signIn = async () => {
+  if(document.querySelector("#email").checkValidity()) { // validazione email
+    await authStore.login({email, password})
+
+    if (authStore.isAuthenticated) {
+      router.push({ path: '/' })
+    } else {
+      alert('Error')
+    }
   } else {
-    alert('Error')
+    console.debug('Error in the email format: ', )
   }
+
 }
 </script>
 <template>
@@ -25,13 +34,17 @@ const signIn = async () => {
       <hr class="login__separator" />
       <div class="login__main">
         <form action="#" method="POST" v-on:submit.prevent="">
-          <input class="input" type="email" name="email" id="email" placeholder="Email" />
           <input
+              v-model="email"
+              class="input" type="email" name="email" id="email" placeholder="Email" required />
+          <input
+              v-model="password"
             class="input"
             type="password"
             name="password"
             id="password"
             placeholder="Password"
+              required
           />
           <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
