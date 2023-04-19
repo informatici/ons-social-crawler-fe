@@ -42,4 +42,14 @@ spec:
           service:
             name: ons2-be
             port:
-              number: 8080                
+              number: 8080
+  - host: 34-95-74-41.nip.io
+    http:
+      paths:
+      - path: /api-hs/*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: ons2-be-hs
+            port:
+              number: 5000                
