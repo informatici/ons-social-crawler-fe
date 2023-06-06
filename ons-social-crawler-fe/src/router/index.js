@@ -42,7 +42,7 @@ const router = createRouter({
         {
           path: '/twitter',
           name: 'twitter',
-          component: () => import('../views/NavItemView.vue'),
+          component: () => import('../views/Twitter.vue'),
           meta: { label: 'Twitter' }
         },
         {

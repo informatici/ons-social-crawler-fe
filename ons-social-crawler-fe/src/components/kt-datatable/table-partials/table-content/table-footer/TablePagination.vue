@@ -11,7 +11,7 @@
         >
           <a class="page-link" @click="onClickFirstPage">
             <span class="svg-icon">
-              <inline-svg src="/media/icons/duotune/arrows/arr079.svg" />
+              <img src="/media/icons/duotune/arrows/arr079.svg" />
             </span>
           </a>
         </li>
@@ -23,7 +23,7 @@
         >
           <a class="page-link" @click="onClickPreviousPage">
             <span class="svg-icon">
-              <inline-svg src="/media/icons/duotune/arrows/arr074.svg" />
+              <img src="/media/icons/duotune/arrows/arr074.svg" />
             </span>
           </a>
         </li>
@@ -32,7 +32,7 @@
           v-for="(page, i) in pages"
           class="paginate_button page-item"
           :class="{
-            active: isPageActive(page.name),
+            active: isPageActive(page.name)
           }"
           :style="{ cursor: !page.isDisabled ? 'pointer' : 'auto' }"
           :key="i"
@@ -49,7 +49,7 @@
         >
           <a class="paginate_button page-link" @click="onClickNextPage">
             <span class="svg-icon">
-              <inline-svg src="/media/icons/duotune/arrows/arr071.svg" />
+              <img src="/media/icons/duotune/arrows/arr071.svg" />
             </span>
           </a>
         </li>
@@ -61,7 +61,7 @@
         >
           <a class="paginate_button page-link" @click="onClickLastPage">
             <span class="svg-icon">
-              <inline-svg src="/media/icons/duotune/arrows/arr080.svg" />
+              <img src="/media/icons/duotune/arrows/arr080.svg" />
             </span>
           </a>
         </li>
@@ -71,98 +71,94 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
-  name: "table-pagination",
+  name: 'table-pagination',
   props: {
     maxVisibleButtons: {
       type: Number,
       required: false,
-      default: 5,
+      default: 5
     },
     totalPages: {
       type: Number,
-      required: true,
+      required: true
     },
     total: {
       type: Number,
-      required: true,
+      required: true
     },
     perPage: {
       type: Number,
-      required: true,
+      required: true
     },
     currentPage: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
-  emits: ["page-change"],
+  emits: ['page-change'],
   setup(props, { emit }) {
     const startPage = computed(() => {
       if (
         props.totalPages < props.maxVisibleButtons ||
         props.currentPage === 1 ||
         props.currentPage <= Math.floor(props.maxVisibleButtons / 2) ||
-        (props.currentPage + 2 > props.totalPages &&
-          props.totalPages === props.maxVisibleButtons)
+        (props.currentPage + 2 > props.totalPages && props.totalPages === props.maxVisibleButtons)
       ) {
-        return 1;
+        return 1
       }
 
       if (props.currentPage + 2 > props.totalPages) {
-        return props.totalPages - props.maxVisibleButtons + 1;
+        return props.totalPages - props.maxVisibleButtons + 1
       }
 
-      return props.currentPage - 2;
-    });
+      return props.currentPage - 2
+    })
 
     const endPage = computed(() => {
-      return Math.min(
-        startPage.value + props.maxVisibleButtons - 1,
-        props.totalPages
-      );
-    });
+      return Math.min(startPage.value + props.maxVisibleButtons - 1, props.totalPages)
+    })
 
     const pages = computed(() => {
-      const range = [];
+      const range = []
 
       for (let i = startPage.value; i <= endPage.value; i += 1) {
         range.push({
           name: i,
-          isDisabled: i === props.currentPage,
-        });
+          isDisabled: i === props.currentPage
+        })
       }
 
-      return range;
-    });
+      return range
+    })
 
     const isInFirstPage = computed(() => {
-      return props.currentPage === 1;
-    });
+      return props.currentPage === 1
+    })
     const isInLastPage = computed(() => {
-      return props.currentPage === props.totalPages;
-    });
+      return props.currentPage === props.totalPages
+    })
 
     const onClickFirstPage = () => {
-      emit("page-change", 1);
-    };
+      emit('page-change', 1)
+    }
     const onClickPreviousPage = () => {
-      emit("page-change", props.currentPage - 1);
-    };
+      emit('page-change', props.currentPage - 1)
+    }
     const onClickPage = (page) => {
-      emit("page-change", page);
-    };
+      emit('page-change', page)
+    }
     const onClickNextPage = () => {
-      emit("page-change", props.currentPage + 1);
-    };
+      emit('page-change', props.currentPage + 1)
+    }
     const onClickLastPage = () => {
-      emit("page-change", props.totalPages);
-    };
+      emit('page-change', props.totalPages)
+    }
     const isPageActive = (page) => {
-      return props.currentPage === page;
-    };
+      return props.currentPage === page
+    }
 
     return {
       startPage,
@@ -175,8 +171,8 @@ export default defineComponent({
       onClickPage,
       onClickNextPage,
       onClickLastPage,
-      isPageActive,
-    };
-  },
-});
+      isPageActive
+    }
+  }
+})
 </script>
