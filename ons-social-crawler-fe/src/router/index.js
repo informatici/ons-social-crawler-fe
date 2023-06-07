@@ -28,7 +28,7 @@ const router = createRouter({
         {
           path: '/twitter',
           name: 'twitter',
-          component: () => import('../views/Twitter.vue'),
+          component: () => import('../views/TwitterView.vue'),
           meta: { label: 'Twitter' }
         },
         {

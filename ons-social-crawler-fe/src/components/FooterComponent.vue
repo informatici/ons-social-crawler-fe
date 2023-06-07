@@ -32,7 +32,6 @@ year = year.getFullYear()
       background-color: #eee;
       width: 100%;
       height: .15rem;
-      //margin: 0 auto;
       top: -$paddingY;
     }
 

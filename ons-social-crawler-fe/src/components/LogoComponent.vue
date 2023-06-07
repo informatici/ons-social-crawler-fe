@@ -2,7 +2,7 @@
 <template>
   <div class="logo-image-container">
     <router-link :to="{name: 'dashboard'}">
-      <img class="logo-image" src="/odiare-logo.jpeg" alt="logo">
+      <img class="logo-image" src="/logo/odiare-logo.jpeg" alt="logo">
     </router-link>
   </div>
 </template>
