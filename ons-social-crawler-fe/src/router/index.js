@@ -42,6 +42,12 @@ const router = createRouter({
           name: 'settings',
           component: () => import('../views/SettingsView.vue'),
           meta: { label: 'Impostazioni' }
+        },
+        {
+          path: '/youTube/dettaglio/:id',
+          name: 'youTubeDetail',
+          component: () => import('../views/YoutubeDetailView.vue'),
+          meta: { label: 'Commenti Video' }
         }
       ]
     },

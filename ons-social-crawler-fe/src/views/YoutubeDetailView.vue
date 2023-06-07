@@ -1,5 +1,5 @@
 <script setup>
-import { useRoute, RouterLink, RouterView  } from 'vue-router'
+import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
@@ -57,7 +57,7 @@ const headerConfig = ref([
 ])
 
 onMounted(async () => {
-  await init()
+  // await init()
   // setInterval(async () => {
   //   await init()
   // }, 10000)
@@ -65,7 +65,12 @@ onMounted(async () => {
 </script>
 <template>
   <main class="page-container">
-    <h1>{{ route?.meta?.label }}</h1>
+    <div style="display: flex; justify-content: space-between; gap: 1rem;">
+      <h1>{{ route?.meta?.label }} {{ route.params.id }}</h1>
+      <router-link :to="{name: 'youTube'}">
+        <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
+      </router-link>
+    </div>
     <div class="col-12 text-end">
       <span class="fs-5 text-gray-800"
       >Video processati: <span class="fw-bold text-primary">{{ total }}</span></span
@@ -77,13 +82,13 @@ onMounted(async () => {
         :searched-fields="searchedFields"
         :search="search"
     >
-<!--      <template v-slot:twit="{ row: row }">-->
-<!--        {{ row._source.data.text }}-->
-<!--        <template v-if="row._source.data.response">-->
-<!--          <hr />-->
-<!--          <span class="text-success">{{ row._source.data.response }}</span>-->
-<!--        </template>-->
-<!--      </template>-->
+      <!--      <template v-slot:twit="{ row: row }">-->
+      <!--        {{ row._source.data.text }}-->
+      <!--        <template v-if="row._source.data.response">-->
+      <!--          <hr />-->
+      <!--          <span class="text-success">{{ row._source.data.response }}</span>-->
+      <!--        </template>-->
+      <!--      </template>-->
 
       <template v-slot:actions="{ row: row }">
         <div class="d-flex gap-3">
@@ -92,12 +97,12 @@ onMounted(async () => {
               style="color: #f00;"
           ><i class="fa-brands fa-youtube fs-5"></i
           ></a>
-<!--              @click="openItem(row.ID, 'kt_modal_asset_edit')"-->
-          <router-link :to="{name: 'youTubeDetail', params: {id: row.id}}"
+          <!--              @click="openItem(row.ID, 'kt_modal_asset_edit')"-->
+          <a href="#"
           >
             <i class="fa-solid fa-info text-primary fs-5"></i>
-<!--            <i class="fa-brands fa-youtube"></i>-->
-          </router-link>
+            <!--            <i class="fa-brands fa-youtube"></i>-->
+          </a>
 
 
         </div>
@@ -107,19 +112,19 @@ onMounted(async () => {
         {{ dateTimeFormatter(row.publishedAt) }}
       </template>
 
-<!--      <template v-slot:isHate="{ row: row }">-->
-<!--        <span v-if="row._source.data.prediction" class="badge bg-success">Si</span>-->
-<!--        <span v-else class="badge bg-danger">No</span>-->
-<!--      </template>-->
+      <!--      <template v-slot:isHate="{ row: row }">-->
+      <!--        <span v-if="row._source.data.prediction" class="badge bg-success">Si</span>-->
+      <!--        <span v-else class="badge bg-danger">No</span>-->
+      <!--      </template>-->
 
-<!--      <template v-slot:score="{ row: row }">-->
-<!--        <span v-if="row._source.data.prediction" class="">-->
-<!--          {{ row._source.data.prediction.score }}</span-->
-<!--        >-->
-<!--        <span v-else></span>-->
-<!--      </template>-->
+      <!--      <template v-slot:score="{ row: row }">-->
+      <!--        <span v-if="row._source.data.prediction" class="">-->
+      <!--          {{ row._source.data.prediction.score }}</span-->
+      <!--        >-->
+      <!--        <span v-else></span>-->
+      <!--      </template>-->
     </DigiTable>
   </main>
-<!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
+  <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
 </template>
 <style lang="scss"></style>
