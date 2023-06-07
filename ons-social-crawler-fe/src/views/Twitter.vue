@@ -36,7 +36,7 @@ const headerConfig = ref([
     sortEnabled: false
   },
   {
-    columnName: 'Twit',
+    columnName: 'Tweet',
     columnLabel: 'twit',
     sortEnabled: false
   },
@@ -60,7 +60,7 @@ onMounted(async () => {
     <h1>{{ route?.meta?.label }}</h1>
     <div class="col-12 text-end">
       <span class="fs-5 text-gray-800"
-        >Twit processati: <span class="fw-bold text-primary">{{ total }}</span></span
+        >Tweet processati: <span class="fw-bold text-primary">{{ total }}</span></span
       >
     </div>
     <DigiTable

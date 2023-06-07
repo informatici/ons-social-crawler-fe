@@ -40,7 +40,7 @@ const messages = {
       signinError: 'Something is not right',
       validEmail: 'L\'email deve avere un formato valido',
       passwordsDoNotMatch: 'Le password non corrispondono',
-      totalRows: 'Total Rows',
+      totalRows: 'Righe totali',
       selectDate: 'Select a date'
     },
 
