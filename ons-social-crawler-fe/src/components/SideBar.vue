@@ -11,7 +11,6 @@ const sidebarStore = useSidebarStore()
 <template>
   <div :class="['sidebar', sidebarStore.isSidebarOpen ? 'sidebar--open' : '']" >
     <div :class="['sidebar__arrow', sidebarStore.isSidebarOpen ? 'sidebar__arrow--rotate' : '']" @click="sidebarStore.toggleSidebarStatus">
-<!--      <i class="fa-solid fa-angles-right"></i>-->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"/></svg>
     </div>
     <section class="logo section-top">
@@ -20,11 +19,6 @@ const sidebarStore = useSidebarStore()
     <section class="nav">
       <NavList />
     </section>
-<!--    <section class="logo logo-bottom">-->
-<!--      <div class="logo-image-container">-->
-<!--        <img class="logo-image" src="/public/odiare-logo.jpeg" alt="logo">-->
-<!--      </div>-->
-<!--    </section>-->
   </div>
 </template>
 
@@ -105,24 +99,8 @@ $header-height: var(--header-height);
     position: absolute;
     bottom: 0;
     left: calc((100% - $width) / 2);
-    //transform: translateY(-50%);
     transition: .25s;
   }
-
-  //.logo-bottom {
-  //  display: none;
-  //  .logo-image-container {
-  //    width: 50%;
-  //    margin: 0 auto;
-  //    height: auto;
-  //
-  //    .logo-image {
-  //      width: 100%;
-  //    }
-  //
-  //  }
-  //
-  //}
 }
 
 @media screen and (max-width: 992px) {
@@ -137,11 +115,9 @@ $header-height: var(--header-height);
       visibility: visible;
     }
 
-
     .logo-image {
       visibility: hidden;
     }
-
 
     .section-top::after {
       width: 0;

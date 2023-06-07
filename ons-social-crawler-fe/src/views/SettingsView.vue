@@ -1,34 +1,17 @@
 <script setup>
 import { useRoute } from 'vue-router'
-// const props = defineProps(["pageTitle"])
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref, computed } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 
 // import { useLoadingStore } from "@/stores/loading";
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
-// import ModalUserViewer from "./modals/ModalUserViewer.vue";
 import alert from '@/core/helpers/alert'
 import { showModal } from '@/core/helpers/dom'
 import { isArray } from '@vue/shared'
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
-
-// const twitter = ref([])
-//
-// const init = async () => {
-//   const res = await ApiService.get('/twitter/elasticsearch/twits')
-//   twitter.value = res.data
-// }
-//
-// onMounted(async () => {
-//   await init()
-// })
-//
-// const total = computed(() => {
-//   return twitter.value?.hits?.total?.value ?? 0
-// })
 const route = useRoute()
 const data = ref([])
 const selectedId = ref('')
@@ -39,7 +22,7 @@ const init = async () => {
   data.value = res.data.users ?? []
   console.debug('#c data: ', data.value)
 }
-//
+
 const searchedFields = []
 const search = ref('')
 const headerConfig = ref([
@@ -63,11 +46,6 @@ const headerConfig = ref([
     columnLabel: 'customClaims',
     sortEnabled: false
   }
-  // {
-  //   columnName: "tables.roles",
-  //   columnLabel: "roles",
-  //   sortEnabled: false,
-  // },
 ])
 const { operationConfirm, warningAlert, dangerAlert } = alert()
 

@@ -38,10 +38,8 @@ const displayUserName = computed(() => {
       v-if="userMenuStore.isUserMenuOpen"
       @click="userMenuStore.toggleUserMenuStatus"
     >
-      <!--        <router-link :to="{name: 'login'}">-->
       <div class="options-item" @click="signOut">
         <div class="options-item__image">
-          <!--            <i class="fa-solid fa-arrow-right-from-bracket"></i>-->
           <svg xmlns="http://www.w3.org/2000/svg" fill="#666666" viewBox="0 0 512 512">
             <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
             <path
@@ -51,7 +49,6 @@ const displayUserName = computed(() => {
         </div>
         <p class="options-item__text">Esci</p>
       </div>
-      <!--        </router-link>-->
     </div>
   </div>
 </template>
@@ -76,21 +73,6 @@ const displayUserName = computed(() => {
     position: relative;
 
     .user-menu__button {
-      // circle
-      //$size: calc($header-height/100*75);
-      //background-color: var(--primary-color);
-      //color: white;
-      //width: $size;
-      //height: $size;
-      //border-radius: 50%;
-      //display: flex;
-      //align-items: center;
-      //justify-content: center;
-      //font-weight: 600;
-      //font-size: calc($header-height/100*30);
-      //letter-spacing: .1rem;
-      //cursor: pointer;
-
       // square
       background-color: var(--primary-color);
       color: white;
@@ -111,7 +93,6 @@ const displayUserName = computed(() => {
       }
 
       &:hover {
-        //color: var(--secondary-color);
         opacity: 0.9;
       }
     }
@@ -123,7 +104,6 @@ const displayUserName = computed(() => {
     right: 3rem;
     background-color: white;
     box-shadow: 0px 3px 5px 1px lightgrey;
-    //width: 10rem;
     border-radius: 4px;
     padding: 1rem 1.5rem;
 

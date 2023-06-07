@@ -1,6 +1,5 @@
 <template>
   <!--begin::App-->
-
   <div class="wrapper">
     <SideBar />
     <div class="drawer">
@@ -11,7 +10,6 @@
       <FooterComponent />
     </div>
   </div>
-
   <!--end::App-->
 
 <!--  <KTScrollTop />-->

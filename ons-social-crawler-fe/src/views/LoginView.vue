@@ -48,9 +48,7 @@ const signIn = async () => {
           />
           <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
-            <!--            <router-link :to="{name: 'dashboard'}" style="display: block; width: 100%;">-->
             <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
-            <!--            </router-link>-->
           </div>
         </form>
       </div>
@@ -132,7 +130,6 @@ const signIn = async () => {
           }
 
           &:hover {
-            //color: var(--secondary-color);
             opacity: 0.9;
           }
         }
