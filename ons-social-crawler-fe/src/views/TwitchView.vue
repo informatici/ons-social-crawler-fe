@@ -21,7 +21,7 @@ const total = computed(() => {
 <template>
   <main class="page-container">
     <h1>{{ route?.meta?.label }}</h1>
-    Total {{ total }}
+<!--    Total {{ total }}-->
   </main>
 </template>
 <style lang="scss"></style>
