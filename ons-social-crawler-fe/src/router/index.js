@@ -46,7 +46,7 @@ const router = createRouter({
         {
           path: '/youTube/dettaglio/:id',
           name: 'youTubeDetail',
-          component: () => import('../views/YoutubeDetailView.vue'),
+          component: () => import('../views/YoutubeCommentsView.vue'),
           meta: { label: 'Commenti al video' }
         }
       ]
