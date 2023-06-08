@@ -20,9 +20,14 @@ const data = ref([])
 
 const init = async () => {
   try {
-    const res = await ApiService.get('youtube/elasticsearch/videos')
+    const res = await ApiService.get('youtube/elasticsearch/comments/' + route.params.id)
     data.value = res.data.hits ?? []
-    data.value = data.value.map(hit => hit?._source?.video) ?? [];
+    data.value = data.value.map(hit => {
+      return {
+        ...hit?._source?.comment,
+        score: hit?._score,
+      }
+    }) ?? [];
     total.value = res.data.total.value ?? 0
   } catch (e) {
     console.log(e)
@@ -36,7 +41,7 @@ const headerConfig = ref([
     columnName: '',
     columnLabel: 'actions',
     sortEnabled: false,
-    columnMinWidth: 100,
+    columnMinWidth: 50,
   },
   {
     columnName: 'Data',
@@ -45,19 +50,25 @@ const headerConfig = ref([
     columnMinWidth: 175
   },
   {
-    columnName: 'Titolo',
-    columnLabel: 'title',
+    columnName: 'Odio',
+    columnLabel: 'prediction',
     sortEnabled: false
   },
   {
-    columnName: 'Canale',
-    columnLabel: 'channelTitle',
+    columnName: 'Commento',
+    columnLabel: 'textDisplay',
     sortEnabled: false
   },
+  {
+    columnName: 'Grado',
+    columnLabel: 'score',
+    sortEnabled: false,
+    tdClass: 'bg-warning text-center'
+  }
 ])
 
 onMounted(async () => {
-  // await init()
+  await init()
   // setInterval(async () => {
   //   await init()
   // }, 10000)
@@ -66,14 +77,14 @@ onMounted(async () => {
 <template>
   <main class="page-container">
     <div style="display: flex; justify-content: space-between; gap: 1rem;">
-      <h1>{{ route?.meta?.label }} {{ route.params.id }}</h1>
+      <h1>{{ route?.meta?.label }} <br> "{{ route.query.videoTitle }}"</h1>
       <router-link :to="{name: 'youTube'}">
         <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
       </router-link>
     </div>
     <div class="col-12 text-end">
       <span class="fs-5 text-gray-800"
-      >Video processati: <span class="fw-bold text-primary">{{ total }}</span></span
+      >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
       >
     </div>
     <DigiTable
@@ -82,29 +93,13 @@ onMounted(async () => {
         :searched-fields="searchedFields"
         :search="search"
     >
-      <!--      <template v-slot:twit="{ row: row }">-->
-      <!--        {{ row._source.data.text }}-->
-      <!--        <template v-if="row._source.data.response">-->
-      <!--          <hr />-->
-      <!--          <span class="text-success">{{ row._source.data.response }}</span>-->
-      <!--        </template>-->
-      <!--      </template>-->
-
       <template v-slot:actions="{ row: row }">
         <div class="d-flex gap-3">
           <a
-              :href="'https://www.youtube.com/watch?v=' + row.id" target="_blank"
+              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"
               style="color: #f00;"
           ><i class="fa-brands fa-youtube fs-5"></i
           ></a>
-          <!--              @click="openItem(row.ID, 'kt_modal_asset_edit')"-->
-          <a href="#"
-          >
-            <i class="fa-solid fa-info text-primary fs-5"></i>
-            <!--            <i class="fa-brands fa-youtube"></i>-->
-          </a>
-
-
         </div>
       </template>
 
@@ -112,17 +107,25 @@ onMounted(async () => {
         {{ dateTimeFormatter(row.publishedAt) }}
       </template>
 
-      <!--      <template v-slot:isHate="{ row: row }">-->
-      <!--        <span v-if="row._source.data.prediction" class="badge bg-success">Si</span>-->
-      <!--        <span v-else class="badge bg-danger">No</span>-->
-      <!--      </template>-->
+      <template v-slot:prediction="{ row: row }">
+        <span v-if="row.prediction" class="badge bg-success">Si</span>
+        <span v-else class="badge bg-danger">No</span>
+      </template>
 
-      <!--      <template v-slot:score="{ row: row }">-->
-      <!--        <span v-if="row._source.data.prediction" class="">-->
-      <!--          {{ row._source.data.prediction.score }}</span-->
-      <!--        >-->
-      <!--        <span v-else></span>-->
-      <!--      </template>-->
+      <template v-slot:textDisplay="{ row: row }">
+        {{ row.textDisplay }}
+        <template v-if="row.response">
+          <hr />
+          <span class="text-success">{{ row.response }}</span>
+        </template>
+      </template>
+
+      <template v-slot:score="{ row: row }">
+        <span v-if="row.prediction" class="">
+          {{ row.prediction.score }}</span
+        >
+        <span v-else></span>
+      </template>
     </DigiTable>
   </main>
   <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->

@@ -93,7 +93,7 @@ onMounted(async () => {
           ><i class="fa-brands fa-youtube fs-5"></i
           ></a>
 <!--              @click="openItem(row.ID, 'kt_modal_asset_edit')"-->
-          <router-link :to="{name: 'youTubeDetail', params: {id: row.id}}"
+          <router-link :to="{name: 'youTubeDetail', params: {id: row.id}, query: {videoTitle: row.title}}"
           >
             <i class="fa-solid fa-info text-primary fs-5"></i>
 <!--            <i class="fa-brands fa-youtube"></i>-->
