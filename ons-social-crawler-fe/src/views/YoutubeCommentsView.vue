@@ -77,7 +77,7 @@ onMounted(async () => {
 <template>
   <main class="page-container">
     <div style="display: flex; justify-content: space-between; gap: 1rem;">
-      <h1>{{ route?.meta?.label }} <br> "{{ route.query.videoTitle }}"</h1>
+      <h1>{{ route?.meta?.label }} <br> <span class="videoTitle">"{{ route.query.videoTitle }}"</span></h1>
       <router-link :to="{name: 'youTube'}">
         <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
       </router-link>
@@ -130,4 +130,8 @@ onMounted(async () => {
   </main>
   <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.videoTitle {
+  font-size: 1.4rem;
+}
+</style>

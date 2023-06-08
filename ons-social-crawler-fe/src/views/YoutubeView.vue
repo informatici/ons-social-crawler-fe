@@ -77,26 +77,20 @@ onMounted(async () => {
         :searched-fields="searchedFields"
         :search="search"
     >
-<!--      <template v-slot:twit="{ row: row }">-->
-<!--        {{ row._source.data.text }}-->
-<!--        <template v-if="row._source.data.response">-->
-<!--          <hr />-->
-<!--          <span class="text-success">{{ row._source.data.response }}</span>-->
-<!--        </template>-->
-<!--      </template>-->
-
       <template v-slot:actions="{ row: row }">
         <div class="d-flex gap-3">
-          <a
+          <a style="display: flex; align-items: center"
               :href="'https://www.youtube.com/watch?v=' + row.id" target="_blank"
-              style="color: #f00;"
-          ><i class="fa-brands fa-youtube fs-5"></i
+          ><i class="action-icon fa-brands fa-youtube fs-5"></i
           ></a>
 <!--              @click="openItem(row.ID, 'kt_modal_asset_edit')"-->
           <router-link :to="{name: 'youTubeDetail', params: {id: row.id}, query: {videoTitle: row.title}}"
           >
-            <i class="fa-solid fa-info text-primary fs-5"></i>
-<!--            <i class="fa-brands fa-youtube"></i>-->
+<!--            <i class="fa-solid fa-info text-primary fs-5"></i>-->
+<!--            <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">&lt;!&ndash;! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. &ndash;&gt;<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>-->
+<!--            <i class="fa-sharp fa-solid fa-comments fs-5"></i>-->
+<!--            <i class="fa-solid fa-comment fs-5"></i>-->
+            <svg xmlns="http://www.w3.org/2000/svg" class="action-icon view-comments-icon" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4l0 0 0 0 0 0 0 0 .3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"/></svg>
           </router-link>
 
 
@@ -107,19 +101,18 @@ onMounted(async () => {
         {{ dateTimeFormatter(row.publishedAt) }}
       </template>
 
-<!--      <template v-slot:isHate="{ row: row }">-->
-<!--        <span v-if="row._source.data.prediction" class="badge bg-success">Si</span>-->
-<!--        <span v-else class="badge bg-danger">No</span>-->
-<!--      </template>-->
-
-<!--      <template v-slot:score="{ row: row }">-->
-<!--        <span v-if="row._source.data.prediction" class="">-->
-<!--          {{ row._source.data.prediction.score }}</span-->
-<!--        >-->
-<!--        <span v-else></span>-->
-<!--      </template>-->
     </DigiTable>
   </main>
 <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.action-icon {
+  &.fa-youtube {
+  }
+
+  &.view-comments-icon {
+    fill: var(--primary-color);
+    height: 1.4rem;
+  }
+}
+</style>
