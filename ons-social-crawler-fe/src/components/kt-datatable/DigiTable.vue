@@ -17,6 +17,7 @@
       </template>
     </TableContent>
     <TableFooter
+        v-if="tableFooter"
       @page-change="pageChange"
       :current-page="currentPage"
       v-model:itemsPerPage="itemsInTable"
@@ -60,6 +61,7 @@ export default defineComponent({
     search: { type: String, required: false },
     // eslint-disable-next-line vue/require-valid-default-prop
     searchedFields: { type: Array, required: false, default: [] },
+    tableFooter: { type: Boolean, required: false, default: true },
   },
   emits: [
     "page-change",
