@@ -131,7 +131,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 import { useI18n } from 'vue-i18n'
-// import { useLoadingStore } from "@/stores/loading";
+import { useLoadingStore } from "@/stores/loading";
 import ApiService from '@/core/services/ApiService'
 import { getModalInstance, hideModal } from '@/core/helpers/dom'
 import alert from '@/core/helpers/alert'
@@ -151,7 +151,7 @@ export default defineComponent({
   setup(props, context) {
     const { operationConfirm, dangerAlert } = alert()
     const { t } = useI18n()
-    // const loading = useLoadingStore()
+    const loading = useLoadingStore()
     const id = computed(() => props.id)
     const form = ref(null)
     // const userRoles = ref([])
@@ -222,7 +222,7 @@ export default defineComponent({
     }
 
     const init = async () => {
-      // loading.show()
+      loading.show()
       form.value.resetForm()
       try {
         // userRoles.value = (await ApiService.get('/user/role')).data
@@ -243,7 +243,7 @@ export default defineComponent({
       } catch (e) {
         dangerAlert(e)
       } finally {
-        // loading.hide()
+        loading.hide()
       }
     }
 

@@ -10,17 +10,21 @@ import alert from '@/core/helpers/alert'
 import { showModal } from '@/core/helpers/dom'
 import { isArray } from '@vue/shared'
 import { useI18n } from "vue-i18n";
+import { useLoadingStore } from "@/stores/loading";
 
+const loading = useLoadingStore();
 const { t } = useI18n();
 const route = useRoute()
 const data = ref([])
 const selectedId = ref('')
 
 const init = async () => {
+  loading.show()
   selectedId.value = ''
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
   console.debug('#c data: ', data.value)
+  loading.hide()
 }
 
 const searchedFields = []

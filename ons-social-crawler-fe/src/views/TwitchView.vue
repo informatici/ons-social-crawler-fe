@@ -3,11 +3,14 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref, computed } from 'vue'
+import { useLoadingStore } from "@/stores/loading";
 
+const loading = useLoadingStore();
 const twitch = ref([])
 
 const init = async () => {
-
+  // loading.show()
+  // loading.hide()
 }
 
 onMounted(async () => {

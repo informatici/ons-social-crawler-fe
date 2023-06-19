@@ -5,19 +5,24 @@ import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
+import { useLoadingStore } from "@/stores/loading";
 
 const route = useRoute()
 const { dateTimeFormatter } = global()
 const total = ref(0)
 const data = ref([])
+const loading = useLoadingStore();
 
 const init = async () => {
+  loading.show()
   try {
     const res = await ApiService.get('twitter/elasticsearch/twits')
     data.value = res.data.hits.hits ?? []
     total.value = res.data.hits.total.value ?? 0
   } catch (e) {
     console.log(e)
+  } finally {
+    loading.hide()
   }
 }
 

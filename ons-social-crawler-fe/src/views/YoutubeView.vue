@@ -5,7 +5,10 @@ import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
+import { useLoadingStore } from "@/stores/loading";
 
+
+const loading = useLoadingStore();
 const route = useRoute()
 const { dateTimeFormatter } = global()
 const total = ref(0)
@@ -19,6 +22,7 @@ const data = ref([])
 // };
 
 const init = async () => {
+  loading.show();
   try {
     const res = await ApiService.get('youtube/elasticsearch/comments')
     data.value = res.data.hits ?? []
@@ -26,6 +30,8 @@ const init = async () => {
     total.value = res.data.total.value ?? 0
   } catch (e) {
     console.error("Error: ", e)
+  } finally {
+    loading.hide()
   }
 }
 
