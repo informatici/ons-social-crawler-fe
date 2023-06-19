@@ -37,7 +37,8 @@ const init = async () => {
     selectedCommentData.value = commentsData.value.find(comment => comment.id === route.params.id) ?? {}
     otherCommentsData.value = commentsData.value.filter(comment => comment.id !== route.params.id) ?? []
     console.debug('#c comment: ', commentsData.value, selectedCommentData.value, route.params.id);
-    total.value = res.data.total.value ?? 0 // todo: manca nella chiamata
+    total.value = otherCommentsData.value.length;
+    // total.value = res.data.total.value ?? 0 // todo: manca nella chiamata
   } catch (e) {
     console.error("Error: ", e)
   }
