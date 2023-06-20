@@ -21,6 +21,7 @@ const loading = useLoadingStore();
 // };
 
 const init = async () => {
+  loading.show()
   try {
     const res = await ApiService.get('twitch/elasticsearch/comments')
     data.value = res.data.hits ?? []
@@ -28,9 +29,9 @@ const init = async () => {
     total.value = res.data.total.value ?? 0
   } catch (e) {
     console.error("Error: ", e)
+  } finally {
+    loading.hide()
   }
-  // loading.show()
-  // loading.hide()
 }
 
 const searchedFields = []

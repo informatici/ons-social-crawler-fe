@@ -6,6 +6,7 @@ import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
+import { useLoadingStore } from "@/stores/loading";
 
 const route = useRoute()
 const { dateTimeFormatter } = global()
@@ -15,6 +16,7 @@ const videoData = ref({})
 const selectedCommentData = ref({})
 const otherCommentsData = ref([])
 const parentDomain = ref("")
+const loading = useLoadingStore();
 
 // const openItem = (id, modal) => {
 //   selectedId.value = id;
@@ -24,6 +26,7 @@ const parentDomain = ref("")
 // };
 
 const init = async () => {
+  loading.show()
   try {
     parentDomain.value = window.location.hostname
     console.log('%cCurrent domain - twitch embedded video: ', 'color: #00a6fb; font-size: 16px; font-weight: 500;', parentDomain.value)
@@ -45,6 +48,8 @@ const init = async () => {
     // total.value = res.data.total.value ?? 0 // todo: manca nella chiamata
   } catch (e) {
     console.error("Error: ", e)
+  } finally {
+    loading.hide()
   }
 }
 
