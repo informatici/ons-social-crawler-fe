@@ -48,7 +48,13 @@ const router = createRouter({
           name: 'youTubeDetail',
           component: () => import('../views/YoutubeCommentsView.vue'),
           meta: { label: 'Dettagli commento' }
-        }
+        },
+        {
+          path: '/twitch/dettaglio/:id',
+          name: 'twitchDetail',
+          component: () => import('../views/TwitchCommentsView.vue'),
+          meta: { label: 'Dettagli commento' }
+        },
       ]
     },
     {
