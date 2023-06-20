@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import Swal from "sweetalert2";
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -16,7 +17,7 @@ const signIn = async () => {
     if (authStore.isAuthenticated) {
       router.push({ path: '/twitter' })
     } else {
-      alert('Error')
+      // alert('Error')
     }
   } else {
     console.debug('Error in the email format: ', )
