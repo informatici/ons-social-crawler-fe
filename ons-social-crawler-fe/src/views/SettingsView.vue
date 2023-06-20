@@ -19,12 +19,12 @@ const data = ref([])
 const selectedId = ref('')
 
 const init = async () => {
-  loading.show()
+  // loading.show()
   selectedId.value = ''
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
   console.debug('#c data: ', data.value)
-  loading.hide()
+  // loading.hide()
 }
 
 const searchedFields = []

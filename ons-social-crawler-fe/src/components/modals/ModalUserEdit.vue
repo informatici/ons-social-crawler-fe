@@ -193,7 +193,7 @@ export default defineComponent({
     })
 
     const onSubmit = async (values) => {
-      // loading.show()
+      loading.show()
       try {
         const data = {
           id: 0,
@@ -210,7 +210,7 @@ export default defineComponent({
           await ApiService.post('/auth', data)
         }
         form.value.resetForm()
-        // loading.hide()
+        loading.hide()
         operationConfirm().then(() => {
           hideModal('kt_modal_user_edit')
         })
@@ -218,11 +218,13 @@ export default defineComponent({
         console.log(e)
         // loading.hide()
         // dangerAlert(e)
+      } finally {
+        loading.hide()
       }
     }
 
     const init = async () => {
-      loading.show()
+      // loading.show()
       form.value.resetForm()
       try {
         // userRoles.value = (await ApiService.get('/user/role')).data
@@ -243,7 +245,7 @@ export default defineComponent({
       } catch (e) {
         dangerAlert(e)
       } finally {
-        loading.hide()
+        // loading.hide()
       }
     }
 
