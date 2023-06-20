@@ -92,7 +92,7 @@ onMounted(async () => {
 <template>
   <main class="page-container">
     <div class="section page-title">
-      <h1>{{ route?.meta?.label }} <br> <span class="commentTitle">"{{ selectedCommentData?.textDisplay }}"</span></h1>
+      <h1><span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }} <br> <span class="commentTitle">"{{ selectedCommentData?.textDisplay }}"</span></h1>
       <router-link :to="{name: 'youTube'}">
         <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
       </router-link>

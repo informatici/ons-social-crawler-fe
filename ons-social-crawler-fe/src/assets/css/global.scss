@@ -107,12 +107,18 @@ router-link, a {
 }
 
 /* ICONA YOUTUBE */
+.title-icon {
+    padding-right: .3rem;
+}
+
+.title-icon.fa-youtube,
 .action-icon.fa-youtube {
     color: #f00 !important;
     transform: translateY(.05rem) !important;
 }
 
 /* ICONA TWITCH */
+.title-icon.fa-twitch,
 .action-icon.fa-twitch {
     color: #bf94ff !important;
     transform: translateY(.05rem) !important;
