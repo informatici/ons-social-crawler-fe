@@ -62,7 +62,7 @@ onMounted(async () => {
 </script>
 <template>
   <main class="page-container">
-    <h1>{{ route?.meta?.label }}</h1>
+    <h1><span><i class="title-icon fa-brands fa-twitter"></i></span> {{ route?.meta?.label }}</h1>
     <div class="col-12 text-end">
       <span class="fs-5 text-gray-800"
         >Tweet processati: <span class="fw-bold text-primary">{{ total }}</span></span

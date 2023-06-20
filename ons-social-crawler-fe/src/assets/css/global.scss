@@ -124,6 +124,23 @@ router-link, a {
     transform: translateY(.05rem) !important;
 }
 
+/* ICONA TWITTER */
+.title-icon.fa-twitter,
+.action-icon.fa-twitter {
+    color: #174ea6 !important;
+    transform: translateY(.05rem) !important;
+}
+
+/* ICONA SETTINGS */
+.title-icon.custom-gear {
+    --size: 2.4rem;
+    display: inline-block;
+    height: var(--size);
+    width: var(--size);
+    fill: hsl(0deg, 0%, 60%);
+    transform: translateY(-10%);
+}
+
 /* #APP */
 #app {
     /* BUTTONS */
