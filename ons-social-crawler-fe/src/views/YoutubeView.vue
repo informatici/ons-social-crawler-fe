@@ -39,7 +39,7 @@ const searchedFields = ['textDisplay']
 const search = ref('')
 const predictionId = ref(0)
 const predictions = [
-  {label: 'Tutti', value: 0},
+  {label: 'Tutti i commenti', value: 0},
   {label: 'No', value: 1},
   {label: 'Yes', value: 2}
 ]
