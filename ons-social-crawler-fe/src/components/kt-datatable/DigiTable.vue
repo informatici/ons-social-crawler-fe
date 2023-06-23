@@ -61,6 +61,7 @@ export default defineComponent({
     search: { type: String, required: false },
     // eslint-disable-next-line vue/require-valid-default-prop
     searchedFields: { type: Array, required: false, default: [] },
+    predictionFilter: { type: Number, required: false },
     tableFooter: { type: Boolean, required: false, default: true },
   },
   emits: [
@@ -114,20 +115,34 @@ export default defineComponent({
       return false;
     };
 
-    const filterData = (val) => {
+    const predictionFilter = (data) => {
+      let recordPrediction = data.prediction === null ? 1 : 2;
+      console.debug('#c af: ', data.prediction, recordPrediction, props.predictionFilter);
+      if (props.predictionFilter && props.predictionFilter !== 0) {
+        return recordPrediction == props.predictionFilter
+        // return data?.CrmAsset?.ID == props.predictionFilter;
+      }
+      return true;
+    };
+
+    const filterData = () => {
       currentPage.value = 1;
       tableData.value = [];
-      if (val !== "") {
-        let results = [];
-        for (let j = 0; j < props.data.length; j++) {
-          if (searchingFunc(props.data[j], val)) {
-            results.push(props.data[j]);
-          }
+      // if (val !== "") {
+      let results = [];
+      for (let j = 0; j < props.data.length; j++) {
+        if (
+            searchingFunc(props.data[j], props.search) &&
+            predictionFilter(props.data[j])
+        ) {
+          results.push(props.data[j]);
         }
-        tableData.value = results;
-      } else {
-        tableData.value = props.data;
       }
+      tableData.value = results;
+      // sonSortort(sortLabel.value);
+      // } else {
+      //   tableData.value = props.data;
+      // }
     };
 
     watch(
@@ -142,15 +157,22 @@ export default defineComponent({
       () => props.data,
       (val) => {
         // init(val);
-        filterData(props.search);
+        filterData();
       }
     );
 
     watch(
       () => props.search,
       (val) => {
-        filterData(val);
+        filterData();
       }
+    );
+
+    watch(
+        () => props.predictionFilter,
+        () => {
+          filterData();
+        }
     );
 
     const pageChange = (page) => {
