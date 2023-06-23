@@ -28,9 +28,14 @@ const signIn = async () => {
 <template>
   <div class="login-overlay">
     <div class="login">
-      <div class="login__title">
-        <h1>Log In</h1>
-        <p>Effettua il login</p>
+      <div class="login-content">
+        <div class="login__title">
+          <h1>Log In</h1>
+          <p>Effettua il login</p>
+        </div>
+        <div class="login__logo">
+          <img class="logo-img" src="/logo/odiare-logo.jpeg" alt="Logo Odiare non è uno sport" />
+        </div>
       </div>
       <hr class="login__separator" />
       <div class="login__main">
@@ -77,9 +82,36 @@ const signIn = async () => {
       background-color: white;
       padding: 2.2rem 1.5rem;
 
-      .login__title {
-        h1 {
-          font-weight: 500;
+      .login-content {
+        display: flex;
+        justify-content: space-between;
+        //justify-content: flex-start;
+        //gap: 2rem;
+        align-items: center;
+
+        .login__title {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          gap: 1rem;
+          h1 {
+            font-weight: 500;
+            margin-bottom: 0;
+          }
+
+          p {
+            margin-bottom: 0;
+          }
+        }
+
+        .login__logo {
+          --size: 7rem;
+          height: var(--size);
+          width: var(--size);
+
+          .logo-img {
+            width: 100%;
+          }
         }
       }
 
