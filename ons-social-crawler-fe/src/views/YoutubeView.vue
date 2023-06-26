@@ -53,7 +53,7 @@ const headerConfig = ref([
   {
     columnName: 'Data',
     columnLabel: 'publishedAt',
-    sortEnabled: false,
+    sortEnabled: true,
     columnMinWidth: 175
   },
   {
@@ -138,6 +138,7 @@ onMounted(async () => {
           :searched-fields="searchedFields"
           :search="search"
           :prediction-filter="predictionId"
+          sort-label="publishedAt"
       >
         <template v-slot:actions="{ row: row }">
           <div class="d-flex gap-3">

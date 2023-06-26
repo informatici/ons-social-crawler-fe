@@ -106,6 +106,15 @@ router-link, a {
 
 }
 
+/* Table Head */
+.dataTables_wrapper {
+    table {
+        th {
+            white-space: nowrap;
+        }
+    }
+}
+
 /* ICONA YOUTUBE */
 .title-icon {
     padding-right: .3rem;
