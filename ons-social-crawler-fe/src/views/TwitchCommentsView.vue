@@ -111,8 +111,7 @@ onMounted(async () => {
                 <div>
                   <iframe
                       class="embedded-video"
-                      :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}`"
-                      autoplay="false"
+                      :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}&autoplay=false`"
                       frameborder="0" allowfullscreen="true" scrolling="no"
                   ></iframe>
 <!--                  <iframe-->
