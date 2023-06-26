@@ -6,6 +6,7 @@ import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
+import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
 
 
 const loading = useLoadingStore();
@@ -102,6 +103,7 @@ onMounted(async () => {
     <div class="page-title">
       <h1><span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }}</h1>
     </div>
+
     <div class="page-content">
       <!--   FILTRI::START   -->
       <FiltersToolbar
@@ -184,59 +186,6 @@ onMounted(async () => {
   &.view-detail-icon {
     fill: var(--primary-color);
     height: 1.4rem;
-  }
-}
-
-.page-title {
-  margin-bottom: 2.5rem;
-}
-
-.page-content {
-  //border: 1px solid #ced4da;
-  //border: none;
-  border-radius: 6px;
-  //padding: .7rem;
-
-  .dataTables_wrapper .table-responsive {
-    //border: none !important;
-    border: 1px solid #ced4da !important;
-    border-radius: 6px !important;
-    margin-bottom: 1rem;
-  }
-
-
-  .dataTables_wrapper .table-responsive table {
-    border: none !important;
-    margin-bottom: 0 !important;
-
-    //border: 1px solid #ced4da !important;
-    //border-radius: 6px !important;
-
-    thead tr {
-      //border-bottom: 0 !important;
-    }
-
-
-    >:not(caption)>*>* {
-      border-bottom: none !important;
-    }
-  }
-}
-
-.filter-toolbar {
-  display: flex;
-  gap: 2rem;
-  .search-element {
-    flex-basis: 15rem !important;
-  }
-  .filter-element {
-    .filter-element__label {
-      font-size: 1.2rem;
-      font-weight: 400;
-      text-transform: uppercase;
-      display: inline-block;
-      padding: .5rem;
-    }
   }
 }
 </style>

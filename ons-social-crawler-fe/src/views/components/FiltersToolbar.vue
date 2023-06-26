@@ -60,3 +60,22 @@ watch(
 
   </div>
 </template>
+<style lang="scss">
+
+.filter-toolbar {
+  display: flex;
+  gap: 2rem;
+  .search-element {
+    flex-basis: 15rem !important;
+  }
+  .filter-element {
+    .filter-element__label {
+      font-size: 1.2rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      display: inline-block;
+      padding: .5rem;
+    }
+  }
+}
+</style>
