@@ -27,7 +27,7 @@ const init = async () => {
     const res = await ApiService.get('youtube/elasticsearch/comments')
     data.value = res.data.hits ?? []
     data.value = data.value.map(hit => hit?._source?.comment) ?? [];
-    data.value = data.value.map(item => {
+    data.value = data.value.map(item => { // per sorting score
       item.predictionScore = 0
       if(item.prediction) {
         item.predictionScore = item.prediction.score
@@ -45,11 +45,7 @@ const init = async () => {
 const searchedFields = ['textDisplay']
 const search = ref('')
 const predictionId = ref(0)
-const predictions = [
-  {label: 'Tutti i commenti', value: 0},
-  {label: 'No', value: 1},
-  {label: 'Yes', value: 2}
-]
+
 const headerConfig = ref([
   {
     columnName: '',
@@ -86,6 +82,14 @@ const headerConfig = ref([
   // },
 ])
 
+const onSearch = (newValue) => {
+  search.value = newValue
+}
+
+const onPrediction = (newValue) => {
+  predictionId.value = newValue
+}
+
 onMounted(async () => {
   await init()
   // setInterval(async () => {
@@ -100,39 +104,11 @@ onMounted(async () => {
     </div>
     <div class="page-content">
       <!--   FILTRI::START   -->
-      <div class="filter-toolbar">
-
-        <!--     search::START     -->
-        <div class="search-element d-flex align-items-center position-relative my-1">
-<!--          <span class="position-absolute ms-6">-->
-<!--            <i class="fa-solid fa-magnifying-glass fs-4"></i>-->
-<!--          </span>-->
-          <input
-              type="text"
-              class="form-control form-control-solid w-250px ps-15"
-              :placeholder="'Cerca'"
-              v-model="search"
-          />
-        </div>
-        <!--     search::END     -->
-
-          <!--     filtro select odio::START     -->
-          <div class="filter-element d-flex align-items-center position-relative my-1">
-            <span class="filter-element__label">Odio: </span>
-            <select
-                class="filter-element__input form-select form-select-solid w-250px ps-15"
-                :placeholder="$t('Filtra')"
-                v-model="predictionId"
-            >
-              <option v-for="(a, ix) in predictions" :key="ix" :value="a.value">
-                {{ a.label }}
-              </option>
-            </select>
-          </div>
-          <!--     filtro select odio::END     -->
-
-        </div>
-        <!--   FILTRI::END   -->
+      <FiltersToolbar
+          @on-search="onSearch"
+          @on-prediction="onPrediction"
+      />
+      <!--   FILTRI::END   -->
 
       <div class="col-12 text-end">
       <span class="fs-5 text-gray-800"
