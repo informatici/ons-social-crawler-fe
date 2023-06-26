@@ -27,6 +27,13 @@ const init = async () => {
     const res = await ApiService.get('youtube/elasticsearch/comments')
     data.value = res.data.hits ?? []
     data.value = data.value.map(hit => hit?._source?.comment) ?? [];
+    data.value = data.value.map(item => {
+      item.predictionScore = 0
+      if(item.prediction) {
+        item.predictionScore = item.prediction.score
+      }
+      return item
+    })
     total.value = res.data.total.value ?? 0
   } catch (e) {
     console.error("Error: ", e)
@@ -69,7 +76,7 @@ const headerConfig = ref([
   {
     columnName: 'Grado',
     columnLabel: 'score',
-    sortEnabled: false,
+    sortEnabled: true,
     tdClass: 'bg-warning text-center'
   },
   // {

@@ -51,11 +51,11 @@ export default defineComponent({
     total: { type: Number, required: false },
     loading: { type: Boolean, required: false, default: false },
     sortLabel: { type: String, required: false, default: null },
-    // sortOrder: {
-    //   type: String () => "asc" | "desc",
-    //   required: false,
-    //   default: "asc",
-    // },
+    sortOrder: {
+      type: String,
+      required: false,
+      default: "desc",
+    },
     emptyTableText: { type: String, required: false, default: "No data found" },
     cPage: { type: Number, required: false, default: 1 },
     search: { type: String, required: false },
@@ -82,6 +82,8 @@ export default defineComponent({
     const init = (value) => {
       tableData.value = value;
     };
+
+    const sortLabel = ref({ label: null, order: "asc" });
 
     const searchingFunc = (obj, value) => {
       value = value.toLowerCase();
@@ -139,7 +141,7 @@ export default defineComponent({
         }
       }
       tableData.value = results;
-      // sonSortort(sortLabel.value);
+      sonSortort(sortLabel.value);
       // } else {
       //   tableData.value = props.data;
       // }
@@ -211,13 +213,21 @@ export default defineComponent({
       emit("on-sort", sort);
     };
     */
+
     const sonSortort = (sort) => {
-      const reverse = sort.order === "asc";
+      const reverse = sort.order === "desc";
       if (sort.label) {
-        arraySort(tableData.value, sort.label, { reverse });
+        let sortLabel = sort.label
+
+        if(sort.label === "score") {
+          sortLabel = 'predictionScore'
+        }
+
+        arraySort(tableData.value, sortLabel, { reverse });
       }
     };
     const onSort = (sort) => {
+      sortLabel.value = sort;
       sonSortort(sort);
     };
 
