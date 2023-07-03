@@ -11,6 +11,7 @@
       :sort-label="sortLabel"
       :sort-order="sortOrder"
       :loading="loading"
+      :only-display="onlyDisplay /* prop necessaria per tabelle in sola visualizzazione (no search, sort, ...): necessaria quando più tabelle in una stessa pagina */"
     >
       <template v-for="(_, name) in $slots" v-slot:[name]="{ row: item }">
         <slot :name="name" :row="item" />
@@ -63,6 +64,7 @@ export default defineComponent({
     searchedFields: { type: Array, required: false, default: [] },
     predictionFilter: { type: Number, required: false },
     tableFooter: { type: Boolean, required: false, default: true },
+    onlyDisplay: { type: Boolean, required: false, default: false },
   },
   emits: [
     "page-change",
@@ -119,15 +121,18 @@ export default defineComponent({
 
     const predictionFilter = (data) => {
       let recordPrediction = data.prediction === null ? 1 : 2;
-      console.debug('#c af: ', data.prediction, recordPrediction, props.predictionFilter);
+
       if (props.predictionFilter && props.predictionFilter !== 0) {
         return recordPrediction == props.predictionFilter
-        // return data?.CrmAsset?.ID == props.predictionFilter;
       }
       return true;
     };
 
     const filterData = () => {
+      if(props.onlyDisplay) {
+        tableData.value = props.data
+        return
+      }
       currentPage.value = 1;
       tableData.value = [];
       // if (val !== "") {
@@ -142,6 +147,8 @@ export default defineComponent({
       }
       tableData.value = results;
       sonSortort(sortLabel.value);
+
+
       // } else {
       //   tableData.value = props.data;
       // }

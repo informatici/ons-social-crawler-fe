@@ -11,6 +11,7 @@ import { showModal } from '@/core/helpers/dom'
 import { isArray } from '@vue/shared'
 import { useI18n } from "vue-i18n";
 import { useLoadingStore } from "@/stores/loading";
+import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
 
 const loading = useLoadingStore();
 const { t } = useI18n();
@@ -23,11 +24,11 @@ const init = async () => {
   selectedId.value = ''
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
-  console.debug('#c data: ', data.value)
+
   // loading.hide()
 }
 
-const searchedFields = []
+const searchedFields = ["email", "displayName"]
 const search = ref('')
 const headerConfig = ref([
   {
@@ -73,7 +74,7 @@ const deleteItem = async (uid) => {
           uid
         }
 
-        console.debug('#c delete: ', data)
+
         await ApiService.delete('/auth/', data)
         operationConfirm()
       } catch (e) {
@@ -86,13 +87,18 @@ const deleteItem = async (uid) => {
   })
 }
 
+const onSearch = (newValue) => {
+  search.value = newValue
+}
+
 onMounted(async () => {
   await init()
 })
 </script>
 <template>
   <main class="page-container">
-    <h1><span class="title-icon custom-gear">
+    <div class="page-title">
+      <h1><span class="title-icon custom-gear">
 <!--      <i class="title-icon fa-solid fa-gear"></i>-->
       <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -104,39 +110,61 @@ onMounted(async () => {
                 />
               </svg>
     </span> {{ route?.meta?.label }}</h1>
-    <div class="row pb-3">
-      <div class="col-6"></div>
-      <div class="col-6 text-end">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#kt_modal_user_edit"
-        >
-          Aggiungi Utente
-        </button>
-      </div>
+
     </div>
-    <DigiTable
-      :data="data"
-      :header="headerConfig"
-      :searched-fields="searchedFields"
-      :search="search"
-    >
-      <template v-slot:actions="{ row: row }">
-        <div class="d-flex gap-3">
-          <a href="#" @click="openItem(row.uid, 'kt_modal_user_edit')"
-            ><i class="fa-solid fa-pen-to-square text-primary fs-5"></i
-          ></a>
-          <a href="#" @click="deleteItem(row.uid)"
-            ><i class="fa-solid fa-trash-can text-primary fs-5"></i
-          ></a>
+
+    <div class="page-content">
+
+      <!--   FILTRI::START   -->
+      <FiltersToolbar
+          @on-search="onSearch"
+          :prediction-filter="false"
+      />
+      <!--   FILTRI::END   -->
+
+<!--      <div class="col-12 text-end">-->
+<!--      <span class="fs-5 text-gray-800"-->
+<!--      >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
+<!--      >-->
+<!--      </div>-->
+
+      <div class="row pb-3">
+        <div class="col-6"></div>
+        <div class="col-6 text-end">
+          <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#kt_modal_user_edit"
+          >
+            Aggiungi Utente
+          </button>
         </div>
-      </template>
-      <template v-slot:customClaims="{ row: row }">
-        {{ getRoles(row?.customClaims?.user) }}
-      </template>
-    </DigiTable>
+      </div>
+
+      <DigiTable
+          :data="data"
+          :header="headerConfig"
+          :searched-fields="searchedFields"
+          :search="search"
+      >
+        <template v-slot:actions="{ row: row }">
+          <div class="d-flex gap-3">
+            <a href="#" @click="openItem(row.uid, 'kt_modal_user_edit')"
+            ><i class="fa-solid fa-pen-to-square text-primary fs-5"></i
+            ></a>
+            <a href="#" @click="deleteItem(row.uid)"
+            ><i class="fa-solid fa-trash-can text-primary fs-5"></i
+            ></a>
+          </div>
+        </template>
+        <template v-slot:customClaims="{ row: row }">
+          {{ getRoles(row?.customClaims?.user) }}
+        </template>
+      </DigiTable>
+    </div>
+
+
   </main>
   <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>
 </template>

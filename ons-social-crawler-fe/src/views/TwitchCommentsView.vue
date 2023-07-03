@@ -7,6 +7,7 @@ import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
+import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
 
 const route = useRoute()
 const { dateTimeFormatter } = global()
@@ -41,9 +42,27 @@ const init = async () => {
         score: comment?._score,
       }
     }) ?? [];
+    commentsData.value = commentsData.value.map(item => { // per sorting score
+      item.predictionScore = 0
+      if(item.prediction) {
+        item.predictionScore = item.prediction.score
+      }
+      return item
+    })
+
+
+    // #qui::START aggiungere normalizzazione dati per filtri e search
+    // data.value = data.value.map(item => { // per sorting score
+    //   item.predictionScore = 0
+    //   if(item.prediction) {
+    //     item.predictionScore = item.prediction.score
+    //   }
+    //   return item
+    // })
+    // #qui::END
     selectedCommentData.value = commentsData.value.find(comment => comment.id === route.params.id) ?? {}
     otherCommentsData.value = commentsData.value.filter(comment => comment.id !== route.params.id) ?? []
-    console.debug('#c comment: ', commentsData.value, selectedCommentData.value, route.params.id);
+
     total.value = otherCommentsData.value.length;
     // total.value = res.data.total.value ?? 0 // todo: manca nella chiamata
   } catch (e) {
@@ -53,8 +72,10 @@ const init = async () => {
   }
 }
 
-const searchedFields = []
+const searchedFields = ['textDisplay']
 const search = ref('')
+const predictionId = ref(0)
+
 const headerConfig = ref([
   // {
   //   columnName: '',
@@ -62,6 +83,32 @@ const headerConfig = ref([
   //   sortEnabled: false,
   //   columnMinWidth: 50,
   // },
+  {
+    columnName: 'Data',
+    columnLabel: 'publishedAt',
+    sortEnabled: true,
+    columnMinWidth: 175
+  },
+  {
+    columnName: 'Odio',
+    columnLabel: 'prediction',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Commento',
+    columnLabel: 'textDisplay',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Grado',
+    columnLabel: 'score',
+    sortEnabled: true,
+    tdClass: 'bg-warning text-center'
+  },
+])
+
+
+const headerConfigTableSelected = ref([
   {
     columnName: 'Data',
     columnLabel: 'publishedAt',
@@ -83,8 +130,16 @@ const headerConfig = ref([
     columnLabel: 'score',
     sortEnabled: false,
     tdClass: 'bg-warning text-center'
-  }
+  },
 ])
+
+const onSearch = (newValue) => {
+  search.value = newValue
+}
+
+const onPrediction = (newValue) => {
+  predictionId.value = newValue
+}
 
 onMounted(async () => {
   await init()
@@ -102,150 +157,155 @@ onMounted(async () => {
       </router-link>
     </div>
 
-    <section class="section video-info">
-      <h2 class="section-title">Il video</h2>
-      <div class="section-content">
-        <div class="section-content__video">
+    <div class="page-content">
 
-<!--                <div id="twitch-embed">{{videoData.url}}-->
-                <div>
-                  <iframe
-                      class="embedded-video"
-                      :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}&autoplay=false`"
-                      frameborder="0" allowfullscreen="true" scrolling="no"
-                  ></iframe>
-<!--                  <iframe-->
-<!--                      class="embedded-video"-->
-<!--                      :src="videoData.url"-->
-<!--                      :title="videoData.title" frameborder="0"-->
-<!--                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"-->
-<!--                      allowfullscreen-->
-<!--                  >-->
-<!--                  </iframe>-->
-                </div>
+      <section class="section video-info">
+        <h2 class="section-title">Il video</h2>
+        <div class="section-content">
+          <div class="section-content__video">
 
-<!--                <div class="embedded-video-container">-->
-<!--                  <div v-html="videoData.player"></div>-->
-<!--                </div>-->
+            <!--                <div id="twitch-embed">{{videoData.url}}-->
+            <div>
+              <iframe
+                  class="embedded-video"
+                  :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}&autoplay=false`"
+                  frameborder="0" allowfullscreen="true" scrolling="no"
+              ></iframe>
+
+            </div>
+
+            <!--                <div class="embedded-video-container">-->
+            <!--                  <div v-html="videoData.player"></div>-->
+            <!--                </div>-->
+          </div>
+
+          <div class="section-content__info">
+            <p class="video-info__row">
+              <h4>Titolo</h4>
+              <span>{{videoData.title}}</span>
+            </p>
+
+            <p class="video-info__row" v-if="videoData.description">
+              <h4>Descrizione</h4>
+              <span>{{videoData.description}}</span>
+            </p>
+
+            <p class="video-info__row">
+              <h4>Data e ora di pubblicazione</h4>
+              <span>{{dateTimeFormatter(videoData.published_at)}}</span>
+            </p>
+          </div>
         </div>
 
-        <div class="section-content__info">
-          <p class="video-info__row">
-            <h4>Titolo</h4>
-            <span>{{videoData.title}}</span>
-          </p>
 
-          <p class="video-info__row" v-if="videoData.description">
-            <h4>Descrizione</h4>
-            <span>{{videoData.description}}</span>
-          </p>
+      </section>
 
-          <p class="video-info__row">
-            <h4>Data e ora di pubblicazione</h4>
-            <span>{{dateTimeFormatter(videoData.published_at)}}</span>
-          </p>
-        </div>
-      </div>
+      <section class="section comments-info">
+        <h2 class="section-title">Il commento</h2>
+        <!--      <div class="col-12 text-end">-->
+        <!--        <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
+        <!--        >-->
+        <!--      </div>-->
+        <DigiTable
+            :data="[selectedCommentData]"
+            :header="headerConfigTableSelected"
+            :search="search"
+            :tableFooter="false"
+            :only-display="true"
+        >
+          <!--      <template v-slot:actions="{ row: row }">-->
+          <!--        <div class="d-flex gap-3">-->
+          <!--          <a-->
+          <!--              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"-->
+          <!--              style="color: #f00;"-->
+          <!--          ><i class="fa-brands fa-youtube fs-5"></i-->
+          <!--          ></a>-->
+          <!--        </div>-->
+          <!--      </template>-->
 
-
-    </section>
-
-    <section class="section comments-info">
-      <h2 class="section-title">Il commento</h2>
-<!--      <div class="col-12 text-end">-->
-<!--        <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
-<!--        >-->
-<!--      </div>-->
-      <DigiTable
-          :data="[selectedCommentData]"
-          :header="headerConfig"
-          :searched-fields="searchedFields"
-          :search="search"
-          :tableFooter="false"
-      >
-        <!--      <template v-slot:actions="{ row: row }">-->
-        <!--        <div class="d-flex gap-3">-->
-        <!--          <a-->
-        <!--              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"-->
-        <!--              style="color: #f00;"-->
-        <!--          ><i class="fa-brands fa-youtube fs-5"></i-->
-        <!--          ></a>-->
-        <!--        </div>-->
-        <!--      </template>-->
-
-        <template v-slot:publishedAt="{ row: row }">
-          {{ dateTimeFormatter(row.publishedAt) }}
-        </template>
-
-        <template v-slot:prediction="{ row: row }">
-          <span v-if="row.prediction" class="badge bg-success">Si</span>
-          <span v-else class="badge bg-danger">No</span>
-        </template>
-
-        <template v-slot:textDisplay="{ row: row }">
-          {{ row.textDisplay }}
-          <template v-if="row.response">
-            <hr />
-            <span class="text-success">{{ row.response }}</span>
+          <template v-slot:publishedAt="{ row: row }">
+            {{ dateTimeFormatter(row.publishedAt) }}
           </template>
-        </template>
 
-        <template v-slot:score="{ row: row }">
+          <template v-slot:prediction="{ row: row }">
+            <span v-if="row.prediction" class="badge bg-success">Si</span>
+            <span v-else class="badge bg-danger">No</span>
+          </template>
+
+          <template v-slot:textDisplay="{ row: row }">
+            {{ row.textDisplay }}
+            <template v-if="row.response">
+              <hr />
+              <span class="text-success">{{ row.response }}</span>
+            </template>
+          </template>
+
+          <template v-slot:score="{ row: row }">
         <span v-if="row.prediction" class="">
           {{ row.prediction.score }}</span
         >
-          <span v-else></span>
-        </template>
-      </DigiTable>
-    </section>
-
-    <section class="section comments-info">
-      <h2 class="section-title">Gli altri commenti</h2>
-      <div class="col-12 text-end">
-        <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
-        >
-      </div>
-      <DigiTable
-          :data="otherCommentsData"
-          :header="headerConfig"
-          :searched-fields="searchedFields"
-          :search="search"
-      >
-        <!--      <template v-slot:actions="{ row: row }">-->
-        <!--        <div class="d-flex gap-3">-->
-        <!--          <a-->
-        <!--              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"-->
-        <!--              style="color: #f00;"-->
-        <!--          ><i class="fa-brands fa-youtube fs-5"></i-->
-        <!--          ></a>-->
-        <!--        </div>-->
-        <!--      </template>-->
-
-        <template v-slot:publishedAt="{ row: row }">
-          {{ dateTimeFormatter(row.publishedAt) }}
-        </template>
-
-        <template v-slot:prediction="{ row: row }">
-          <span v-if="row.prediction" class="badge bg-success">Si</span>
-          <span v-else class="badge bg-danger">No</span>
-        </template>
-
-        <template v-slot:textDisplay="{ row: row }">
-          {{ row.textDisplay }}
-          <template v-if="row.response">
-            <hr />
-            <span class="text-success">{{ row.response }}</span>
+            <span v-else></span>
           </template>
-        </template>
+        </DigiTable>
+      </section>
 
-        <template v-slot:score="{ row: row }">
-        <span v-if="row.prediction" class="">
-          {{ row.prediction.score }}</span
+      <section class="section comments-info">
+        <h2 class="section-title">Gli altri commenti</h2>
+        <!--   FILTRI::START   -->
+        <FiltersToolbar
+            @on-search="onSearch"
+            @on-prediction="onPrediction"
+        />
+        <!--   FILTRI::END   -->
+        <div class="col-12 text-end">
+          <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
+          >
+        </div>
+        <DigiTable
+            :data="otherCommentsData"
+            :header="headerConfig"
+            :searched-fields="searchedFields"
+            :search="search"
+            :prediction-filter="predictionId"
+            sort-label="publishedAt"
         >
-          <span v-else></span>
-        </template>
-      </DigiTable>
-    </section>
+          <!--      <template v-slot:actions="{ row: row }">-->
+          <!--        <div class="d-flex gap-3">-->
+          <!--          <a-->
+          <!--              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"-->
+          <!--              style="color: #f00;"-->
+          <!--          ><i class="fa-brands fa-youtube fs-5"></i-->
+          <!--          ></a>-->
+          <!--        </div>-->
+          <!--      </template>-->
+
+          <template v-slot:publishedAt="{ row: row }">
+            {{ dateTimeFormatter(row.publishedAt) }}
+          </template>
+
+          <template v-slot:prediction="{ row: row }">
+            <span v-if="row.prediction" class="badge bg-success">Si</span>
+            <span v-else class="badge bg-danger">No</span>
+          </template>
+
+          <template v-slot:textDisplay="{ row: row }">
+            {{ row.textDisplay }}
+            <template v-if="row.response">
+              <hr />
+              <span class="text-success">{{ row.response }}</span>
+            </template>
+          </template>
+
+          <template v-slot:score="{ row: row }">
+          <span v-if="row.prediction" class="">
+            {{ row.prediction.score }}</span
+          >
+            <span v-else></span>
+          </template>
+        </DigiTable>
+      </section>
+
+    </div>
 
   </main>
   <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->

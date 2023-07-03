@@ -81,6 +81,7 @@ const signIn = async () => {
       border-radius: 0.3rem;
       background-color: white;
       padding: 2.2rem 1.5rem;
+      box-shadow: 0 2.5px 5px 3.5px hsla(0, 0%, 55%, .4);
 
       .login-content {
         display: flex;

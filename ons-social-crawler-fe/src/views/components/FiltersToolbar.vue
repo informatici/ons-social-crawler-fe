@@ -2,6 +2,13 @@
 import {ref, watch} from "vue";
 
 const emits = defineEmits(["onSearch", "onPrediction"])
+const props = defineProps({
+  predictionFilter: {
+    type: Boolean,
+    required: false,
+    default: true,
+  }
+})
 
 const search = ref('')
 const predictionId = ref(0)
@@ -44,7 +51,7 @@ watch(
     <!--     search::END     -->
 
     <!--     filtro select odio::START     -->
-    <div class="filter-element d-flex align-items-center position-relative my-1">
+    <div class="filter-element d-flex align-items-center position-relative my-1" v-if="props.predictionFilter">
       <span class="filter-element__label">Odio: </span>
       <select
           class="filter-element__input form-select form-select-solid w-250px ps-15"
