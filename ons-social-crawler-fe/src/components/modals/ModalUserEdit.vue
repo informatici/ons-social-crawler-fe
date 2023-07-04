@@ -131,7 +131,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 import { useI18n } from 'vue-i18n'
-// import { useLoadingStore } from "@/stores/loading";
+import { useLoadingStore } from "@/stores/loading";
 import ApiService from '@/core/services/ApiService'
 import { getModalInstance, hideModal } from '@/core/helpers/dom'
 import alert from '@/core/helpers/alert'
@@ -151,7 +151,7 @@ export default defineComponent({
   setup(props, context) {
     const { operationConfirm, dangerAlert } = alert()
     const { t } = useI18n()
-    // const loading = useLoadingStore()
+    const loading = useLoadingStore()
     const id = computed(() => props.id)
     const form = ref(null)
     // const userRoles = ref([])
@@ -193,7 +193,7 @@ export default defineComponent({
     })
 
     const onSubmit = async (values) => {
-      // loading.show()
+      loading.show()
       try {
         const data = {
           id: 0,
@@ -210,7 +210,7 @@ export default defineComponent({
           await ApiService.post('/auth', data)
         }
         form.value.resetForm()
-        // loading.hide()
+        loading.hide()
         operationConfirm().then(() => {
           hideModal('kt_modal_user_edit')
         })
@@ -218,6 +218,8 @@ export default defineComponent({
         console.log(e)
         // loading.hide()
         // dangerAlert(e)
+      } finally {
+        loading.hide()
       }
     }
 

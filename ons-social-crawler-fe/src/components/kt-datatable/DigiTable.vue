@@ -11,12 +11,14 @@
       :sort-label="sortLabel"
       :sort-order="sortOrder"
       :loading="loading"
+      :only-display="onlyDisplay /* prop necessaria per tabelle in sola visualizzazione (no search, sort, ...): necessaria quando più tabelle in una stessa pagina */"
     >
       <template v-for="(_, name) in $slots" v-slot:[name]="{ row: item }">
         <slot :name="name" :row="item" />
       </template>
     </TableContent>
     <TableFooter
+        v-if="tableFooter"
       @page-change="pageChange"
       :current-page="currentPage"
       v-model:itemsPerPage="itemsInTable"
@@ -50,16 +52,19 @@ export default defineComponent({
     total: { type: Number, required: false },
     loading: { type: Boolean, required: false, default: false },
     sortLabel: { type: String, required: false, default: null },
-    // sortOrder: {
-    //   type: String () => "asc" | "desc",
-    //   required: false,
-    //   default: "asc",
-    // },
+    sortOrder: {
+      type: String,
+      required: false,
+      default: "desc",
+    },
     emptyTableText: { type: String, required: false, default: "No data found" },
     cPage: { type: Number, required: false, default: 1 },
     search: { type: String, required: false },
     // eslint-disable-next-line vue/require-valid-default-prop
     searchedFields: { type: Array, required: false, default: [] },
+    predictionFilter: { type: Number, required: false },
+    tableFooter: { type: Boolean, required: false, default: true },
+    onlyDisplay: { type: Boolean, required: false, default: false },
   },
   emits: [
     "page-change",
@@ -79,6 +84,8 @@ export default defineComponent({
     const init = (value) => {
       tableData.value = value;
     };
+
+    const sortLabel = ref({ label: null, order: "asc" });
 
     const searchingFunc = (obj, value) => {
       value = value.toLowerCase();
@@ -112,20 +119,39 @@ export default defineComponent({
       return false;
     };
 
-    const filterData = (val) => {
+    const predictionFilter = (data) => {
+      let recordPrediction = data.prediction === null ? 1 : 2;
+
+      if (props.predictionFilter && props.predictionFilter !== 0) {
+        return recordPrediction == props.predictionFilter
+      }
+      return true;
+    };
+
+    const filterData = () => {
+      if(props.onlyDisplay) {
+        tableData.value = props.data
+        return
+      }
       currentPage.value = 1;
       tableData.value = [];
-      if (val !== "") {
-        let results = [];
-        for (let j = 0; j < props.data.length; j++) {
-          if (searchingFunc(props.data[j], val)) {
-            results.push(props.data[j]);
-          }
+      // if (val !== "") {
+      let results = [];
+      for (let j = 0; j < props.data.length; j++) {
+        if (
+            searchingFunc(props.data[j], props.search) &&
+            predictionFilter(props.data[j])
+        ) {
+          results.push(props.data[j]);
         }
-        tableData.value = results;
-      } else {
-        tableData.value = props.data;
       }
+      tableData.value = results;
+      sonSortort(sortLabel.value);
+
+
+      // } else {
+      //   tableData.value = props.data;
+      // }
     };
 
     watch(
@@ -140,15 +166,22 @@ export default defineComponent({
       () => props.data,
       (val) => {
         // init(val);
-        filterData(props.search);
+        filterData();
       }
     );
 
     watch(
       () => props.search,
       (val) => {
-        filterData(val);
+        filterData();
       }
+    );
+
+    watch(
+        () => props.predictionFilter,
+        () => {
+          filterData();
+        }
     );
 
     const pageChange = (page) => {
@@ -187,13 +220,21 @@ export default defineComponent({
       emit("on-sort", sort);
     };
     */
+
     const sonSortort = (sort) => {
-      const reverse = sort.order === "asc";
+      const reverse = sort.order === "desc";
       if (sort.label) {
-        arraySort(tableData.value, sort.label, { reverse });
+        let sortLabel = sort.label
+
+        if(sort.label === "score") {
+          sortLabel = 'predictionScore'
+        }
+
+        arraySort(tableData.value, sortLabel, { reverse });
       }
     };
     const onSort = (sort) => {
+      sortLabel.value = sort;
       sonSortort(sort);
     };
 

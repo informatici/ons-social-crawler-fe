@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import Swal from "sweetalert2";
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -16,7 +17,7 @@ const signIn = async () => {
     if (authStore.isAuthenticated) {
       router.push({ path: '/twitter' })
     } else {
-      alert('Error')
+      // alert('Error')
     }
   } else {
     console.debug('Error in the email format: ', )
@@ -27,9 +28,14 @@ const signIn = async () => {
 <template>
   <div class="login-overlay">
     <div class="login">
-      <div class="login__title">
-        <h1>Log In</h1>
-        <p>Effettua il login</p>
+      <div class="login-content">
+        <div class="login__title">
+          <h1>Log In</h1>
+          <p>Effettua il login</p>
+        </div>
+        <div class="login__logo">
+          <img class="logo-img" src="/logo/odiare-logo.jpeg" alt="Logo Odiare non è uno sport" />
+        </div>
       </div>
       <hr class="login__separator" />
       <div class="login__main">
@@ -48,9 +54,7 @@ const signIn = async () => {
           />
           <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
-            <!--            <router-link :to="{name: 'dashboard'}" style="display: block; width: 100%;">-->
             <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
-            <!--            </router-link>-->
           </div>
         </form>
       </div>
@@ -77,10 +81,38 @@ const signIn = async () => {
       border-radius: 0.3rem;
       background-color: white;
       padding: 2.2rem 1.5rem;
+      box-shadow: 0 2.5px 5px 3.5px hsla(0, 0%, 55%, .4);
 
-      .login__title {
-        h1 {
-          font-weight: 500;
+      .login-content {
+        display: flex;
+        justify-content: space-between;
+        //justify-content: flex-start;
+        //gap: 2rem;
+        align-items: center;
+
+        .login__title {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          gap: 1rem;
+          h1 {
+            font-weight: 500;
+            margin-bottom: 0;
+          }
+
+          p {
+            margin-bottom: 0;
+          }
+        }
+
+        .login__logo {
+          --size: 7rem;
+          height: var(--size);
+          width: var(--size);
+
+          .logo-img {
+            width: 100%;
+          }
         }
       }
 
@@ -132,7 +164,6 @@ const signIn = async () => {
           }
 
           &:hover {
-            //color: var(--secondary-color);
             opacity: 0.9;
           }
         }

@@ -5,7 +5,6 @@
           <router-view></router-view>
         </div>
         <!--end::Wrapper-->
-
   <!--end::Authentication Layout -->
 </template>
 

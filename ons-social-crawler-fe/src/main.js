@@ -7,7 +7,7 @@ import { initVeeValidate } from '@/core/plugins/vee-validate'
 import i18n from '@/core/plugins/i18n'
 
 import 'bootstrap'
-import './assets/main.css'
+// import './assets/css/main.scss'
 
 const app = createApp(App)
 

@@ -4,6 +4,7 @@ import ApiService from '../core/services/ApiService'
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth } from '../firebase/config'
 import JwtService from '@/core/services/JwtService'
+import Swal from "sweetalert2";
 
 export const useAuthStore = defineStore('auth', () => {
   // const errors = ref({})
@@ -42,7 +43,25 @@ export const useAuthStore = defineStore('auth', () => {
       )
       setAuth(res)
     } catch (error) {
-      setError(error)
+      console.debug('#c error: ', typeof error, error.code);
+      let errorMessage = "";
+      if(error.code.includes('auth/wrong-password') || error.code.includes('auth/user-not-found')) {
+        errorMessage = "Le credenziali inserite non sono corrette"
+      }
+      await Swal.fire({
+        title: "Attenzione!",
+        icon: "error",
+        text: errorMessage,
+        buttonsStyling: false,
+        showConfirmButton: false,
+        // confirmButtonText: "",
+        heightAuto: false,
+        customClass: {
+          // confirmButton: "btn fw-semibold btn-light-primary",
+        },
+        timer: 2500,
+      });
+      // setError(error)
     }
   }
 

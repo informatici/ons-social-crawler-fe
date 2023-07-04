@@ -140,18 +140,9 @@ $paddingX: 0.7rem;
     position: absolute;
 
     height: 0.25rem;
-    //width: calc((100% - $paddingX * 2));
     width: 2.7rem;
     bottom: 0;
     left: $paddingX;
-
-    //$size: .7rem;
-    //height: $size;
-    //width: $size;
-    //border-radius: 50%;
-    //left: 0;
-    //top: 50%;
-    //transform: translateY(-50%);
   }
 
   &:hover::after {
@@ -178,7 +169,6 @@ $paddingX: 0.7rem;
   position: absolute;
 
   height: 0.25rem;
-  //width: calc((100% - $paddingX * 2));
   width: 2.7rem;
   bottom: 0;
   left: $paddingX;
@@ -200,7 +190,6 @@ $paddingX: 0.7rem;
     position: absolute;
 
     height: 0.25rem;
-    //width: calc((100% - $paddingX * 2));
     width: 1rem;
     bottom: 0;
     left: $paddingX;
