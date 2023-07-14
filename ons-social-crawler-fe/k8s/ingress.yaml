@@ -26,16 +26,6 @@ spec:
   - host: 34-95-74-41.nip.io
     http:
       paths:
-      - path: /*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: ons2-fe
-            port:
-              number: 80
-  - host: 34-95-74-41.nip.io
-    http:
-      paths:
       - path: /api/*
         pathType: ImplementationSpecific
         backend:
@@ -43,9 +33,6 @@ spec:
             name: ons2-be
             port:
               number: 8080
-  - host: 34-95-74-41.nip.io
-    http:
-      paths:
       - path: /api-hs/*
         pathType: ImplementationSpecific
         backend:
@@ -53,3 +40,10 @@ spec:
             name: ons2-be-hs
             port:
               number: 5000                
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: ons2-fe
+            port:
+              number: 80
