@@ -28,7 +28,7 @@ const otherCommentsData = ref([])
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('youtube/elasticsearch/videos/' + route.query.videoId)
+    const res = await ApiService.get('youtube/videos/' + route.query.videoId)
 
     videoData.value = res.data.video ?? {}
 

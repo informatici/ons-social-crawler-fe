@@ -25,7 +25,7 @@ const data = ref([])
 const init = async () => {
   // loading.show();
   try {
-    const res = await ApiService.get('youtube/elasticsearch/comments')
+    const res = await ApiService.get('youtube/comments')
     data.value = res.data.hits ?? []
     data.value = data.value.map(hit => hit?._source?.comment) ?? [];
     data.value = data.value.map(item => { // per sorting score

@@ -18,7 +18,7 @@ const data = ref([])
 const init = async () => {
   // loading.show()
   try {
-    const res = await ApiService.get('twitter/elasticsearch/twits')
+    const res = await ApiService.get('twitter/twits')
     data.value = res.data.hits.hits ?? []
     data.value = data.value.map(item => {
       item.publishedAt = item._source.data.timestamp // per sort data

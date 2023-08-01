@@ -31,7 +31,7 @@ const init = async () => {
   try {
     parentDomain.value = window.location.hostname
     console.log('%cCurrent domain - twitch embedded video: ', 'color: #00a6fb; font-size: 16px; font-weight: 500;', parentDomain.value)
-    const res = await ApiService.get('twitch/elasticsearch/streams/' + route.query.streamId)
+    const res = await ApiService.get('twitch/streams/' + route.query.streamId)
 
     videoData.value = res.data.video ?? {}
 
