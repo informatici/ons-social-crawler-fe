@@ -103,9 +103,10 @@ const displayUserName = computed(() => {
     top: calc($header-height - 0.5rem);
     right: 3rem;
     background-color: white;
-    box-shadow: 0px 3px 5px 1px lightgrey;
+    box-shadow: 0px 3px 5px 1px hsla(0, 0%, 50%, .5);
     border-radius: 4px;
     padding: 1rem 1.5rem;
+    z-index: 1;
 
     .options-item {
       display: flex;
