@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
-import { onMounted, ref, computed } from 'vue'
+import {onMounted, ref, computed, onUnmounted} from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 
 // import { useLoadingStore } from "@/stores/loading";
@@ -12,18 +12,29 @@ import { isArray } from '@vue/shared'
 import { useI18n } from "vue-i18n";
 import { useLoadingStore } from "@/stores/loading";
 import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
+import StreamsSettings from "@/views/components/StreamsSettings.vue";
+import apiService from "@/core/services/ApiService";
 
 const loading = useLoadingStore();
 const { t } = useI18n();
 const route = useRoute()
 const data = ref([])
 const selectedId = ref('')
+const streamsStatus = ref({})
+
+const handleStreamStatus = async () => {
+  const tempStreamsStatus = await ApiService.get('/stream/status')
+  streamsStatus.value = tempStreamsStatus?.data ?? {}
+  console.debug('#c ssvalue: ', streamsStatus.value);
+}
 
 const init = async () => {
   // loading.show()
   selectedId.value = ''
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
+
+  await handleStreamStatus()
 
   // loading.hide()
 }
@@ -96,7 +107,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <main class="page-container">
+  <main class="page-container settings-view">
     <div class="page-title">
       <h1><span class="title-icon custom-gear">
 <!--      <i class="title-icon fa-solid fa-gear"></i>-->
@@ -115,57 +126,110 @@ onMounted(async () => {
 
     <div class="page-content">
 
-      <!--   FILTRI::START   -->
-      <FiltersToolbar
-          @on-search="onSearch"
-          :prediction-filter="false"
-      />
-      <!--   FILTRI::END   -->
-
-<!--      <div class="col-12 text-end">-->
-<!--      <span class="fs-5 text-gray-800"-->
-<!--      >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
-<!--      >-->
-<!--      </div>-->
-
-      <div class="row pb-3">
-        <div class="col-6"></div>
-        <div class="col-6 text-end">
-          <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#kt_modal_user_edit"
-          >
-            Aggiungi Utente
-          </button>
+      <section class="section streams-actions">
+        <h2 class="section-title">Servizi</h2>
+        <div class="section-content">
+          <StreamsSettings :status-data="streamsStatus"/>
         </div>
-      </div>
+      </section>
 
-      <DigiTable
-          :data="data"
-          :header="headerConfig"
-          :searched-fields="searchedFields"
-          :search="search"
-      >
-        <template v-slot:actions="{ row: row }">
-          <div class="d-flex gap-3">
-            <a href="#" @click="openItem(row.uid, 'kt_modal_user_edit')"
-            ><i class="fa-solid fa-pen-to-square text-primary fs-5"></i
-            ></a>
-            <a href="#" @click="deleteItem(row.uid)"
-            ><i class="fa-solid fa-trash-can text-primary fs-5"></i
-            ></a>
+      <section class="section users-info">
+        <h2 class="section-title">Utenti</h2>
+
+        <!--   FILTRI::START   -->
+        <FiltersToolbar
+            @on-search="onSearch"
+            :prediction-filter="false"
+        />
+        <!--   FILTRI::END   -->
+
+<!--        <div class="col-12 text-end">-->
+<!--          <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
+<!--          >-->
+<!--        </div>-->
+
+        <div class="row pb-3">
+          <div class="col-6"></div>
+          <div class="col-6 text-end">
+            <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#kt_modal_user_edit"
+            >
+              Aggiungi Utente
+            </button>
           </div>
-        </template>
-        <template v-slot:customClaims="{ row: row }">
-          {{ getRoles(row?.customClaims?.user) }}
-        </template>
-      </DigiTable>
-    </div>
+        </div>
 
+        <DigiTable
+            :data="data"
+            :header="headerConfig"
+            :searched-fields="searchedFields"
+            :search="search"
+        >
+          <template v-slot:actions="{ row: row }">
+            <div class="d-flex gap-3">
+              <a href="#" @click="openItem(row.uid, 'kt_modal_user_edit')"
+              ><i class="fa-solid fa-pen-to-square text-primary fs-5"></i
+              ></a>
+              <a href="#" @click="deleteItem(row.uid)"
+              ><i class="fa-solid fa-trash-can text-primary fs-5"></i
+              ></a>
+            </div>
+          </template>
+          <template v-slot:customClaims="{ row: row }">
+            {{ getRoles(row?.customClaims?.user) }}
+          </template>
+        </DigiTable>
+      </section>
+    </div>
 
   </main>
   <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.settings-view {
+  .section {
+    margin-bottom: 3.2rem;
+
+    &.page-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .section-title {
+      margin-bottom: 1rem;
+    }
+
+    .section-content {
+      display: flex;
+      gap: 3rem;
+
+      border: 1px solid lightgrey;
+      border-radius: 6px;
+    }
+
+  }
+
+  @media screen and (max-width: 1400px)  {
+
+    .section {
+    }
+  }
+
+  @media screen and (max-width: 992px)  {
+
+    .section {
+    }
+  }
+
+  @media screen and (max-width: 768px)  {
+
+    .section {
+    }
+  }
+}
+
+</style>

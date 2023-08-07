@@ -79,6 +79,7 @@ const onClick = () => {
 <style lang="scss">
 .stream-button {
   display: flex;
+  align-items: center;
 
   &.btn-label--left {
     flex-direction: row;
@@ -90,16 +91,21 @@ const onClick = () => {
   }
 
   .btn-label {
-    $label--font-size: 1.25rem;
-    font-weight: 500;
+    //$label--font-size: 1.25rem;
+    //font-weight: 500;
+    //font-size: $label--font-size;
+    //line-height: 1.2rem;
+    //.btn-label__icon {
+    //  margin-right: .07rem;
+    //  font-size: calc($label--font-size + .15rem) !important;
+    //  //height: $label--font-size !important;
+    //  //width: auto;
+    //}
+
+    $label--font-size: 1rem;
+    font-weight: 400;
     font-size: $label--font-size;
     line-height: 1.2rem;
-    .btn-label__icon {
-      margin-right: .07rem;
-      font-size: calc($label--font-size + .15rem) !important;
-      //height: $label--font-size !important;
-      //width: auto;
-    }
   }
 
   .btn-element {
