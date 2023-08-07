@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
@@ -84,12 +84,20 @@ const onPrediction = (newValue) => {
   predictionId.value = newValue
 }
 
+let interval = null
+
 onMounted(async () => {
   await init()
-  setInterval(async () => {
+  interval = setInterval(async () => {
     await init()
   }, 10000)
 })
+
+onUnmounted(() => {
+  clearInterval(interval)
+})
+
+
 </script>
 <template>
   <main class="page-container">
