@@ -8,14 +8,9 @@ import {computed, defineProps, onMounted, ref} from "vue";
 import apiService from "@/core/services/ApiService";
 import StreamSwitch from "@/views/components/StreamSwitch.vue";
 import {flip} from "@popperjs/core";
+import ApiService from "@/core/services/ApiService";
 
-const props = defineProps({
-  statusData: {
-    type: Object,
-    default: {},
-    required: true,
-  }
-})
+const statusData = ref({})
 
 const formData = ref({})
 formData.value.youTubeStatus = false;
@@ -73,16 +68,23 @@ const onUpdateStream = (stream, active = null) => { // todo: rinominare in onSub
 //   formData.value[key] = +e.target.value
 // }
 
-onMounted(() => {
+const init = async () => {
+  const tempStreamsStatus = await ApiService.get('/stream/status')
+  statusData.value = tempStreamsStatus?.data ?? {}
+  console.debug('#c ssvalue: ', statusData.value);
 
-  formData.value.youTubeStatus = props.statusData?.youTubeFlag ?? false;
-  formData.value.twitterStatus = props.statusData?.twitterFlag ?? false;
-  formData.value.twitchStatus = props.statusData?.twitchFlag ?? false;
+  formData.value.youTubeStatus = statusData.value?.youTubeFlag ?? false;
+  formData.value.twitterStatus = statusData.value?.twitterFlag ?? false;
+  formData.value.twitchStatus = statusData.value?.twitchFlag ?? false;
 
   let fallBackNumber = 250;
-  formData.value.youTubeRecordLength = props.statusData?.youTubeLength ?? fallBackNumber;
-  formData.value.twitterRecordLength = props.statusData?.twitterLength ?? fallBackNumber;
-  formData.value.twitchRecordLength = props.statusData?.twitchLength ?? fallBackNumber;
+  formData.value.youTubeRecordLength = statusData.value?.youTubeLength ?? fallBackNumber;
+  formData.value.twitterRecordLength = statusData.value?.twitterLength ?? fallBackNumber;
+  formData.value.twitchRecordLength = statusData.value?.twitchLength ?? fallBackNumber;
+}
+
+onMounted(async () => {
+  await init()
 })
 
 
@@ -159,6 +161,7 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
 //
 //   // isSwitchDisabled.value = stream !== "twitch" && statusValue ? true : false
 // }
+
 
 </script>
 <template>

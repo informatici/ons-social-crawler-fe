@@ -20,13 +20,13 @@ const { t } = useI18n();
 const route = useRoute()
 const data = ref([])
 const selectedId = ref('')
-const streamsStatus = ref({})
+// const streamsStatus = ref({})
 
-const handleStreamStatus = async () => {
-  const tempStreamsStatus = await ApiService.get('/stream/status')
-  streamsStatus.value = tempStreamsStatus?.data ?? {}
-  console.debug('#c ssvalue: ', streamsStatus.value);
-}
+// const handleStreamStatus = async () => {
+//   const tempStreamsStatus = await ApiService.get('/stream/status')
+//   streamsStatus.value = tempStreamsStatus?.data ?? {}
+//   console.debug('#c ssvalue: ', streamsStatus.value);
+// }
 
 const init = async () => {
   // loading.show()
@@ -34,7 +34,7 @@ const init = async () => {
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
 
-  await handleStreamStatus()
+  // await handleStreamStatus()
 
   // loading.hide()
 }
@@ -129,7 +129,7 @@ onMounted(async () => {
       <section class="section streams-actions">
         <h2 class="section-title">Servizi</h2>
         <div class="section-content">
-          <StreamsSettings :status-data="streamsStatus"/>
+          <StreamsSettings />
         </div>
       </section>
 
