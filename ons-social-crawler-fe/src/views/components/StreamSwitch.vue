@@ -66,11 +66,8 @@ const onClick = () => {
     <div class="btn-element">
 
       <button class="switch-element" :disabled="props.disabled" @click="onClick">
-<!--        <div class="switch-element&#45;&#45;disabled" v-show="props.disabled"></div>-->
         <div :class="['switch-input', isActive || props.isActive ? 'isActive' : '', props.disabled ? 'switch-input--disabled' : '']" ></div>
       </button>
-
-<!--      <button class="btn-element__input" :disabled="props.disabled" @click="onClick">{{ props.btnText }}</button>-->
 
       <p class="btn-element__message">{{ props.btnMessage }}</p>
     </div>
@@ -91,17 +88,6 @@ const onClick = () => {
   }
 
   .btn-label {
-    //$label--font-size: 1.25rem;
-    //font-weight: 500;
-    //font-size: $label--font-size;
-    //line-height: 1.2rem;
-    //.btn-label__icon {
-    //  margin-right: .07rem;
-    //  font-size: calc($label--font-size + .15rem) !important;
-    //  //height: $label--font-size !important;
-    //  //width: auto;
-    //}
-
     $label--font-size: 1rem;
     font-weight: 400;
     font-size: $label--font-size;
@@ -123,22 +109,14 @@ const onClick = () => {
       $switch-element--padding: .2rem;
       position: relative;
       background-color: white;
-      //.switch-element--disabled {
-      //  width: 100%;
-      //  height: 100%;
-      //  z-index: 5;
-      //  background-color: hsla(0, 0%, 70%, .5);
-      //  border-radius: $btn-input--border-radius;
-      //}
+
       .switch-input {
         $transitionDuration: .15s;
         position: absolute;
         top: 50%;
-        //left: $switch-element--padding;
         transform: translate($switch-element--padding, -50%);
         transition: transform $transitionDuration,  background-color $transitionDuration;
         border-radius: 50%;
-        border: 1px solid lightgrey;
         background-color: var(--primary-color);
         width: calc($btn-height - ($switch-element--padding * 2));
         height: calc($btn-height - ($switch-element--padding * 2));
@@ -148,8 +126,6 @@ const onClick = () => {
         }
 
         &.isActive {
-          //left: auto !important;
-          //right: $switch-element--padding !important;
           transform: translate(calc($btn-width - ($switch-element--padding * 2) - 100%), -50%);
           transition: transform $transitionDuration, background-color $transitionDuration;
           background-color: var(--secondary-color);

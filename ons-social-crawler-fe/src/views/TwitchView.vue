@@ -7,6 +7,7 @@ import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
 import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
+import StreamButton from "@/views/components/StreamButton.vue";
 
 
 const loading = useLoadingStore();
@@ -103,6 +104,7 @@ onMounted(async () => {
   <main class="page-container">
     <div class="page-title">
       <h1><span><i class="title-icon fa-brands fa-twitch"></i></span> {{ route?.meta?.label }}</h1>
+      <StreamButton name="twitch" />
     </div>
 
     <div class="page-content">

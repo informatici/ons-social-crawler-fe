@@ -20,21 +20,12 @@ const { t } = useI18n();
 const route = useRoute()
 const data = ref([])
 const selectedId = ref('')
-// const streamsStatus = ref({})
-
-// const handleStreamStatus = async () => {
-//   const tempStreamsStatus = await ApiService.get('/stream/status')
-//   streamsStatus.value = tempStreamsStatus?.data ?? {}
-//   console.debug('#c ssvalue: ', streamsStatus.value);
-// }
 
 const init = async () => {
   // loading.show()
   selectedId.value = ''
   const res = await ApiService.get('/auth/')
   data.value = res.data.users ?? []
-
-  // await handleStreamStatus()
 
   // loading.hide()
 }
@@ -110,7 +101,6 @@ onMounted(async () => {
   <main class="page-container settings-view">
     <div class="page-title">
       <h1><span class="title-icon custom-gear">
-<!--      <i class="title-icon fa-solid fa-gear"></i>-->
       <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
@@ -142,11 +132,6 @@ onMounted(async () => {
             :prediction-filter="false"
         />
         <!--   FILTRI::END   -->
-
-<!--        <div class="col-12 text-end">-->
-<!--          <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
-<!--          >-->
-<!--        </div>-->
 
         <div class="row pb-3">
           <div class="col-6"></div>

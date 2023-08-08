@@ -25,8 +25,7 @@ const maxStreamNumber = 2500;
 const stepStreamNumber = 250;
 
 const onUpdate = () => {
-  console.debug('#c o-u: ', formData.value);
-  apiService.post(`/stream/status`, formData.value)
+  apiService.put(`/stream/status`, formData.value)
       .then(res => console.log('Call successful: ', res))
       .catch(err => console.error(err))
   // todo: gestione errore tramite swal.fire?
@@ -35,43 +34,11 @@ const onUpdate = () => {
 const onUpdateStream = (stream, active = null) => { // todo: rinominare in onSubmit
   const key = stream + "Status"
   formData.value[key] = active.active
-  console.debug('#c ous: ', stream, active);
-
-  // let command = ""
-  // let statusValue = null
-  // if(active === null) {
-  //   command = "start"
-  //   statusValue = true
-  // } else {
-  //   if(active.active) {
-  //     command = "start"
-  //     statusValue = true
-  //   } else {
-  //     command = "stop"
-  //     statusValue = false
-  //   }
-  // }
-  //
-  // apiService.get(`/stream/${stream}/${command}`)
-  //     .then(res => console.log('Call successful: ', stream))
-  //     .catch(err => console.error(err))
-  // // todo: gestione errore tramite swal.fire?
-
-  // props.statusData[stream] = statusValue // innesca la computed che disabilita altri pulsanti e fa vedere messaggio
-
-  // isSwitchDisabled.value = stream !== "twitch" && statusValue ? true : false
 }
-
-// const onStreamNumberUpdate = (e) => {
-//   console.debug('#c osnu: ', e.srcElement.name);
-//   let key = (e.srcElement.name + "RecordLength") ?? ""
-//   formData.value[key] = +e.target.value
-// }
 
 const init = async () => {
   const tempStreamsStatus = await ApiService.get('/stream/status')
   statusData.value = tempStreamsStatus?.data ?? {}
-  console.debug('#c ssvalue: ', statusData.value);
 
   formData.value.youTubeStatus = statusData.value?.youTubeFlag ?? false;
   formData.value.twitterStatus = statusData.value?.twitterFlag ?? false;
@@ -87,81 +54,7 @@ onMounted(async () => {
   await init()
 })
 
-
-
 const btnMessage = ref("") // todo: rendere dinamico il testo
-// const streamsMessage = ref("")
-// const displayStreamName = (input) => {
-//   let result = ""
-//   switch(input) {
-//     case "twitter":
-//       result = "Twitter"
-//       break;
-//     case "youTube":
-//       result = "YouTube"
-//       break;
-//     case "twitch":
-//       result = "Twitch"
-//       break;
-//     default:
-//       result = input
-//   }
-//   return result;
-// }
-
-// const isSwitchDisabled = ref(false)
-// const isSwitchActive = computed(() => {
-//   const streamControls = document.querySelector(".stream-control__container > .stream-button")
-//   let stream = streamControls.dataset?.name ?? ""
-//
-//
-//   return props.statusData.twitch
-// })
-// const isBtnDisabled = computed(() => {
-//   for(let key in props.statusData) {
-//     if(props.statusData[key]) {
-//
-//       if(key === "youTube" || key === "twitter") {
-//         streamsMessage.value = `Attendere! Aggiornamento di ${displayStreamName(key)} in corso.`
-//         isSwitchDisabled.value = true
-//       } else if(key === "twitch") {
-//         streamsMessage.value = `Attenzione! L’aggiornamento di ${displayStreamName(key)} - in corso - deve essere fermato manualmente.`
-//       }
-//
-//       return true
-//     }
-//   }
-//   isSwitchDisabled.value = false
-//   return false
-// })
-
-// const onUpdate = (stream, active = null) => { // todo: rinominare in onSubmit
-//
-//   let command = ""
-//   let statusValue = null
-//   if(active === null) {
-//     command = "start"
-//     statusValue = true
-//   } else {
-//     if(active.active) {
-//       command = "start"
-//       statusValue = true
-//     } else {
-//       command = "stop"
-//       statusValue = false
-//     }
-//   }
-//
-//   apiService.get(`/stream/${stream}/${command}`)
-//       .then(res => console.log('Call successful: ', stream))
-//       .catch(err => console.error(err))
-//   // todo: gestione errore tramite swal.fire?
-//
-//   // props.statusData[stream] = statusValue // innesca la computed che disabilita altri pulsanti e fa vedere messaggio
-//
-//   // isSwitchDisabled.value = stream !== "twitch" && statusValue ? true : false
-// }
-
 
 </script>
 <template>
@@ -176,8 +69,8 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
           <h4><i class="title-icon fa-brands fa-youtube"></i> YouTube</h4>
           <StreamSwitch label="Aggiornamento" label-icon="" name="youTube" :disabled="false" :btn-message="btnMessage" @on-update="onUpdateStream" :isActive="formData.youTubeStatus"/>
           <div class="stream-record-number">
-            <label for="twitch-record-number" class="stream-record-number__label">Q.tà commenti</label>
-            <input id="twitch-record-number" name="youTube" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.youTubeRecordLength" />
+            <label for="youTube-record-number" class="stream-record-number__label">Q.tà commenti</label>
+            <input id="youTube-record-number" name="youTube" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.youTubeRecordLength" />
           </div>
         </div>
 
@@ -194,30 +87,28 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
           <h4><i class="title-icon fa-brands fa-twitter"></i> Twitter</h4>
           <StreamSwitch label="Aggiornamento" label-icon="" name="twitter" :disabled="false" :btn-message="btnMessage" @on-update="onUpdateStream" :isActive="formData.twitterStatus"/>
           <div class="stream-record-number">
-            <label for="twitch-record-number" class="stream-record-number__label">Q.tà commenti</label>
-            <input id="twitch-record-number" name="twitter" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.twitterRecordLength" />
+            <label for="twitter-record-number" class="stream-record-number__label">Q.tà commenti</label>
+            <input id="twitter-record-number" name="twitter" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.twitterRecordLength" />
           </div>
         </div>
       </div>
 
 
         <div class="streams-control__actions">
-<!--          <input type="submit" value="Invia">-->
           <button @click="onUpdate" class="btn btn-primary">Invia</button>
         </div>
-<!--      </form>-->
-
-<!--      <StreamSwitch label="Twitch" label-icon="title-icon fa-brands fa-twitch" name="twitch" :disabled="isSwitchDisabled" :btn-message="btnMessage" @on-update="onUpdate" :isActive="isSwitchActive"/>-->
-<!--      <StreamSwitch label="Twitch" label-icon="title-icon fa-brands fa-twitch" name="twitch" :disabled="isSwitchDisabled" :btn-message="btnMessage" @on-update="onUpdate" :isActive="isSwitchActive"/>-->
     </div>
-<!--    <div :class="['streams-message', !isBtnDisabled ? '' : 'streams-message&#45;&#45;visible']" >-->
-<!--      <p>{{ streamsMessage }}</p>-->
-<!--    </div>-->
   </div>
 </template>
 <style lang="scss">
 .streams-settings p {
   margin: 0;
+}
+
+.streams-settings {
+  .stream-record-number {
+  }
+
 }
 
 .streams-settings {
@@ -228,7 +119,6 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
 
   .streams-description,
   .streams-message {
-    //padding: 1rem;
   }
 
   .streams-description {
@@ -238,9 +128,6 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
   }
 
   .streams-controls {
-    //display: flex;
-    //flex-direction: column;
-    //align-items: center;
 
     .streams-controls__inputs {
       display: flex;
@@ -271,7 +158,17 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
           .stream-record-number__input {
             border-radius: 4px;
             border: 1px solid lightgrey;
-            padding: .15rem 0 .15rem .5rem ;
+            padding: .15rem 0rem .15rem .5rem ;
+          }
+
+          input[type=number] {
+          }
+
+          input[type=number]::-webkit-inner-spin-button,
+          input[type=number]::-webkit-outer-spin-button
+          {
+            opacity: 1;
+            cursor: pointer;
           }
         }
       }
@@ -284,14 +181,12 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
       button {
         border-radius: 4px;
         border: none;
-        //padding: .5rem .7rem;
       }
     }
   }
 
   .streams-message {
     $stream-message--transition-time: .25s;
-    //display: none;
     display: inline-block;
     width: 100%;
     background-color: red;
@@ -307,7 +202,6 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
     transition: transform $stream-message--transition-time;
 
     &.streams-message--visible {
-      //display: inline-block;
       transform: translate(-50%, 0%);
       transition: transform $stream-message--transition-time;
     }
