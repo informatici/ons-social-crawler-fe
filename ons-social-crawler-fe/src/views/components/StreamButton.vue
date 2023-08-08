@@ -112,7 +112,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div :class="['btn-container', 'stream-update-button', props.labelTop ? 'btn-label--top': 'btn-label--left']" v-show="!isVisible">
+  <div :class="['btn-container', 'stream-update-button', props.labelTop ? 'btn-label--top': 'btn-label--left']" v-show="isVisible">
     <div class="btn-label">
       <span :class="['btn-label__icon', props.labelIcon]"></span>
       {{ props.label }}
