@@ -1,6 +1,6 @@
 <script setup>
-import UserMenu from "@/components/UserMenu.vue"
-import LogoComponent from "@/components/LogoComponent.vue";
+import UserMenu from '@/components/UserMenu.vue'
+import LogoComponent from '@/components/LogoComponent.vue'
 </script>
 <template>
   <div class="header">
@@ -9,7 +9,6 @@ import LogoComponent from "@/components/LogoComponent.vue";
     </div>
     <UserMenu />
   </div>
-
 </template>
 
 <style lang="scss">

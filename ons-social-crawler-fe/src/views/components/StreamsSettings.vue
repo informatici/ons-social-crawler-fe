@@ -1,38 +1,39 @@
 <script>
 export default {
-  name: "streams-settings",
+  name: 'streams-settings'
 }
 </script>
 <script setup>
-import {computed, defineProps, onMounted, ref} from "vue";
-import apiService from "@/core/services/ApiService";
-import StreamSwitch from "@/views/components/StreamSwitch.vue";
-import {flip} from "@popperjs/core";
-import ApiService from "@/core/services/ApiService";
+import { onMounted, ref } from 'vue'
+import StreamSwitch from '@/views/components/StreamSwitch.vue'
+import { flip } from '@popperjs/core'
+import ApiService from '@/core/services/ApiService'
 
 const statusData = ref({})
 
 const formData = ref({})
-formData.value.youTubeStatus = false;
-formData.value.twitterStatus = false;
-formData.value.twitchStatus = false;
-formData.value.youTubeRecordLength = 0;
-formData.value.twitterRecordLength = 0;
-formData.value.twitchRecordLength = 0;
+formData.value.youTubeStatus = false
+formData.value.twitterStatus = false
+formData.value.twitchStatus = false
+formData.value.youTubeRecordLength = 0
+formData.value.twitterRecordLength = 0
+formData.value.twitchRecordLength = 0
 
-const minStreamNumber = 250;
-const maxStreamNumber = 2500;
-const stepStreamNumber = 250;
+const minStreamNumber = 250
+const maxStreamNumber = 2500
+const stepStreamNumber = 250
 
 const onUpdate = () => {
-  apiService.put(`/stream/status`, formData.value)
-      .then(res => console.log('Call successful: ', res))
-      .catch(err => console.error(err))
-  // todo: gestione errore tramite swal.fire?
+  try {
+    ApiService.put(`/stream/status`, formData.value)
+  } catch (e) {
+    dangerAlert(e)
+  }
 }
 
-const onUpdateStream = (stream, active = null) => { // todo: rinominare in onSubmit
-  const key = stream + "Status"
+const onUpdateStream = (stream, active = null) => {
+  // todo: rinominare in onSubmit
+  const key = stream + 'Status'
   formData.value[key] = active.active
 }
 
@@ -40,22 +41,21 @@ const init = async () => {
   const tempStreamsStatus = await ApiService.get('/stream/status')
   statusData.value = tempStreamsStatus?.data ?? {}
 
-  formData.value.youTubeStatus = statusData.value?.youTubeFlag ?? false;
-  formData.value.twitterStatus = statusData.value?.twitterFlag ?? false;
-  formData.value.twitchStatus = statusData.value?.twitchFlag ?? false;
+  formData.value.youTubeStatus = statusData.value?.youTubeFlag ?? false
+  formData.value.twitterStatus = statusData.value?.twitterFlag ?? false
+  formData.value.twitchStatus = statusData.value?.twitchFlag ?? false
 
-  let fallBackNumber = 250;
-  formData.value.youTubeRecordLength = statusData.value?.youTubeLength ?? fallBackNumber;
-  formData.value.twitterRecordLength = statusData.value?.twitterLength ?? fallBackNumber;
-  formData.value.twitchRecordLength = statusData.value?.twitchLength ?? fallBackNumber;
+  let fallBackNumber = 250
+  formData.value.youTubeRecordLength = statusData.value?.youTubeLength ?? fallBackNumber
+  formData.value.twitterRecordLength = statusData.value?.twitterLength ?? fallBackNumber
+  formData.value.twitchRecordLength = statusData.value?.twitchLength ?? fallBackNumber
 }
 
 onMounted(async () => {
   await init()
 })
 
-const btnMessage = ref("") // todo: rendere dinamico il testo
-
+const btnMessage = ref('')
 </script>
 <template>
   <div class="streams-container streams-settings">
@@ -63,40 +63,99 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
       <h4></h4>
     </div>
     <div class="streams-controls">
-<!--      <form @submit.prevent="onUpdate"> {{formData.twitchRecordLength}} {{formData.twitchStatus}}-->
+      <!--      <form @submit.prevent="onUpdate"> {{formData.twitchRecordLength}} {{formData.twitchStatus}}-->
       <div class="streams-controls__inputs">
         <div class="stream-control__container">
           <h4><i class="title-icon fa-brands fa-youtube"></i> YouTube</h4>
-          <StreamSwitch label="Aggiornamento" label-icon="" name="youTube" :disabled="false" :btn-message="btnMessage" @on-update="onUpdateStream" :isActive="formData.youTubeStatus"/>
+          <StreamSwitch
+            label="Aggiornamento"
+            label-icon=""
+            name="youTube"
+            :disabled="false"
+            :btn-message="btnMessage"
+            @on-update="onUpdateStream"
+            :isActive="formData.youTubeStatus"
+          />
           <div class="stream-record-number">
-            <label for="youTube-record-number" class="stream-record-number__label">Q.tà commenti</label>
-            <input id="youTube-record-number" name="youTube" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.youTubeRecordLength" />
+            <label for="youTube-record-number" class="stream-record-number__label"
+              >Q.tà commenti</label
+            >
+            <input
+              id="youTube-record-number"
+              name="youTube"
+              class="stream-record-number__input"
+              type="number"
+              :min="minStreamNumber"
+              :max="maxStreamNumber"
+              :step="stepStreamNumber"
+              placeholder="250"
+              v-model="formData.youTubeRecordLength"
+            />
           </div>
         </div>
 
         <div class="stream-control__container">
           <h4><i class="title-icon fa-brands fa-twitch"></i> Twitch</h4>
-          <StreamSwitch label="Aggiornamento" label-icon="" name="twitch" :disabled="false" :btn-message="btnMessage" @on-update="onUpdateStream" :isActive="formData.twitchStatus"/>
+          <StreamSwitch
+            label="Aggiornamento"
+            label-icon=""
+            name="twitch"
+            :disabled="false"
+            :btn-message="btnMessage"
+            @on-update="onUpdateStream"
+            :isActive="formData.twitchStatus"
+          />
           <div class="stream-record-number">
-            <label for="twitch-record-number" class="stream-record-number__label">Q.tà commenti</label>
-            <input id="twitch-record-number" name="twitch" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.twitchRecordLength" />
+            <label for="twitch-record-number" class="stream-record-number__label"
+              >Q.tà commenti</label
+            >
+            <input
+              id="twitch-record-number"
+              name="twitch"
+              class="stream-record-number__input"
+              type="number"
+              :min="minStreamNumber"
+              :max="maxStreamNumber"
+              :step="stepStreamNumber"
+              placeholder="250"
+              v-model="formData.twitchRecordLength"
+            />
           </div>
         </div>
 
         <div class="stream-control__container">
           <h4><i class="title-icon fa-brands fa-twitter"></i> Twitter</h4>
-          <StreamSwitch label="Aggiornamento" label-icon="" name="twitter" :disabled="false" :btn-message="btnMessage" @on-update="onUpdateStream" :isActive="formData.twitterStatus"/>
+          <StreamSwitch
+            label="Aggiornamento"
+            label-icon=""
+            name="twitter"
+            :disabled="false"
+            :btn-message="btnMessage"
+            @on-update="onUpdateStream"
+            :isActive="formData.twitterStatus"
+          />
           <div class="stream-record-number">
-            <label for="twitter-record-number" class="stream-record-number__label">Q.tà commenti</label>
-            <input id="twitter-record-number" name="twitter" class="stream-record-number__input" type="number" :min="minStreamNumber" :max="maxStreamNumber" :step="stepStreamNumber" placeholder="250" v-model="formData.twitterRecordLength" />
+            <label for="twitter-record-number" class="stream-record-number__label"
+              >Q.tà commenti</label
+            >
+            <input
+              id="twitter-record-number"
+              name="twitter"
+              class="stream-record-number__input"
+              type="number"
+              :min="minStreamNumber"
+              :max="maxStreamNumber"
+              :step="stepStreamNumber"
+              placeholder="250"
+              v-model="formData.twitterRecordLength"
+            />
           </div>
         </div>
       </div>
 
-
-        <div class="streams-control__actions">
-          <button @click="onUpdate" class="btn btn-primary">Invia</button>
-        </div>
+      <div class="streams-control__actions">
+        <button @click="onUpdate" class="btn btn-primary">Invia</button>
+      </div>
     </div>
   </div>
 </template>
@@ -108,7 +167,6 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
 .streams-settings {
   .stream-record-number {
   }
-
 }
 
 .streams-settings {
@@ -128,7 +186,6 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
   }
 
   .streams-controls {
-
     .streams-controls__inputs {
       display: flex;
       justify-content: space-around;
@@ -158,15 +215,14 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
           .stream-record-number__input {
             border-radius: 4px;
             border: 1px solid lightgrey;
-            padding: .15rem 0rem .15rem .5rem ;
+            padding: 0.15rem 0rem 0.15rem 0.5rem;
           }
 
-          input[type=number] {
+          input[type='number'] {
           }
 
-          input[type=number]::-webkit-inner-spin-button,
-          input[type=number]::-webkit-outer-spin-button
-          {
+          input[type='number']::-webkit-inner-spin-button,
+          input[type='number']::-webkit-outer-spin-button {
             opacity: 1;
             cursor: pointer;
           }
@@ -186,14 +242,13 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
   }
 
   .streams-message {
-    $stream-message--transition-time: .25s;
+    $stream-message--transition-time: 0.25s;
     display: inline-block;
     width: 100%;
     background-color: red;
     border-radius: 0 0 4px 4px;
-    padding: .5rem 1.25rem;
+    padding: 0.5rem 1.25rem;
     color: white;
-
 
     position: absolute;
     bottom: 0;
@@ -215,9 +270,8 @@ const btnMessage = ref("") // todo: rendere dinamico il testo
     }
   }
 
-  @media screen and (max-width: 992px){
+  @media screen and (max-width: 992px) {
     .stream-control__container {
-
     }
   }
 }

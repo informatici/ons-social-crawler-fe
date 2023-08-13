@@ -94,7 +94,6 @@ const navList = ref([
 
 <style lang="scss">
 #app .nav-list {
-
   * {
     box-sizing: border-box;
     margin: 0;

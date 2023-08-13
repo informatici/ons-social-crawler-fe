@@ -7,10 +7,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "kt-loading",
-  components: {},
-});
+  name: 'kt-loading',
+  components: {}
+})
 </script>

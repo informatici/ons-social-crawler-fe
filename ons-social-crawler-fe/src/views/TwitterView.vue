@@ -3,35 +3,33 @@ import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref, onUnmounted } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
-import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
-import { useLoadingStore } from "@/stores/loading";
-import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
-import StreamButton from "@/views/components/StreamButton.vue";
+import { useLoadingStore } from '@/stores/loading'
+import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
+import StreamButton from '@/views/components/StreamButton.vue'
 
-
-const loading = useLoadingStore();
+const loading = useLoadingStore()
 const route = useRoute()
 const { dateTimeFormatter } = global()
 const total = ref(0)
 const data = ref([])
 
 const init = async () => {
-  // loading.show()
+  loading.show()
   try {
     const res = await ApiService.get('twitter/twits')
     data.value = res.data.hits.hits ?? []
-    data.value = data.value.map(item => {
+    data.value = data.value.map((item) => {
       item.publishedAt = item._source.data.timestamp // per sort data
       // per filtro odio::START
       item.prediction = null
-      if(item._source.data.prediction) {
+      if (item._source.data.prediction) {
         item.prediction = item._source.data.prediction
       }
       // per filtro odio::END
       // per sort score::START
       item.predictionScore = 0
-      if(item._source.data.prediction) {
+      if (item._source.data.prediction) {
         item.predictionScore = item._source.data.prediction.score
       }
       // per sort score::END
@@ -42,9 +40,9 @@ const init = async () => {
 
     total.value = res.data.hits.total.value ?? 0
   } catch (e) {
-    console.error("Error: ", e)
+    console.error('Error: ', e)
   } finally {
-    // loading.hide()
+    loading.hide()
   }
 }
 
@@ -89,44 +87,41 @@ let interval = null
 
 onMounted(async () => {
   await init()
-  interval = setInterval(async () => {
-    await init()
-  }, 10000)
+  // interval = setInterval(async () => {
+  //   await init()
+  // }, 10000)
 })
 
 onUnmounted(() => {
   clearInterval(interval)
 })
-
-
 </script>
 <template>
   <main class="page-container">
     <div class="page-title">
-      <h1><span><i class="title-icon fa-brands fa-twitter"></i></span> {{ route?.meta?.label }}</h1>
+      <h1>
+        <span><i class="title-icon fa-brands fa-twitter"></i></span> {{ route?.meta?.label }}
+      </h1>
       <StreamButton name="twitter" />
     </div>
 
     <div class="page-content">
       <!--   FILTRI::START   -->
-      <FiltersToolbar
-          @on-search="onSearch"
-          @on-prediction="onPrediction"
-      />
+      <FiltersToolbar @on-search="onSearch" @on-prediction="onPrediction" />
       <!--   FILTRI::END   -->
 
       <div class="col-12 text-end">
-      <span class="fs-5 text-gray-800"
-      >Tweet processati: <span class="fw-bold text-primary">{{ total }}</span></span
-      >
+        <span class="fs-5 text-gray-800"
+          >Tweet processati: <span class="fw-bold text-primary">{{ total }}</span></span
+        >
       </div>
       <DigiTable
-          :data="data"
-          :header="headerConfig"
-          :searched-fields="searchedFields"
-          :search="search"
-          :prediction-filter="predictionId"
-          sort-label="publishedAt"
+        :data="data"
+        :header="headerConfig"
+        :searched-fields="searchedFields"
+        :search="search"
+        :prediction-filter="predictionId"
+        sort-label="publishedAt"
       >
         <template v-slot:twit="{ row: row }">
           {{ row._source.data.text }}
@@ -143,17 +138,13 @@ onUnmounted(() => {
           <span v-else class="badge bg-danger">No</span>
         </template>
         <template v-slot:score="{ row: row }">
-        <span v-if="row._source.data.prediction" class="">
-          {{ row._source.data.prediction.score }}</span
-        >
+          <span v-if="row._source.data.prediction" class="">
+            {{ row._source.data.prediction.score }}</span
+          >
           <span v-else></span>
         </template>
       </DigiTable>
     </div>
-
-
-
   </main>
-  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>
 </template>
 <style lang="scss"></style>

@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
-// import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
 import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
@@ -172,7 +171,6 @@ onMounted(async () => {
         <div class="section-content">
           <div class="section-content__video">
 
-            <!--                <div id="twitch-embed">{{videoData.url}}-->
             <div v-if="isVideo">
               <iframe
                   class="embedded-video"
@@ -326,7 +324,6 @@ onMounted(async () => {
     </div>
 
   </main>
-  <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
 </template>
 <style lang="scss">
 .videoTitle,

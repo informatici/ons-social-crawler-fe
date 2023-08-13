@@ -131,7 +131,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 import { useI18n } from 'vue-i18n'
-import { useLoadingStore } from "@/stores/loading";
+import { useLoadingStore } from '@/stores/loading'
 import ApiService from '@/core/services/ApiService'
 import { getModalInstance, hideModal } from '@/core/helpers/dom'
 import alert from '@/core/helpers/alert'
@@ -180,7 +180,8 @@ export default defineComponent({
       password: Yup.string().when('id', {
         is: () => isEdit.value,
         then: (schema) => schema.notRequired(),
-        otherwise: (schema) => schema.min(6, t('entities.users.passwordMinLength')).required(t('common.requiredField'))
+        otherwise: (schema) =>
+          schema.min(6, t('entities.users.passwordMinLength')).required(t('common.requiredField'))
       }),
       passwordConfirmation: Yup.string().when('id', {
         is: () => isEdit.value,

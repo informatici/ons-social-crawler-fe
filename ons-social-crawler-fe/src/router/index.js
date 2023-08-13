@@ -54,7 +54,7 @@ const router = createRouter({
           name: 'twitchDetail',
           component: () => import('../views/TwitchCommentsView.vue'),
           meta: { label: 'Dettagli commento' }
-        },
+        }
       ]
     },
     {

@@ -5,7 +5,7 @@ year = year.getFullYear()
 <template>
   <footer class="footer">
     <div class="legal-info">
-      <p> Copyright © {{ year }}. All rights reserved.</p>
+      <p>Copyright © {{ year }}. All rights reserved.</p>
       <p><router-link to="#">Privacy</router-link> e <router-link to="#">Cookie</router-link>.</p>
     </div>
   </footer>
@@ -13,9 +13,7 @@ year = year.getFullYear()
 
 <style lang="scss">
 #app {
-
   .footer {
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -27,11 +25,11 @@ year = year.getFullYear()
     padding: $paddingY var(--drawer-paddingX);
 
     &::before {
-      content: "";
+      content: '';
       display: block;
       background-color: #eee;
       width: 100%;
-      height: .15rem;
+      height: 0.15rem;
       top: -$paddingY;
     }
 
@@ -50,6 +48,3 @@ year = year.getFullYear()
   }
 }
 </style>
-
-
-

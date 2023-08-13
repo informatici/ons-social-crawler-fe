@@ -1,31 +1,31 @@
 <script>
 export default {
-  name: "stream-switch"
+  name: 'stream-switch'
 }
 </script>
 <script setup>
-import {defineProps, defineEmits, ref,} from "vue";
-const emits = defineEmits(["onUpdate"])
+import { defineProps, defineEmits, ref } from 'vue'
+const emits = defineEmits(['onUpdate'])
 const props = defineProps({
   label: {
     type: String,
-    default: "",
-    required: false,
+    default: '',
+    required: false
   },
   labelIcon: {
     type: String,
-    default: "",
-    required: false,
+    default: '',
+    required: false
   },
   labelTop: {
     type: Boolean,
     default: false,
-    required: true,
+    required: true
   },
   name: {
     type: String,
-    default: "",
-    required: true,
+    default: '',
+    required: true
   },
   // btnText: {
   //   type: String,
@@ -34,39 +34,49 @@ const props = defineProps({
   // },
   btnMessage: {
     type: String,
-    default: "",
-    required: false,
+    default: '',
+    required: false
   },
   disabled: {
     type: Boolean,
     default: false,
-    required: false,
+    required: false
   },
   isActive: {
     type: Boolean,
     default: false,
-    required: false,
-  },
+    required: false
+  }
 })
 
 const isActive = ref(false)
 const onClick = () => {
-  props.isActive === true ? isActive.value = true : false;
+  props.isActive === true ? (isActive.value = true) : false
   isActive.value = !isActive.value
-  emits("onUpdate", props.name, {origin: "twitch", active: isActive.value})
+  emits('onUpdate', props.name, { origin: 'twitch', active: isActive.value })
 }
-
 </script>
 <template>
-  <div :class="['btn-container', 'stream-button', props.labelTop ? 'btn-label--top': 'btn-label--left']">
+  <div
+    :class="[
+      'btn-container',
+      'stream-button',
+      props.labelTop ? 'btn-label--top' : 'btn-label--left'
+    ]"
+  >
     <div class="btn-label">
       <span :class="['btn-label__icon', props.labelIcon]"></span>
       {{ props.label }}
     </div>
     <div class="btn-element">
-
       <button class="switch-element" :disabled="props.disabled" @click="onClick">
-        <div :class="['switch-input', isActive || props.isActive ? 'isActive' : '', props.disabled ? 'switch-input--disabled' : '']" ></div>
+        <div
+          :class="[
+            'switch-input',
+            isActive || props.isActive ? 'isActive' : '',
+            props.disabled ? 'switch-input--disabled' : ''
+          ]"
+        ></div>
       </button>
 
       <p class="btn-element__message">{{ props.btnMessage }}</p>
@@ -84,7 +94,7 @@ const onClick = () => {
   }
   &.btn-label--top {
     flex-direction: column;
-    gap: .7rem;
+    gap: 0.7rem;
   }
 
   .btn-label {
@@ -96,7 +106,7 @@ const onClick = () => {
 
   .btn-element {
     $btn-width: 4rem;
-    $btn-height: calc($btn-width /1.6);
+    $btn-height: calc($btn-width / 1.6);
     width: $btn-width;
     height: $btn-height;
 
@@ -106,16 +116,16 @@ const onClick = () => {
       border: 1px solid lightgrey;
       width: 100%;
       height: 100%;
-      $switch-element--padding: .2rem;
+      $switch-element--padding: 0.2rem;
       position: relative;
       background-color: white;
 
       .switch-input {
-        $transitionDuration: .15s;
+        $transitionDuration: 0.15s;
         position: absolute;
         top: 50%;
         transform: translate($switch-element--padding, -50%);
-        transition: transform $transitionDuration,  background-color $transitionDuration;
+        transition: transform $transitionDuration, background-color $transitionDuration;
         border-radius: 50%;
         background-color: var(--primary-color);
         width: calc($btn-height - ($switch-element--padding * 2));

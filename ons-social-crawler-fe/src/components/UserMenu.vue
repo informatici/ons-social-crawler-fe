@@ -2,7 +2,7 @@
 import { useUserMenuStore } from '../stores/userMenu'
 import { useAuthStore } from '../stores/auth'
 import { useRouter } from 'vue-router'
-import {computed} from "vue";
+import { computed } from 'vue'
 
 const userMenuStore = useUserMenuStore()
 const authStore = useAuthStore()
@@ -14,25 +14,26 @@ const signOut = () => {
 }
 
 const displayUserName = computed(() => {
-  let name = ""
-  let parsedNamed = ""
+  let name = ''
+  let parsedNamed = ''
   if (
-      localStorage.getItem("userName")
-      && typeof localStorage.getItem("userName") === "string"
-      && localStorage.getItem("userName").length > 0
+    localStorage.getItem('userName') &&
+    typeof localStorage.getItem('userName') === 'string' &&
+    localStorage.getItem('userName').length > 0
   ) {
-    name = localStorage.getItem("userName")
-    parsedNamed = name.split(" ")[0][0].toUpperCase() + name.split(" ")[1][0].toUpperCase()
+    name = localStorage.getItem('userName')
+    parsedNamed = name.split(' ')[0][0].toUpperCase() + name.split(' ')[1][0].toUpperCase()
   } else {
-    parsedNamed = "ONS"
+    parsedNamed = 'ONS'
   }
   return parsedNamed
 })
-
 </script>
 <template>
   <div class="user-menu">
-    <div class="user-menu__button" @click="userMenuStore.toggleUserMenuStatus">{{ displayUserName }}</div>
+    <div class="user-menu__button" @click="userMenuStore.toggleUserMenuStatus">
+      {{ displayUserName }}
+    </div>
     <div
       class="user-menu__options"
       v-if="userMenuStore.isUserMenuOpen"
@@ -59,7 +60,6 @@ const displayUserName = computed(() => {
   $sidebar-padding: var(--sidebar-padding);
 
   .user-menu {
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -103,7 +103,7 @@ const displayUserName = computed(() => {
     top: calc($header-height - 0.5rem);
     right: 3rem;
     background-color: white;
-    box-shadow: 0px 3px 5px 1px hsla(0, 0%, 50%, .5);
+    box-shadow: 0px 3px 5px 1px hsla(0, 0%, 50%, 0.5);
     border-radius: 4px;
     padding: 1rem 1.5rem;
     z-index: 1;

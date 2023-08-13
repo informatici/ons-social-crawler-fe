@@ -12,34 +12,26 @@
   </div>
   <!--end::App-->
 
-<!--  <KTScrollTop />-->
-<!--  <KTModals />-->
+  <!--  <KTScrollTop />-->
+  <!--  <KTModals />-->
 </template>
 
 <script>
-import {
-  defineComponent,
-  nextTick,
-  onBeforeMount,
-  onMounted,
-  watch,
-} from "vue";
+import { defineComponent, nextTick, onBeforeMount, onMounted, watch } from 'vue'
 
-import Header from "@/components/HeaderComponent.vue"
-import SideBar from "@/components/SideBar.vue"
-import FooterComponent from "@/components/FooterComponent.vue"
-import LoginView from "@/views/LoginView.vue"
+import Header from '@/components/HeaderComponent.vue'
+import SideBar from '@/components/SideBar.vue'
+import FooterComponent from '@/components/FooterComponent.vue'
+import LoginView from '@/views/LoginView.vue'
 
 export default defineComponent({
-  name: "default-layout",
+  name: 'default-layout',
   components: {
     Header,
     SideBar,
     FooterComponent,
-    LoginView,
+    LoginView
   },
-  setup() {
-
-  },
-});
+  setup() {}
+})
 </script>
