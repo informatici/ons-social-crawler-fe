@@ -1,32 +1,31 @@
 @import './base.css';
-@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
 body {
-    min-width: 576px;
+  min-width: 576px;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
-router-link, a {
-    text-decoration: none;
-    color: var(--primary-color);
+router-link,
+a {
+  text-decoration: none;
+  color: var(--primary-color);
 }
 
 .item--active {
-
 }
 
 /* page:START */
 .page-container {
-    padding: .9rem 0;
+  padding: 0.9rem 0;
 }
 /* page:END */
 
-
 @media screen and (max-width: 768px) {
-    :root {
-        font-size: 14px;
-    }
+  :root {
+    font-size: 14px;
+  }
 }

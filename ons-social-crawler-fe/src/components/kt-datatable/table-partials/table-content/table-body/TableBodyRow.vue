@@ -3,9 +3,7 @@
     <template v-for="(row, i) in data" :key="i">
       <tr>
         <td v-if="checkboxEnabled">
-          <div
-            class="form-check form-check-sm form-check-custom form-check-solid"
-          >
+          <div class="form-check form-check-sm form-check-custom form-check-solid">
             <input
               class="form-check-input"
               type="checkbox"
@@ -35,10 +33,10 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, useSlots } from "vue";
+import { defineComponent, ref, watch, useSlots } from 'vue'
 
 export default defineComponent({
-  name: "table-body-row",
+  name: 'table-body-row',
   components: {},
   props: {
     header: { type: Array, required: true },
@@ -48,36 +46,34 @@ export default defineComponent({
     checkboxLabel: {
       type: String,
       required: false,
-      default: "id",
-    },
+      default: 'id'
+    }
   },
-  emits: ["on-select"],
+  emits: ['on-select'],
   setup(props, { emit }) {
-    const selectedItems = ref([]);
-    const slots = useSlots();
+    const selectedItems = ref([])
+    const slots = useSlots()
 
     watch(
       () => [...props.currentlySelectedItems],
       (currentValue) => {
         if (props.currentlySelectedItems.length !== 0) {
-          selectedItems.value = [
-            ...new Set([...selectedItems.value, ...currentValue]),
-          ];
+          selectedItems.value = [...new Set([...selectedItems.value, ...currentValue])]
         } else {
-          selectedItems.value = [];
+          selectedItems.value = []
         }
       }
-    );
+    )
 
     const onChange = () => {
-      emit("on-select", selectedItems.value);
-    };
+      emit('on-select', selectedItems.value)
+    }
 
     return {
       selectedItems,
       slots,
-      onChange,
-    };
-  },
-});
+      onChange
+    }
+  }
+})
 </script>

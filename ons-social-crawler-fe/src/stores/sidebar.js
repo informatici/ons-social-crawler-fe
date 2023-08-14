@@ -10,15 +10,14 @@ import { defineStore } from 'pinia'
 //     return {toggleSidebarStatus, }
 // })
 
-
 export const useSidebarStore = defineStore({
-    id: 'sidebar',
-    state: () => ({
-        isSidebarOpen: false,
-    }),
-    actions: {
-        toggleSidebarStatus() {
-            this.isSidebarOpen = !this.isSidebarOpen
-        }
+  id: 'sidebar',
+  state: () => ({
+    isSidebarOpen: false
+  }),
+  actions: {
+    toggleSidebarStatus() {
+      this.isSidebarOpen = !this.isSidebarOpen
     }
+  }
 })

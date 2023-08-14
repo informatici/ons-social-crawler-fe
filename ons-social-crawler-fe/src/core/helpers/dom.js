@@ -1,4 +1,4 @@
-import { Modal } from "bootstrap";
+import { Modal } from 'bootstrap'
 
 /*const hideModal = (modalEl: HTMLElement | null): void => {
   if (!modalEl) {
@@ -17,23 +17,22 @@ const removeModalBackdrop = (): void => {
   }
 };*/
 
-
-const getModalInstance = (modalId) => document.getElementById(modalId.toString());
+const getModalInstance = (modalId) => document.getElementById(modalId.toString())
 
 const hideModal = (modalId) => {
-  const element = getModalInstance(modalId);
-  if(element) {
-    const myModal = Modal.getInstance(element);
-    myModal?.hide();
+  const element = getModalInstance(modalId)
+  if (element) {
+    const myModal = Modal.getInstance(element)
+    myModal?.hide()
   }
-};
+}
 
 const showModal = (modalId) => {
-  const element = getModalInstance(modalId);
-  if(element) {
-    const myModal = new Modal(element);
-    myModal?.show();
+  const element = getModalInstance(modalId)
+  if (element) {
+    const myModal = new Modal(element)
+    myModal?.show()
   }
-};
+}
 
-export { hideModal, getModalInstance, showModal };
+export { hideModal, getModalInstance, showModal }

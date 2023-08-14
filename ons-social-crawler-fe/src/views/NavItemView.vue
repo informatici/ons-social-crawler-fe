@@ -8,7 +8,7 @@ import { onMounted, ref, computed } from 'vue'
 const twitter = ref([])
 
 const init = async () => {
-  const res = await ApiService.get('/twitter/elasticsearch/twits')
+  const res = await ApiService.get('/twitter/twits')
   twitter.value = res.data
 }
 

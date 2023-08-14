@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/DashboardView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
@@ -7,18 +6,12 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard',
+      redirect: '/youTube',
       component: () => import('../layouts/main-layout/MainLayout.vue'),
       meta: {
         middleware: 'auth'
       },
       children: [
-        {
-          path: '/dashboard',
-          name: 'dashboard',
-          component: () => import('../views/DashboardView.vue'),
-          meta: { label: 'Dashboard' }
-        },
         {
           path: '/youTube',
           name: 'youTube',
@@ -54,7 +47,7 @@ const router = createRouter({
           name: 'twitchDetail',
           component: () => import('../views/TwitchCommentsView.vue'),
           meta: { label: 'Dettagli commento' }
-        },
+        }
       ]
     },
     {
@@ -122,13 +115,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  // const configStore = useConfigStore();
-
-  // current page view title
-  // document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
-
-  // reset config to initial state
-  // configStore.resetLayoutConfig();
 
   // verify auth token before each page change
   await authStore.verifyAuth()

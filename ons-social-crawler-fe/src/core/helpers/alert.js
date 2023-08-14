@@ -1,10 +1,10 @@
 import { useAuthStore } from '@/stores/auth'
 import Swal from 'sweetalert2'
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 export default function alert() {
-  const { t } = useI18n();
+  const { t } = useI18n()
   const router = useRouter()
   const store = useAuthStore()
 
@@ -33,7 +33,7 @@ export default function alert() {
         text: text,
         icon: 'error',
         buttonsStyling: false,
-        confirmButtonText: 'common.ok',
+        confirmButtonText: t('common.ok'),
         customClass: {
           confirmButton: 'btn fw-bold btn-light-primary'
         }
@@ -41,7 +41,11 @@ export default function alert() {
     }
   }
 
-  const warningAlert = (title, showCancelButton = true, confirmButtonText = t('common.confirm')) => {
+  const warningAlert = (
+    title,
+    showCancelButton = true,
+    confirmButtonText = t('common.confirm')
+  ) => {
     return Swal.fire({
       text: title,
       icon: 'warning',
