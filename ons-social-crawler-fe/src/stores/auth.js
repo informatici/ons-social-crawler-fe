@@ -17,6 +17,10 @@ export const useAuthStore = defineStore('auth', () => {
     userRoles.value = res?.user ?? []
   }
 
+  function getRoles() {
+    return userRoles.value.join(',')
+  }
+
   function setAuth(authUser) {
     isAuthenticated.value = true
     user.value = authUser.user
@@ -88,6 +92,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     logout,
-    verifyAuth
+    verifyAuth,
+    getRoles
   }
 })

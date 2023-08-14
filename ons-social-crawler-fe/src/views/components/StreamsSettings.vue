@@ -5,10 +5,13 @@ export default {
 </script>
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useLoadingStore } from '@/stores/loading'
+import alert from '@/core/helpers/alert'
 import StreamSwitch from '@/views/components/StreamSwitch.vue'
-import { flip } from '@popperjs/core'
 import ApiService from '@/core/services/ApiService'
 
+const loading = useLoadingStore()
+const { operationConfirm, dangerAlert } = alert()
 const statusData = ref({})
 
 const formData = ref({})
@@ -24,10 +27,14 @@ const maxStreamNumber = 2500
 const stepStreamNumber = 250
 
 const onUpdate = () => {
+  loading.show()
   try {
     ApiService.put(`/stream/status`, formData.value)
+    operationConfirm()
   } catch (e) {
     dangerAlert(e)
+  } finally {
+    loading.hide()
   }
 }
 

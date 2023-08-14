@@ -15,12 +15,6 @@ const hasAccess = (routeRoles) => {
 
 const navList = ref([
   {
-    label: 'Dashboard',
-    icon: 'fa-solid fa-chart-simple',
-    routerName: 'dashboard',
-    roles: ['Teacher']
-  },
-  {
     label: 'YouTube',
     icon: 'fa-brands fa-youtube',
     routerName: 'youTube'

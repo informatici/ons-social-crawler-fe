@@ -6,6 +6,8 @@ export default {
 <script setup>
 import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
 import ApiService from '@/core/services/ApiService'
+import alert from '@/core/helpers/alert'
+import { useI18n } from 'vue-i18n'
 const emits = defineEmits(['onUpdate'])
 const props = defineProps({
   label: {
@@ -39,16 +41,20 @@ const props = defineProps({
   //   required: false,
   // }
 })
+const { t } = useI18n()
+const { warningAlert, dangerAlert } = alert()
 
 const onClick = async () => {
-  try {
-    emits('onUpdate', props.name)
-    isActive.value = true
-    await ApiService.get(`/stream/${props.name}/start`)
-  } catch (err) {
-    console.error(err)
-    // todo: swal.fire?
-  }
+  warningAlert(t('common.confirmMessageLight')).then(async (res) => {
+    if (res.isConfirmed) {
+      try {
+        isActive.value = true
+        await ApiService.get(`/stream/${props.name}/start`)
+      } catch (err) {
+        dangerAlert(e)
+      }
+    }
+  })
 }
 
 const statusData = ref({})
@@ -89,8 +95,13 @@ const isDisabled = computed(() => {
 })
 
 const fetchStatusData = async () => {
-  let tempStatusData = await ApiService.get('/stream/status')
-  statusData.value = tempStatusData?.data ?? {}
+  try {
+    let tempStatusData = await ApiService.get('/stream/status')
+    statusData.value = tempStatusData?.data ?? {}
+    emits('onUpdate', statusData.value)
+  } catch (e) {
+    dangerAlert(e)
+  }
 }
 
 const init = async () => {
@@ -101,7 +112,6 @@ let interval = null
 
 onMounted(async () => {
   await init()
-
   interval = setInterval(async () => {
     await fetchStatusData()
   }, 5000)

@@ -20,7 +20,7 @@ const init = async () => {
     const res = await ApiService.get('twitter/twits')
     data.value = res.data.hits.hits ?? []
     data.value = data.value.map((item) => {
-      item.publishedAt = item._source.data.timestamp // per sort data
+      item.createdAt = item._source.data.createdAt // per sort data
       // per filtro odio::START
       item.prediction = null
       if (item._source.data.prediction) {
@@ -53,7 +53,7 @@ const predictionId = ref(0)
 const headerConfig = ref([
   {
     columnName: 'Data',
-    columnLabel: 'publishedAt',
+    columnLabel: 'createdAt',
     sortEnabled: true,
     columnMinWidth: 175
   },
@@ -87,14 +87,22 @@ let interval = null
 
 onMounted(async () => {
   await init()
-  // interval = setInterval(async () => {
-  //   await init()
-  // }, 10000)
 })
 
 onUnmounted(() => {
   clearInterval(interval)
 })
+
+const streamButtonUpdate = (data) => {
+  const twitterStatus = data?.twitter || false
+  if (twitterStatus && !interval) {
+    interval = setInterval(async () => {
+      await init()
+    }, 5000)
+  } else if (!twitterStatus) {
+    clearInterval(interval)
+  }
+}
 </script>
 <template>
   <main class="page-container">
@@ -102,7 +110,7 @@ onUnmounted(() => {
       <h1>
         <span><i class="title-icon fa-brands fa-twitter"></i></span> {{ route?.meta?.label }}
       </h1>
-      <StreamButton name="twitter" />
+      <StreamButton name="twitter" @on-update="streamButtonUpdate" />
     </div>
 
     <div class="page-content">
@@ -121,7 +129,7 @@ onUnmounted(() => {
         :searched-fields="searchedFields"
         :search="search"
         :prediction-filter="predictionId"
-        sort-label="publishedAt"
+        sort-label="createdAt"
       >
         <template v-slot:twit="{ row: row }">
           {{ row._source.data.text }}
@@ -130,8 +138,8 @@ onUnmounted(() => {
             <span class="text-success">{{ row._source.data.response }}</span>
           </template>
         </template>
-        <template v-slot:publishedAt="{ row: row }">
-          {{ dateTimeFormatter(row._source.data.timestamp) }}
+        <template v-slot:createdAt="{ row: row }">
+          {{ dateTimeFormatter(row._source.data.createdAt) }}
         </template>
         <template v-slot:isHate="{ row: row }">
           <span v-if="row._source.data.prediction" class="badge bg-success">Si</span>

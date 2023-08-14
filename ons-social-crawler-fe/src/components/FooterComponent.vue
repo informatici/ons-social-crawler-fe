@@ -1,12 +1,13 @@
 <script setup>
+const version = import.meta.env.VITE_APP_VERSION
 let year = new Date()
 year = year.getFullYear()
 </script>
 <template>
   <footer class="footer">
     <div class="legal-info">
-      <p>Copyright © {{ year }}. All rights reserved.</p>
-      <p><router-link to="#">Privacy</router-link> e <router-link to="#">Cookie</router-link>.</p>
+      <span>{{ year }}© Made with 💛</span>
+      <span>v{{ version }}</span>
     </div>
   </footer>
 </template>

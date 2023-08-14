@@ -20,7 +20,7 @@ const props = defineProps({
   labelTop: {
     type: Boolean,
     default: false,
-    required: true
+    required: false
   },
   name: {
     type: String,

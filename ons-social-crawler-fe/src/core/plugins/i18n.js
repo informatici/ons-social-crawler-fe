@@ -27,6 +27,7 @@ const messages = {
       operationconfirm: 'Operation succesfully complete!',
       cancel: 'Annulla',
       confirmMessage: 'Questa azione non è reversibile. Sei sicuro di voler procedere?',
+      confirmMessageLight: 'Sei sicuro di voler procedere?',
       yes: 'Yes',
       no: 'No',
       signout: 'Sign Out',

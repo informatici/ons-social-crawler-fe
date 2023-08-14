@@ -95,14 +95,22 @@ let interval = null
 
 onMounted(async () => {
   await init()
-  interval = setInterval(async () => {
-    await init()
-  }, 10000)
 })
 
 onUnmounted(() => {
   clearInterval(interval)
 })
+
+const streamButtonUpdate = (data) => {
+  const youTubeStatus = data?.youTube || false
+  if (youTubeStatus && !interval) {
+    interval = setInterval(async () => {
+      await init()
+    }, 5000)
+  } else if (!youTubeStatus) {
+    clearInterval(interval)
+  }
+}
 </script>
 <template>
   <main class="page-container">
@@ -110,7 +118,7 @@ onUnmounted(() => {
       <h1>
         <span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }}
       </h1>
-      <StreamButton name="youTube" />
+      <StreamButton name="youTube" @on-update="streamButtonUpdate" />
     </div>
 
     <div class="page-content">

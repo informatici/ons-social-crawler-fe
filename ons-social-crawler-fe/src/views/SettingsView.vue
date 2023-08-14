@@ -12,7 +12,6 @@ import { useI18n } from 'vue-i18n'
 import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamsSettings from '@/views/components/StreamsSettings.vue'
-import apiService from '@/core/services/ApiService'
 
 const loading = useLoadingStore()
 const { t } = useI18n()

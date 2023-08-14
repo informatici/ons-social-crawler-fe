@@ -33,7 +33,7 @@ export default function alert() {
         text: text,
         icon: 'error',
         buttonsStyling: false,
-        confirmButtonText: 'common.ok',
+        confirmButtonText: t('common.ok'),
         customClass: {
           confirmButton: 'btn fw-bold btn-light-primary'
         }

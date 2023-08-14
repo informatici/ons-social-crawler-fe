@@ -56,30 +56,31 @@
                 <div class="invalid-feedback">{{ errors.email }}</div>
               </div>
 
-              <!-- <div class="col-12 col-md-6">
+              <div class="col-12 col-md-6">
                 <label for="roles" class="form-label required">{{
-                  $t('entities.users.crmUserRoles')
+                  $t('entities.users.roles')
                 }}</label>
-                <Field type="text" class="form-control" id="roles" name="roles" v-slot="{ field }">
-                  <DigiSelect
-                    :field="field"
-                    :options="userRoles"
-                    value-prop="ID"
-                    label="RoleName"
-                    track-by="RoleName"
-                    mode="tags"
-                    :is-invalid="errors.roles"
-                  />
+                <Field id="roles" name="roles" v-slot="{ field }">
+                  <el-select
+                    v-bind="field"
+                    v-model="field.value"
+                    multiple
+                    :placeholder="$t('common.insertValue')"
+                    class="form-control"
+                    :class="{ 'is-invalid': errors.roles }"
+                    size="large"
+                  >
+                    <el-option v-for="item in userRoles" :key="item" :label="item" :value="item" />
+                  </el-select>
                 </Field>
                 <div class="invalid-feedback">
                   {{ errors.roles }}
                 </div>
-              </div> -->
+              </div>
 
-              <!-- <div class="d-none d-md-block col-md-6" /> -->
-              <!-- per mandare a capo le passwords (todo:intanto che decidiamo se usare le classi row) -->
+              <div class="d-none d-md-block col-md-6"></div>
 
-              <div class="col-12 col-md-6" v-if="!isEdit">
+              <div class="col-12 col-md-6">
                 <label for="password" class="form-label required">{{
                   $t('entities.users.password')
                 }}</label>
@@ -93,7 +94,7 @@
                 />
                 <div class="invalid-feedback">{{ errors.password }}</div>
               </div>
-              <div class="col-12 col-md-6" v-if="!isEdit">
+              <div class="col-12 col-md-6">
                 <label for="passwordConfirmation" class="form-label required">{{
                   $t('entities.users.passwordConfirmation')
                 }}</label>
@@ -135,14 +136,12 @@ import { useLoadingStore } from '@/stores/loading'
 import ApiService from '@/core/services/ApiService'
 import { getModalInstance, hideModal } from '@/core/helpers/dom'
 import alert from '@/core/helpers/alert'
-// import DigiSelect from "@/components/digi-unit/DigiSelect.vue";
 
 export default defineComponent({
   name: 'modal-user-edit',
   components: {
     Form,
     Field
-    // DigiSelect,
   },
   props: {
     id: { default: '' }
@@ -154,7 +153,7 @@ export default defineComponent({
     const loading = useLoadingStore()
     const id = computed(() => props.id)
     const form = ref(null)
-    // const userRoles = ref([])
+    const userRoles = ref(['Admin', 'Teacher', 'Trainer'])
     const initialValues = ref({
       name: '',
       email: '',
@@ -176,21 +175,25 @@ export default defineComponent({
     const validationSchema = Yup.object().shape({
       name: Yup.string().required(t('common.requiredField')),
       email: Yup.string().email(t('common.validEmail')).required(t('common.requiredField')),
-      // roles: Yup.array().min(1, t('common.requiredField')), // uso .min(1) al posto di .required() perché è un array
-      password: Yup.string().when('id', {
-        is: () => isEdit.value,
-        then: (schema) => schema.notRequired(),
-        otherwise: (schema) =>
-          schema.min(6, t('entities.users.passwordMinLength')).required(t('common.requiredField'))
-      }),
-      passwordConfirmation: Yup.string().when('id', {
-        is: () => isEdit.value,
-        then: (schema) => schema.notRequired(),
-        otherwise: (schema) =>
-          schema
-            .required(t('common.requiredField'))
-            .oneOf([Yup.ref('password')], t('common.passwordsDoNotMatch'))
-      })
+      roles: Yup.array().min(1, t('common.requiredField')),
+      password: Yup.string()
+        .transform((o, v) => v || null)
+        .when('id', {
+          is: () => isEdit.value,
+          then: (schema) => schema.notRequired().min(6, t('entities.users.passwordMinLength')),
+          otherwise: (schema) =>
+            schema.min(6, t('entities.users.passwordMinLength')).required(t('common.requiredField'))
+        }),
+      passwordConfirmation: Yup.string()
+        .transform((o, v) => v || null)
+        .when('password', {
+          is: (val) => val === null,
+          then: (schema) => schema.notRequired(),
+          otherwise: (schema) =>
+            schema
+              .required(t('common.requiredField'))
+              .oneOf([Yup.ref('password')], t('common.passwordsDoNotMatch'))
+        })
     })
 
     const onSubmit = async (values) => {
@@ -200,9 +203,9 @@ export default defineComponent({
           id: 0,
           displayName: values.name ?? '',
           email: values.email ?? '',
-          password: values.password ?? '',
-          passwordConfirmation: values.passwordConfirmation ?? '',
-          roles: values.roles ?? []
+          password: values.password || null,
+          passwordConfirmation: values.passwordConfirmation || null,
+          userRoles: values.roles ?? []
         }
         if (isEdit.value) {
           data.uid = id.value
@@ -216,37 +219,32 @@ export default defineComponent({
           hideModal('kt_modal_user_edit')
         })
       } catch (e) {
-        console.log(e)
-        // loading.hide()
-        // dangerAlert(e)
+        dangerAlert(e)
       } finally {
         loading.hide()
       }
     }
 
     const init = async () => {
-      // loading.show()
+      loading.show()
       form.value.resetForm()
       try {
-        // userRoles.value = (await ApiService.get('/user/role')).data
-
         initialValues.value.name = ''
         initialValues.value.email = ''
         initialValues.value.roles = []
-        initialValues.value.password = ''
-        initialValues.value.passwordConfirmation = ''
+        initialValues.value.password = null
+        initialValues.value.passwordConfirmation = null
 
         if (isEdit.value) {
           const data = await ApiService.get('/auth', id.value)
-          // const roleIds = data.data.CrmRoles.map((role) => role.ID)
-          initialValues.value.name = data.data.displayName
-          initialValues.value.email = data.data.email
-          initialValues.value.roles = []
+          initialValues.value.name = data.data.displayName || ''
+          initialValues.value.email = data.data.email || ''
+          initialValues.value.roles = data.data.customClaims?.user || []
         }
       } catch (e) {
         dangerAlert(e)
       } finally {
-        // loading.hide()
+        loading.hide()
       }
     }
 
@@ -262,7 +260,7 @@ export default defineComponent({
       initialValues,
       title,
       onSubmit,
-      // userRoles,
+      userRoles,
       isEdit
     }
   }

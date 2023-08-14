@@ -53,7 +53,6 @@ const signIn = async () => {
             placeholder="Password"
             required
           />
-          <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
             <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
           </div>

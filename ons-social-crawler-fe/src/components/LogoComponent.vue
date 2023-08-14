@@ -1,7 +1,7 @@
 <script setup></script>
 <template>
   <div class="logo-image-container">
-    <router-link :to="{ name: 'twitter' }">
+    <router-link :to="{ name: 'youTube' }">
       <img class="logo-image" src="/logo/odiare-logo.jpeg" alt="logo" />
     </router-link>
   </div>

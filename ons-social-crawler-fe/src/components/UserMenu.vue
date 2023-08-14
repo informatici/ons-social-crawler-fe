@@ -28,6 +28,14 @@ const displayUserName = computed(() => {
   }
   return parsedNamed
 })
+
+const userName = computed(() => {
+  return localStorage.getItem('userName') || ''
+})
+
+const userRoles = computed(() => {
+  return authStore.getRoles() || ''
+})
 </script>
 <template>
   <div class="user-menu">
@@ -39,6 +47,9 @@ const displayUserName = computed(() => {
       v-if="userMenuStore.isUserMenuOpen"
       @click="userMenuStore.toggleUserMenuStatus"
     >
+      <span class="item">{{ userName }}</span>
+      <el-tag class="p-2">{{ userRoles }}</el-tag>
+      <el-divider class="my-2" />
       <div class="options-item" @click="signOut">
         <div class="options-item__image">
           <svg xmlns="http://www.w3.org/2000/svg" fill="#666666" viewBox="0 0 512 512">
@@ -107,6 +118,12 @@ const displayUserName = computed(() => {
     border-radius: 4px;
     padding: 1rem 1.5rem;
     z-index: 1;
+    width: 100%;
+
+    .item {
+      font-weight: 600;
+      color: #666666;
+    }
 
     .options-item {
       display: flex;

@@ -89,14 +89,22 @@ let interval = null
 
 onMounted(async () => {
   await init()
-  interval = setInterval(async () => {
-    await init()
-  }, 10000)
 })
 
 onUnmounted(() => {
   clearInterval(interval)
 })
+
+const streamButtonUpdate = (data) => {
+  const twitchStatus = data?.twitch || false
+  if (twitchStatus && !interval) {
+    interval = setInterval(async () => {
+      await init()
+    }, 5000)
+  } else if (!twitchStatus) {
+    clearInterval(interval)
+  }
+}
 </script>
 <template>
   <main class="page-container">
@@ -104,7 +112,7 @@ onUnmounted(() => {
       <h1>
         <span><i class="title-icon fa-brands fa-twitch"></i></span> {{ route?.meta?.label }}
       </h1>
-      <StreamButton name="twitch" />
+      <StreamButton name="twitch" @on-update="streamButtonUpdate" />
     </div>
 
     <div class="page-content">

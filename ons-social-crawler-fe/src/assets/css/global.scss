@@ -222,3 +222,25 @@ a {
     font-size: 14px;
   }
 }
+
+
+.el-select.form-control {
+  height: auto;
+  padding: 0.12rem;
+
+  .el-input__wrapper {
+    box-shadow: none;
+    padding-left: .775rem !important;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 992px) {
+    padding: 0.01rem;
+  }
+}
+
+
+.el-select--large .el-input__wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
