@@ -7,17 +7,21 @@ import global from '../core/helpers/functions.js'
 import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamButton from '@/views/components/StreamButton.vue'
+import alert from '@/core/helpers/alert'
 
 const loading = useLoadingStore()
+const { dangerAlert } = alert()
 const route = useRoute()
 const { dateTimeFormatter } = global()
 const total = ref(0)
 const data = ref([])
+const size = ref(10)
+const page = ref(1)
 
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('twitch/comments')
+    const res = await ApiService.get('twitch/comments', `?size=${size.value}&page=${page.value}`)
     data.value = res.data.hits ?? []
     data.value = data.value.map((hit) => hit?._source?.comment) ?? []
     data.value = data.value.map((item) => {
@@ -31,7 +35,7 @@ const init = async () => {
 
     total.value = res.data.total.value ?? 0
   } catch (e) {
-    console.error('Error: ', e)
+    dangerAlert(e)
   } finally {
     loading.hide()
   }
@@ -105,6 +109,16 @@ const streamButtonUpdate = (data) => {
     clearInterval(interval)
   }
 }
+
+const changeItemPerPage = (itemPerPage) => {
+  size.value = itemPerPage
+  init()
+}
+
+const changePage = (newPage) => {
+  page.value = newPage
+  init()
+}
 </script>
 <template>
   <main class="page-container">
@@ -131,7 +145,11 @@ const streamButtonUpdate = (data) => {
         :searched-fields="searchedFields"
         :search="search"
         :prediction-filter="predictionId"
+        :total="total"
+        :cPage="page"
         sort-label="publishedAt"
+        @on-items-per-page-change="changeItemPerPage"
+        @page-change="changePage"
       >
         <template v-slot:actions="{ row: row }">
           <div class="d-flex gap-3">

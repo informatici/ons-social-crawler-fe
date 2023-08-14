@@ -74,7 +74,7 @@ export default defineComponent({
     TableFooter
   },
   setup(props, { emit }) {
-    const currentPage = ref(props.cPage)
+    const currentPage = computed(() => props.cPage)
     const itemsInTable = ref(props.itemsPerPage)
     const tableData = ref([])
 
@@ -232,10 +232,7 @@ export default defineComponent({
     }
 
     const totalRows = computed(() => {
-      if (tableData.value) {
-        return tableData.value.length
-      }
-      return 0
+      return totalItems.value
     })
 
     onMounted(async () => {
