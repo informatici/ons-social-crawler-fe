@@ -39,107 +39,105 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, onMounted } from "vue";
-import TableHeadRow from "@/components/kt-datatable/table-partials/table-content/table-head/TableHeadRow.vue";
-import TableBodyRow from "@/components/kt-datatable/table-partials/table-content/table-body/TableBodyRow.vue";
-import Loading from "@/components/kt-datatable/table-partials/Loading.vue";
+import { defineComponent, ref, watch, onMounted } from 'vue'
+import TableHeadRow from '@/components/kt-datatable/table-partials/table-content/table-head/TableHeadRow.vue'
+import TableBodyRow from '@/components/kt-datatable/table-partials/table-content/table-body/TableBodyRow.vue'
+import Loading from '@/components/kt-datatable/table-partials/Loading.vue'
 // import type { Sort } from "@/components/kt-datatable/table-partials/models";
 
 export default defineComponent({
-  name: "table-body",
+  name: 'table-body',
   props: {
     header: { type: Array, required: true },
     data: { type: Array, required: true },
-    emptyTableText: { type: String, default: "No data found" },
+    emptyTableText: { type: String, default: 'No data found' },
     sortLabel: { type: String, required: false, default: null },
     sortOrder: {
       // type: String as () => "asc" | "desc",
       required: false,
-      default: "asc",
+      default: 'asc'
     },
     checkboxEnabled: { type: Boolean, required: false, default: false },
-    checkboxLabel: { type: String, required: false, default: "id" },
-    loading: { type: Boolean, required: false, default: false },
+    checkboxLabel: { type: String, required: false, default: 'id' },
+    loading: { type: Boolean, required: false, default: false }
   },
-  emits: ["on-sort", "on-items-select"],
+  emits: ['on-sort', 'on-items-select'],
   components: {
     TableHeadRow,
     TableBodyRow,
-    Loading,
+    Loading
   },
   setup(props, { emit }) {
-    const selectedItems = ref([]);
-    const allSelectedItems = ref([]);
-    const check = ref(false);
+    const selectedItems = ref([])
+    const allSelectedItems = ref([])
+    const check = ref(false)
 
     watch(
       () => props.data,
       () => {
-        selectedItems.value = [];
-        allSelectedItems.value = [];
-        check.value = false;
+        selectedItems.value = []
+        allSelectedItems.value = []
+        check.value = false
         // eslint-disable-next-line
         props.data.forEach((item) => {
           if (item[props.checkboxLabel]) {
-            allSelectedItems.value.push(item[props.checkboxLabel]);
+            allSelectedItems.value.push(item[props.checkboxLabel])
           }
-        });
+        })
       }
-    );
+    )
 
     // eslint-disable-next-line
     const selectAll = (checked) => {
-      check.value = checked;
+      check.value = checked
       if (checked) {
-        selectedItems.value = [
-          ...new Set([...selectedItems.value, ...allSelectedItems.value]),
-        ];
+        selectedItems.value = [...new Set([...selectedItems.value, ...allSelectedItems.value])]
       } else {
-        selectedItems.value = [];
+        selectedItems.value = []
       }
-    };
+    }
 
     //eslint-disable-next-line
     const itemsSelect = (value) => {
-      selectedItems.value = [];
+      selectedItems.value = []
       //eslint-disable-next-line
       value.forEach((item) => {
-        if (!selectedItems.value.includes(item)) selectedItems.value.push(item);
-      });
-    };
+        if (!selectedItems.value.includes(item)) selectedItems.value.push(item)
+      })
+    }
 
     const onSort = (sort) => {
-      emit("on-sort", sort);
-    };
+      emit('on-sort', sort)
+    }
 
     watch(
       () => [...selectedItems.value],
       (currentValue) => {
         if (currentValue) {
-          emit("on-items-select", currentValue);
+          emit('on-items-select', currentValue)
         }
       }
-    );
+    )
 
     onMounted(() => {
-      selectedItems.value = [];
-      allSelectedItems.value = [];
-      check.value = false;
+      selectedItems.value = []
+      allSelectedItems.value = []
+      check.value = false
       // eslint-disable-next-line
       props.data.forEach((item) => {
         if (item[props.checkboxLabel]) {
-          allSelectedItems.value.push(item[props.checkboxLabel]);
+          allSelectedItems.value.push(item[props.checkboxLabel])
         }
-      });
-    });
+      })
+    })
 
     return {
       onSort,
       selectedItems,
       selectAll,
       itemsSelect,
-      check,
-    };
-  },
-});
+      check
+    }
+  }
+})
 </script>

@@ -4,16 +4,21 @@ import ApiService from '../core/services/ApiService'
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth } from '../firebase/config'
 import JwtService from '@/core/services/JwtService'
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2'
+import { useLoadingStore } from '@/stores/loading'
 
 export const useAuthStore = defineStore('auth', () => {
-  // const errors = ref({})
+  const loading = useLoadingStore()
   const user = ref({})
   const userRoles = ref([])
   const isAuthenticated = ref(!!JwtService.getToken())
 
   function setRoles(res) {
     userRoles.value = res?.user ?? []
+  }
+
+  function getRoles() {
+    return userRoles.value.join(',')
   }
 
   function setAuth(authUser) {
@@ -23,10 +28,6 @@ export const useAuthStore = defineStore('auth', () => {
     JwtService.saveToken(user.value.accessToken)
   }
 
-  // function setError(error) {
-  //   errors.value = { ...error }
-  // }
-
   function purgeAuth() {
     isAuthenticated.value = false
     user.value = {}
@@ -35,6 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(credentials = {}) {
+    loading.show()
     try {
       const res = await signInWithEmailAndPassword(
         auth,
@@ -43,25 +45,24 @@ export const useAuthStore = defineStore('auth', () => {
       )
       setAuth(res)
     } catch (error) {
-      console.debug('#c error: ', typeof error, error.code);
-      let errorMessage = "";
-      if(error.code.includes('auth/wrong-password') || error.code.includes('auth/user-not-found')) {
-        errorMessage = "Le credenziali inserite non sono corrette"
+      let errorMessage = ''
+      if (
+        error.code.includes('auth/wrong-password') ||
+        error.code.includes('auth/user-not-found')
+      ) {
+        errorMessage = 'Le credenziali inserite non sono corrette'
       }
-      await Swal.fire({
-        title: "Attenzione!",
-        icon: "error",
+      Swal.fire({
+        title: 'Attenzione!',
+        icon: 'error',
         text: errorMessage,
         buttonsStyling: false,
         showConfirmButton: false,
-        // confirmButtonText: "",
         heightAuto: false,
-        customClass: {
-          // confirmButton: "btn fw-semibold btn-light-primary",
-        },
-        timer: 2500,
-      });
-      // setError(error)
+        timer: 2500
+      })
+    } finally {
+      loading.hide()
     }
   }
 
@@ -77,7 +78,6 @@ export const useAuthStore = defineStore('auth', () => {
         const res = await ApiService.post('auth/verify')
         setRoles(res.data)
       } catch (err) {
-        // setError(response.data.errors)
         await logout()
       }
     } else {
@@ -92,6 +92,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     logout,
-    verifyAuth
+    verifyAuth,
+    getRoles
   }
 })

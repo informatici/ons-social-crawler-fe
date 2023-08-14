@@ -17,22 +17,22 @@
 </template>
 
 <script>
-import TableItemsPerPageSelect from "@/components/kt-datatable/table-partials/table-content/table-footer/TableItemsPerPageSelect.vue";
-import TablePagination from "./table-content/table-footer/TablePagination.vue";
+import TableItemsPerPageSelect from '@/components/kt-datatable/table-partials/table-content/table-footer/TableItemsPerPageSelect.vue'
+import TablePagination from './table-content/table-footer/TablePagination.vue'
 import {
   computed,
   defineComponent,
   onMounted,
   ref,
   // type WritableComputedRef,
-  watch,
-} from "vue";
+  watch
+} from 'vue'
 
 export default defineComponent({
-  name: "table-footer",
+  name: 'table-footer',
   components: {
     TableItemsPerPageSelect,
-    TablePagination,
+    TablePagination
   },
   props: {
     count: { type: Number, required: false, default: 5 },
@@ -41,66 +41,66 @@ export default defineComponent({
     itemsPerPageDropdownEnabled: {
       type: Boolean,
       required: false,
-      default: true,
+      default: true
     },
-    currentPage: { type: Number, required: false, default: 1 },
+    currentPage: { type: Number, required: false, default: 1 }
   },
-  emits: ["update:itemsPerPage", "page-change"],
+  emits: ['update:itemsPerPage', 'page-change'],
   setup(props, { emit }) {
-    const page = ref(props.currentPage);
-    const inputItemsPerPage = ref(props.itemsPerPage);
+    const page = ref(props.currentPage)
+    const inputItemsPerPage = ref(props.itemsPerPage)
 
     watch(
       () => props.currentPage,
       (val) => {
-        page.value = val;
+        page.value = val
       }
-    );
+    )
 
     watch(
       () => props.count,
       () => {
-        page.value = 1;
+        page.value = 1
       }
-    );
+    )
 
     watch(
       () => inputItemsPerPage.value,
       () => {
-        page.value = 1;
+        page.value = 1
       }
-    );
+    )
 
     onMounted(() => {
-      inputItemsPerPage.value = props.itemsPerPage;
-    });
+      inputItemsPerPage.value = props.itemsPerPage
+    })
 
     const pageChange = (newPage) => {
-      page.value = newPage;
-      emit("page-change", page.value);
-    };
+      page.value = newPage
+      emit('page-change', page.value)
+    }
 
     const itemsCountInTable = computed({
       get() {
-        return props.itemsPerPage;
+        return props.itemsPerPage
       },
       set(value) {
-        inputItemsPerPage.value = value;
-        emit("update:itemsPerPage", value);
-      },
-    });
+        inputItemsPerPage.value = value
+        emit('update:itemsPerPage', value)
+      }
+    })
 
     const pageCount = computed(() => {
-      return Math.ceil(props.count / itemsCountInTable.value);
-    });
+      return Math.ceil(props.count / itemsCountInTable.value)
+    })
 
     return {
       pageChange,
       pageCount,
       page,
       itemsCountInTable,
-      inputItemsPerPage,
-    };
-  },
-});
+      inputItemsPerPage
+    }
+  }
+})
 </script>

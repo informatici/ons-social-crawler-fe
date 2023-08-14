@@ -7,16 +7,13 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted } from 'vue'
 
 export default defineComponent({
-  name: "system-layout",
+  name: 'system-layout',
   components: {},
   setup() {
-
-    onMounted(() => {
-
-    });
-  },
-});
+    onMounted(() => {})
+  }
+})
 </script>

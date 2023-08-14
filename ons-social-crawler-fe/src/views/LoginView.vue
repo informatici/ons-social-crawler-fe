@@ -1,28 +1,23 @@
 <script setup>
-import {ref} from "vue";
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import Swal from "sweetalert2";
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const email = ref("")
-const password = ref("")
+const email = ref('')
+const password = ref('')
 
 const signIn = async () => {
-  if(document.querySelector("#email").checkValidity()) { // validazione email
-    await authStore.login({email, password})
+  if (document.querySelector('#email').checkValidity()) {
+    // validazione email
+    await authStore.login({ email, password })
 
     if (authStore.isAuthenticated) {
-      router.push({ path: '/twitter' })
-    } else {
-      // alert('Error')
+      router.push({ path: '/youTube' })
     }
-  } else {
-    console.debug('Error in the email format: ', )
   }
-
 }
 </script>
 <template>
@@ -41,18 +36,23 @@ const signIn = async () => {
       <div class="login__main">
         <form action="#" method="POST" v-on:submit.prevent="">
           <input
-              v-model="email"
-              class="input" type="email" name="email" id="email" placeholder="Email" required />
+            v-model="email"
+            class="input"
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
           <input
-              v-model="password"
+            v-model="password"
             class="input"
             type="password"
             name="password"
             id="password"
             placeholder="Password"
-              required
+            required
           />
-          <p class="login__forgot"><a href="#" target="_blank">Hai dimenticato la password?</a></p>
           <div class="login__actions">
             <button class="login__submit btn btn-primary" @click="signIn">Log in</button>
           </div>
@@ -81,7 +81,7 @@ const signIn = async () => {
       border-radius: 0.3rem;
       background-color: white;
       padding: 2.2rem 1.5rem;
-      box-shadow: 0 2.5px 5px 3.5px hsla(0, 0%, 55%, .4);
+      box-shadow: 0 2.5px 5px 3.5px hsla(0, 0%, 55%, 0.4);
 
       .login-content {
         display: flex;

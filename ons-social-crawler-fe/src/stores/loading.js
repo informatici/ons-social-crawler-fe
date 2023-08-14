@@ -1,21 +1,21 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 import { ElLoading } from 'element-plus'
 
-export const useLoadingStore = defineStore("loading", () => {
-    let loadingInstance;
+export const useLoadingStore = defineStore('loading', () => {
+  let loadingInstance
 
-    function show() {
-        loadingInstance = ElLoading.service({
-            fullscreen: true,
-        });
-    }
+  function show() {
+    loadingInstance = ElLoading.service({
+      fullscreen: true
+    })
+  }
 
-    function hide() {
-        loadingInstance.close();
-    }
+  function hide() {
+    loadingInstance.close()
+  }
 
-    return {
-        show,
-        hide,
-    };
-});
+  return {
+    show,
+    hide
+  }
+})

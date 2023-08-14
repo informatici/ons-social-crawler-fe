@@ -1,23 +1,23 @@
 <script setup></script>
 <template>
   <div class="logo-image-container">
-    <router-link :to="{name: 'twitter'}">
-      <img class="logo-image" src="/logo/odiare-logo.jpeg" alt="logo">
+    <router-link :to="{ name: 'youTube' }">
+      <img class="logo-image" src="/logo/odiare-logo.jpeg" alt="logo" />
     </router-link>
   </div>
 </template>
 <style lang="scss">
 .logo-image-container {
   height: 80%;
-  transition: transform .1s;
+  transition: transform 0.1s;
 
   &:active {
-    transform: scale(.9);
-    transition: transform .05s;
+    transform: scale(0.9);
+    transition: transform 0.05s;
   }
 
   &:hover {
-    opacity: .95;
+    opacity: 0.95;
   }
 
   .logo-image {
@@ -28,6 +28,5 @@
 }
 
 @media screen and (max-width: 992px) {
-
 }
 </style>

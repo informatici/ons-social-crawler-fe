@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
-import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
+// import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
 import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
@@ -28,7 +28,7 @@ const otherCommentsData = ref([])
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('youtube/elasticsearch/videos/' + route.query.videoId)
+    const res = await ApiService.get('youtube/videos/' + route.query.videoId)
 
     videoData.value = res.data.video ?? {}
 
@@ -147,7 +147,9 @@ onMounted(async () => {
 <template>
   <main class="page-container">
     <div class="section page-title">
-      <h1><span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }} <br> <span class="commentTitle">"{{ selectedCommentData?.textDisplay }}"</span></h1>
+      <h1>
+        <span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }} <br>
+      </h1>
       <router-link :to="{name: 'youTube'}">
         <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
       </router-link>

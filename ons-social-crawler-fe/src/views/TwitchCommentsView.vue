@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
-import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
 import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
@@ -14,10 +13,13 @@ const { dateTimeFormatter } = global()
 const total = ref(0)
 const commentsData = ref([])
 const videoData = ref({})
+const channelName = ref("")
+const channelSlug = ref("")
 const selectedCommentData = ref({})
 const otherCommentsData = ref([])
 const parentDomain = ref("")
 const loading = useLoadingStore();
+const isVideo = ref(false)
 
 // const openItem = (id, modal) => {
 //   selectedId.value = id;
@@ -31,9 +33,12 @@ const init = async () => {
   try {
     parentDomain.value = window.location.hostname
     console.log('%cCurrent domain - twitch embedded video: ', 'color: #00a6fb; font-size: 16px; font-weight: 500;', parentDomain.value)
-    const res = await ApiService.get('twitch/elasticsearch/streams/' + route.query.streamId)
+    const res = await ApiService.get('twitch/streams/' + route.query.streamId)
 
     videoData.value = res.data.video ?? {}
+    isVideo.value = res.data.video ? true : false
+    channelName.value = res.data?.stream?.user_name ?? ""
+    channelSlug.value = res.data?.stream?.user_login ?? ""
 
     commentsData.value = res.data.comments ?? []
     commentsData.value = commentsData.value.map(comment => {
@@ -151,7 +156,9 @@ onMounted(async () => {
 <template>
   <main class="page-container">
     <div class="section page-title">
-      <h1><span><i class="title-icon fa-brands fa-twitch"></i></span> {{ route?.meta?.label }} <br> <span class="commentTitle">"{{ selectedCommentData?.textDisplay }}"</span></h1>
+      <h1>
+        <span><i class="title-icon fa-brands fa-twitch"></i></span> {{ route?.meta?.label }} <br>
+      </h1>
       <router-link :to="{name: 'twitch'}">
         <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
       </router-link>
@@ -164,8 +171,7 @@ onMounted(async () => {
         <div class="section-content">
           <div class="section-content__video">
 
-            <!--                <div id="twitch-embed">{{videoData.url}}-->
-            <div>
+            <div v-if="isVideo">
               <iframe
                   class="embedded-video"
                   :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}&autoplay=false`"
@@ -173,13 +179,16 @@ onMounted(async () => {
               ></iframe>
 
             </div>
+            <div v-else>
+              <div class="embedded-video no-video-placeholder">
+                <p class="no-video-placeholder__message">Il video non è ancora disponibile</p>
+                <i class="no-video-placeholder__icon title-icon fa-brands fa-twitch"></i>
+              </div>
+            </div>
 
-            <!--                <div class="embedded-video-container">-->
-            <!--                  <div v-html="videoData.player"></div>-->
-            <!--                </div>-->
           </div>
 
-          <div class="section-content__info">
+          <div class="section-content__info" v-if="isVideo">
             <p class="video-info__row">
               <h4>Titolo</h4>
               <span>{{videoData.title}}</span>
@@ -193,6 +202,13 @@ onMounted(async () => {
             <p class="video-info__row">
               <h4>Data e ora di pubblicazione</h4>
               <span>{{dateTimeFormatter(videoData.published_at)}}</span>
+            </p>
+          </div>
+
+          <div class="section-content__info" v-else>
+            <p class="video-info__row">
+              <h4>Canale</h4>
+              <span><a :href="'https://www.twitch.tv/' + channelSlug" target="_blank">{{ channelName }}</a></span>
             </p>
           </div>
         </div>
@@ -308,7 +324,6 @@ onMounted(async () => {
     </div>
 
   </main>
-  <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
 </template>
 <style lang="scss">
 .videoTitle,
@@ -345,6 +360,25 @@ onMounted(async () => {
     .embedded-video {
       height: var(--section-video-height);
       width: var(--video-width);
+
+      &.no-video-placeholder {
+        background-color: #EEE;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+
+        .no-video-placeholder__message {
+          font-size: 1rem;
+          font-weight: 400;
+        }
+
+        .no-video-placeholder__icon {
+          font-size: 5rem;
+        }
+      }
     }
 
     .section-content__info {
