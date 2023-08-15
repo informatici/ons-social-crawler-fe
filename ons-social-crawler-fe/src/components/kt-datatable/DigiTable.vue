@@ -68,7 +68,13 @@ export default defineComponent({
     tableFooter: { type: Boolean, required: false, default: true },
     onlyDisplay: { type: Boolean, required: false, default: false }
   },
-  emits: ['page-change', 'on-sort', 'on-items-select', 'on-items-per-page-change'],
+  emits: [
+    'page-change',
+    'on-sort',
+    'on-items-select',
+    'on-items-per-page-change',
+    'on-search-change'
+  ],
   components: {
     TableContent,
     TableFooter
@@ -128,7 +134,7 @@ export default defineComponent({
         tableData.value = props.data
         return
       }
-      currentPage.value = 1
+      // currentPage.value = 1
       tableData.value = []
       // if (val !== "") {
       let results = []
@@ -148,7 +154,7 @@ export default defineComponent({
     watch(
       () => itemsInTable.value,
       (val) => {
-        currentPage.value = 1
+        // currentPage.value = 1
         emit('on-items-per-page-change', val)
       }
     )
@@ -156,27 +162,28 @@ export default defineComponent({
     watch(
       () => props.data,
       (val) => {
-        // init(val);
-        filterData()
+        init(val)
+        // filterData()
       }
     )
 
     watch(
       () => props.search,
       (val) => {
-        filterData()
+        emit('on-search-change', val)
+        // filterData()
       }
     )
 
     watch(
       () => props.predictionFilter,
       () => {
-        filterData()
+        // filterData()
       }
     )
 
     const pageChange = (page) => {
-      currentPage.value = page
+      // currentPage.value = page
       emit('page-change', page)
     }
 
@@ -203,11 +210,9 @@ export default defineComponent({
       return 0
     })
 
-    /*
-    const onSort = (sort: Sort) => {
-      emit("on-sort", sort);
-    };
-    */
+    const onSort = (sort) => {
+      emit('on-sort', sort)
+    }
 
     const sonSortort = (sort) => {
       const reverse = sort.order === 'desc'
@@ -221,10 +226,10 @@ export default defineComponent({
         arraySort(tableData.value, sortLabel, { reverse })
       }
     }
-    const onSort = (sort) => {
-      sortLabel.value = sort
-      sonSortort(sort)
-    }
+    // const onSort = (sort) => {
+    //   sortLabel.value = sort
+    //   sonSortort(sort)
+    // }
 
     //eslint-disable-next-line
     const onItemSelect = (selectedItems) => {

@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, RouterLink } from 'vue-router'
 import ApiService from '../core/services/ApiService'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from '@/stores/loading'
@@ -17,11 +17,16 @@ const total = ref(0)
 const data = ref([])
 const size = ref(10)
 const page = ref(1)
+const sortLabel = ref('')
+const sortOrder = ref('')
 
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('twitch/comments', `?size=${size.value}&page=${page.value}`)
+    const res = await ApiService.get(
+      'twitch/comments',
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+    )
     data.value = res.data.hits ?? []
     data.value = data.value.map((hit) => hit?._source?.comment) ?? []
     data.value = data.value.map((item) => {
@@ -83,10 +88,14 @@ const headerConfig = ref([
 
 const onSearch = (newValue) => {
   search.value = newValue
+  page.value = 1
+  init()
 }
 
 const onPrediction = (newValue) => {
   predictionId.value = newValue
+  page.value = 1
+  init()
 }
 
 let interval = null
@@ -111,12 +120,19 @@ const streamButtonUpdate = (data) => {
 }
 
 const changeItemPerPage = (itemPerPage) => {
+  page.value = 1
   size.value = itemPerPage
   init()
 }
 
 const changePage = (newPage) => {
   page.value = newPage
+  init()
+}
+
+const changeSort = (sort) => {
+  sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
+  sortOrder.value = sort.order
   init()
 }
 </script>
@@ -150,6 +166,7 @@ const changePage = (newPage) => {
         sort-label="publishedAt"
         @on-items-per-page-change="changeItemPerPage"
         @page-change="changePage"
+        @on-sort="changeSort"
       >
         <template v-slot:actions="{ row: row }">
           <div class="d-flex gap-3">
