@@ -7,8 +7,9 @@ import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import global from '../core/helpers/functions.js'
 import { useLoadingStore } from "@/stores/loading";
 import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
+import alert from '@/core/helpers/alert'
 
-
+const { dangerAlert } = alert()
 const loading = useLoadingStore();
 const route = useRoute()
 const { dateTimeFormatter } = global()
@@ -17,6 +18,10 @@ const commentsData = ref([])
 const videoData = ref({})
 const selectedCommentData = ref({})
 const otherCommentsData = ref([])
+const size = ref(10)
+const page = ref(1)
+const sortLabel = ref('')
+const sortOrder = ref('')
 
 // const openItem = (id, modal) => {
 //   selectedId.value = id;
@@ -28,7 +33,10 @@ const otherCommentsData = ref([])
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('youtube/videos/' + route.query.videoId)
+    const res = await ApiService.get(
+      `youtube/videos/${route.query.videoId}`,
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+    )
 
     videoData.value = res.data.video ?? {}
 
@@ -56,13 +64,12 @@ const init = async () => {
     //   return item
     // })
     // #qui::END
-    selectedCommentData.value = commentsData.value.find(comment => comment.id === route.params.id) ?? {}
+    selectedCommentData.value = Object.keys(selectedCommentData.value).length > 0 ? selectedCommentData.value : (commentsData.value.find(comment => comment.id === route.params.id) ?? {})
     otherCommentsData.value = commentsData.value.filter(comment => comment.id !== route.params.id) ?? []
 
-    total.value = otherCommentsData.value.length;
-    // total.value = res.data.total.value ?? 0 // todo: manca nella chiamata
+    total.value = res.data.totalComments - 1;
   } catch (e) {
-    console.error("Error: ", e)
+    dangerAlert(e)
   } finally {
     loading.hide()
   }
@@ -131,18 +138,37 @@ const headerConfigTableSelected = ref([
 
 const onSearch = (newValue) => {
   search.value = newValue
+  page.value = 1
+  init()
 }
 
 const onPrediction = (newValue) => {
   predictionId.value = newValue
+  page.value = 1
+  init()
 }
 
 onMounted(async () => {
   await init()
-  // setInterval(async () => {
-  //   await init()
-  // }, 10000)
 })
+
+const changeItemPerPage = (itemPerPage) => {
+  page.value = 1
+  size.value = itemPerPage
+  init()
+}
+
+const changePage = (newPage) => {
+  page.value = newPage
+  init()
+}
+
+const changeSort = (sort) => {
+  page.value = 1
+  sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
+  sortOrder.value = sort.order
+  init()
+}
 </script>
 <template>
   <main class="page-container">
@@ -266,7 +292,12 @@ onMounted(async () => {
             :searched-fields="searchedFields"
             :search="search"
             :prediction-filter="predictionId"
+            :total="total"
+            :cPage="page"
             sort-label="publishedAt"
+            @on-items-per-page-change="changeItemPerPage"
+            @page-change="changePage"
+            @on-sort="changeSort"
         >
           <!--      <template v-slot:actions="{ row: row }">-->
           <!--        <div class="d-flex gap-3">-->

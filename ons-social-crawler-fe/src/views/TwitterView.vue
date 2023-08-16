@@ -7,17 +7,26 @@ import global from '../core/helpers/functions.js'
 import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamButton from '@/views/components/StreamButton.vue'
+import alert from '@/core/helpers/alert'
 
 const loading = useLoadingStore()
+const { dangerAlert } = alert()
 const route = useRoute()
 const { dateTimeFormatter } = global()
 const total = ref(0)
 const data = ref([])
+const size = ref(10)
+const page = ref(1)
+const sortLabel = ref('')
+const sortOrder = ref('')
 
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('twitter/twits')
+    const res = await ApiService.get(
+      'twitter/twits',
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+    )
     data.value = res.data.hits.hits ?? []
     data.value = data.value.map((item) => {
       item.createdAt = item._source.data.createdAt // per sort data
@@ -40,7 +49,7 @@ const init = async () => {
 
     total.value = res.data.hits.total.value ?? 0
   } catch (e) {
-    console.error('Error: ', e)
+    dangerAlert(e)
   } finally {
     loading.hide()
   }
@@ -77,10 +86,14 @@ const headerConfig = ref([
 
 const onSearch = (newValue) => {
   search.value = newValue
+  page.value = 1
+  init()
 }
 
 const onPrediction = (newValue) => {
   predictionId.value = newValue
+  page.value = 1
+  init()
 }
 
 let interval = null
@@ -102,6 +115,24 @@ const streamButtonUpdate = (data) => {
   } else if (!twitterStatus) {
     clearInterval(interval)
   }
+}
+
+const changeItemPerPage = (itemPerPage) => {
+  page.value = 1
+  size.value = itemPerPage
+  init()
+}
+
+const changePage = (newPage) => {
+  page.value = newPage
+  init()
+}
+
+const changeSort = (sort) => {
+  page.value = 1
+  sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
+  sortOrder.value = sort.order
+  init()
 }
 </script>
 <template>
@@ -129,7 +160,12 @@ const streamButtonUpdate = (data) => {
         :searched-fields="searchedFields"
         :search="search"
         :prediction-filter="predictionId"
+        :total="total"
+        :cPage="page"
         sort-label="createdAt"
+        @on-items-per-page-change="changeItemPerPage"
+        @page-change="changePage"
+        @on-sort="changeSort"
       >
         <template v-slot:twit="{ row: row }">
           {{ row._source.data.text }}

@@ -131,6 +131,7 @@ const changePage = (newPage) => {
 }
 
 const changeSort = (sort) => {
+  page.value = 1
   sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
   sortOrder.value = sort.order
   init()
