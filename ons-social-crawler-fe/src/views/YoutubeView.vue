@@ -7,24 +7,26 @@ import global from '../core/helpers/functions.js'
 import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamButton from '@/views/components/StreamButton.vue'
+import alert from '@/core/helpers/alert'
 
+const { dangerAlert } = alert()
 const loading = useLoadingStore()
 const route = useRoute()
 const { dateTimeFormatter } = global()
 const total = ref(0)
 const data = ref([])
-
-// const openItem = (id, modal) => {
-//   selectedId.value = id;
-//   setTimeout(() => {
-//     showModal(modal);
-//   }, 100);
-// };
+const size = ref(10)
+const page = ref(1)
+const sortLabel = ref('')
+const sortOrder = ref('')
 
 const init = async () => {
   loading.show()
   try {
-    const res = await ApiService.get('youtube/comments')
+    const res = await ApiService.get(
+      'youtube/comments',
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+    )
     data.value = res.data.hits ?? []
     data.value = data.value.map((hit) => hit?._source?.comment) ?? []
     data.value = data.value.map((item) => {
@@ -37,7 +39,7 @@ const init = async () => {
     })
     total.value = res.data.total.value ?? 0
   } catch (e) {
-    console.error('Error: ', e)
+    dangerAlert(e)
   } finally {
     loading.hide()
   }
@@ -85,10 +87,14 @@ const headerConfig = ref([
 
 const onSearch = (newValue) => {
   search.value = newValue
+  page.value = 1
+  init()
 }
 
 const onPrediction = (newValue) => {
   predictionId.value = newValue
+  page.value = 1
+  init()
 }
 
 let interval = null
@@ -110,6 +116,24 @@ const streamButtonUpdate = (data) => {
   } else if (!youTubeStatus) {
     clearInterval(interval)
   }
+}
+
+const changeItemPerPage = (itemPerPage) => {
+  page.value = 1
+  size.value = itemPerPage
+  init()
+}
+
+const changePage = (newPage) => {
+  page.value = newPage
+  init()
+}
+
+const changeSort = (sort) => {
+  page.value = 1
+  sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
+  sortOrder.value = sort.order
+  init()
 }
 </script>
 <template>
@@ -137,7 +161,12 @@ const streamButtonUpdate = (data) => {
         :searched-fields="searchedFields"
         :search="search"
         :prediction-filter="predictionId"
+        :total="total"
+        :cPage="page"
         sort-label="publishedAt"
+        @on-items-per-page-change="changeItemPerPage"
+        @page-change="changePage"
+        @on-sort="changeSort"
       >
         <template v-slot:actions="{ row: row }">
           <div class="d-flex gap-3">
