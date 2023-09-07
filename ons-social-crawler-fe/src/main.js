@@ -9,12 +9,19 @@ import ElementPlus from 'element-plus'
 
 import 'bootstrap'
 
+import VCalendar from 'v-calendar';
+import 'v-calendar/style.css';
+
+
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
 app.use(i18n)
+
+// Use plugin with optional defaults
+app.use(VCalendar, {})
 
 ApiService.init(app)
 initVeeValidate()
