@@ -1,47 +1,33 @@
 <script setup>
-import { useRoute } from 'vue-router'
-import 'zingchart/es6';
-const route = useRoute()
-</script>
-
-<script>
 import transactions from './data/transactions.js';
 import DateRange from "./components/DateRange.vue";
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue";
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue";
-export default {
-  name: 'dashboard',
-  // Register the components to be used
-  components: {
-    DateRange,
-    LatestTransactionsChart,
-    TransactionBreakdownChart,
-  },
-  data() {
-    return {
-      transactions,
-      range: {
-        start: new Date(new Date().setHours(0,0,0,0)),
-        end: new Date(new Date().setHours(24,0,0,0))
-      },
-    }
-  },
-  computed: {
-    filteredTransactions() {
-      return this.transactions.filter(entry => {
-        return (
-          entry.timestamp >= this.range.start.getTime() &&
-          entry.timestamp < this.range.end.getTime()
-        );
-      });
-    },
-  },
-  methods: {
-    updateRange(range) {
-      // console.log(range);
-      this.range = range;
-    }
-  }
+
+import { useRoute } from 'vue-router'
+import { computed, ref } from 'vue'
+import 'zingchart/es6';
+
+const route = useRoute()
+
+const range = ref({
+  //start: new Date(new Date().setHours(0,0,0,0)),
+  start: new Date('2019-09-15T12:32:22'),
+  end: new Date(new Date().setHours(24, 0, 0, 0))
+})
+
+const filteredTransactions = computed(() => {
+  return transactions.filter(entry => {
+    return (
+      entry.timestamp >= range.value.start.getTime() &&
+      entry.timestamp < range.value.end.getTime()
+    );
+  });
+})
+
+function updateRange(newRange) {
+  // console.log(range);
+  range.value = newRange;
 }
 </script>
 
