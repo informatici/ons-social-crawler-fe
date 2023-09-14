@@ -180,6 +180,16 @@ a {
   transform: translateY(-10%);
 }
 
+/* ICONA DASHBOARD */
+.title-icon.custom-chart {
+  --size: 2.4rem;
+  display: inline-block;
+  height: var(--size);
+  width: var(--size);
+  fill: hsl(0deg, 0%, 60%);
+  transform: translateY(-10%);
+}
+
 /* #APP */
 #app {
   /* BUTTONS */
