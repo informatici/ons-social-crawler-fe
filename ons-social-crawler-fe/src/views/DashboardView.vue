@@ -1,14 +1,20 @@
 <script setup>
-import transactions from './data/transactions.js';
-import DateRange from "./components/DateRange.vue";
-import LatestTransactionsChart from "./components/LatestTransactionsChart.vue";
-import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue";
+//import transactions from './data/transactions.js'
+import DateRange from "./components/DateRange.vue"
+import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
+import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
 
 import { useRoute } from 'vue-router'
-import { computed, ref } from 'vue'
-import 'zingchart/es6';
+import { computed, ref, onMounted } from 'vue'
+import ApiService from '../core/services/ApiService'
+import { useLoadingStore } from "@/stores/loading"
+import alert from '@/core/helpers/alert'
+import 'zingchart/es6'
 
 const route = useRoute()
+const loading = useLoadingStore()
+const { dangerAlert } = alert()
+const transactions = ref([])
 
 const range = ref({
   //start: new Date(new Date().setHours(0,0,0,0)),
@@ -16,19 +22,81 @@ const range = ref({
   end: new Date(new Date().setHours(24, 0, 0, 0))
 })
 
+const toTimestamp = (strDate) => {
+  const dt = Date.parse(strDate)
+  return dt
+}
+
 const filteredTransactions = computed(() => {
-  return transactions.filter(entry => {
+  return transactions.value.filter(entry => {
     return (
       entry.timestamp >= range.value.start.getTime() &&
       entry.timestamp < range.value.end.getTime()
-    );
-  });
+    )
+  })
 })
 
 function updateRange(newRange) {
-  // console.log(range);
-  range.value = newRange;
+  // console.log(range)
+  range.value = newRange
 }
+
+const size = ref(100)
+const page = ref(1)
+const sortLabel = ref('')
+const sortOrder = ref('')
+const search = ref('')
+const predictionId = ref(0)
+const total = ref(0)
+const data = ref([])
+
+const init = async () => {
+  loading.show()
+  try {
+    const youtube = await ApiService.get(
+      'youtube/comments',
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+    )
+    //console.log(youtube)
+    data.value = youtube.data.hits ?? []
+    data.value = data.value.map((hit) => hit?._source?.comment) ?? []
+    data.value = data.value.map((item) => {
+      // per sorting score
+      item.predictionScore = 0
+      if (item.prediction) {
+        item.predictionScore = item.prediction.score
+      }
+      return item
+    })
+    total.value = youtube.data.total.value ?? 0
+
+    //per grafici
+    transactions.value = youtube.data.hits ?? []
+    transactions.value = data.value.map((hit) => hit?._source?.comment) ?? []
+    transactions.value = data.value.map((item) => {
+      let newItem = {}
+      newItem.amount = "1884.46"
+      newItem.purchase_type = item.predictionScore
+      newItem.timestamp = toTimestamp(item.publishedAt)
+      newItem.score = item.predictionScore
+      newItem.response = item.response
+      newItem.dimension = item.prediction ? item.prediction.dimension : ""
+      newItem.tokens = item.prediction ? item.prediction.tokens : ""
+      return newItem
+    })
+    //console.log(transactions.value)
+  } catch (e) {
+    dangerAlert(e)
+  } finally {
+    loading.hide()
+  }
+}
+
+
+onMounted(async () => {
+  await init()
+})
+
 </script>
 
 <template>
