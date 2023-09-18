@@ -12,4 +12,4 @@ metadata:
   name: ons2-cert-pippo
 spec:
   domains:
-    - pippo.34-95-74-41.nip.io
+    - app.34-95-74-41.nip.io
