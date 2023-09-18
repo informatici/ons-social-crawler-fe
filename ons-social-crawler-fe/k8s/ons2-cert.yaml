@@ -13,11 +13,5 @@ metadata:
 spec:
   domains:
     - pippo.34-95-74-41.nip.io
----
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: ons2-cert-app
-spec:
-  domains:
     - 34-95-74-41.nip.io/app
+    
