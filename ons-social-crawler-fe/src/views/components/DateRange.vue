@@ -1,55 +1,85 @@
-<script>
-export default {
-    props: ['entries'],
-    data() {
-        // console.log(this.entries);
-        return {
-            range: {
-                start: this.entries.start,
-                end: this.entries.end,
-            },
-            masks: {
-                input: 'YYYY-MM-DD h:mm A',
-            },
-        };
-    },
+<script setup>
+import { ref, toRefs, onMounted } from 'vue';
+import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns';
+
+const props = defineProps({
+  entries: Object,
+});
+
+const { entries } = toRefs(props);
+
+const masks = {
+  input: 'dd/MM/yyyy',
 };
+
+const date = ref();
+
+const presetDates = ref([
+  {
+    label: 'Periodo',
+    value: [entries.value.start, entries.value.end],
+    slot: 'preset-date-range-button'
+  },
+  { 
+    label: 'Questo mese', 
+    value: [startOfMonth(new Date()), endOfMonth(new Date())] 
+  },
+  {
+    label: 'Ultimo mese',
+    value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  {
+    label: 'Ultimi 2 mesi',
+    value: [startOfMonth(subMonths(new Date(), 2)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  {
+    label: 'Ultimi 3 mesi',
+    value: [startOfMonth(subMonths(new Date(), 3)), endOfMonth(subMonths(new Date(), 1))],
+  },
+  { 
+    label: 'Questo anno', 
+    value: [startOfYear(new Date()), endOfYear(new Date())] 
+  },
+  { 
+    label: 'Ultimo anno', 
+    value: [startOfYear(subYears(new Date(), 1)), endOfYear(subYears(new Date(), 1))] 
+  },
+  { 
+    label: 'Ultimi 2 anni', 
+    value: [startOfYear(subYears(new Date(), 2)), endOfYear(subYears(new Date(), 1))] 
+  },
+]);
+
+onMounted(() => {
+  // Set a default date range when the component is mounted
+  date.value = [entries.value.start, entries.value.end]
+});
 </script>
 
+<style scoped>
+/* Override default styles for the icon: fix position */
+:deep(.dp__input_icon) {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    inset-inline-start: 0;
+    transform: translateY(-115%); /* was -50% */
+    color: var(--dp-icon-color);
+}
+</style>
+
 <template>
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8" @submit.prevent>
-        <div class="mb-4">
-            <h2>
-                Select Range
-            </h2>
-            <v-date-picker v-model="range" mode="dateTime" :masks="masks" is-range @dayclick="$emit('rangeChanged', range)">
-                <template v-slot="{ inputValue, inputEvents, isDragging }">
-                    <div class="flex flex-col sm:flex-row justify-start items-center">
-                        <div class="relative flex-grow">
-                            <!-- <svg class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg> -->
-                            <input class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
-                                :class="isDragging ? 'text-gray-600' : 'text-gray-900'" :value="inputValue.start"
-                                v-on="inputEvents.start" /> ->
-                            <!-- <svg class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                </path>
-                            </svg> -->
-                            <input class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
-                                :class="isDragging ? 'text-gray-600' : 'text-gray-900'" :value="inputValue.end"
-                                v-on="inputEvents.end" />
-                        </div>
-                    </div>
-                </template>
-            </v-date-picker>
-        </div>
-    </form>
+    <VueDatePicker v-model="date" range :preset-dates="presetDates" :format=masks.input >
+      <template #preset-date-range-button="{ label, value, presetDate }">
+        <span 
+            role="button"
+            :tabindex="0"
+            @click="presetDate(value)"
+            @keyup.enter.prevent="presetDate(value)"
+            @keyup.space.prevent="presetDate(value)">
+          {{ label }}
+        </span>
+      </template>
+    </VueDatePicker>
 </template>
+

@@ -1,5 +1,4 @@
 <script setup>
-//import transactions from './data/transactions.js'
 import DateRange from "./components/DateRange.vue"
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
@@ -17,9 +16,8 @@ const { dangerAlert } = alert()
 const transactions = ref([])
 
 const range = ref({
-  //start: new Date(new Date().setHours(0,0,0,0)),
-  start: new Date('2019-09-15T12:32:22'),
-  end: new Date(new Date().setHours(24, 0, 0, 0))
+  end: new Date(),
+  start: new Date(new Date().setHours(-672, 0, 0, 0)) //4 week
 })
 
 const toTimestamp = (strDate) => {
@@ -36,12 +34,12 @@ const filteredTransactions = computed(() => {
   })
 })
 
-function updateRange(newRange) {
-  // console.log(range)
-  range.value = newRange
+const updateRange = (modelData) => {
+  range.value.start = modelData[0]
+  range.value.end = modelData[1]
 }
 
-const size = ref(100)
+const size = ref(4000)
 const page = ref(1)
 const sortLabel = ref('')
 const sortOrder = ref('')
@@ -115,7 +113,7 @@ onMounted(async () => {
     </div>
     <div>
       <div>
-        <DateRange :entries="range" @rangeChanged="updateRange" />
+        <DateRange :entries="range" @update:model-value="updateRange"/>
       </div>
       <div>
         <LatestTransactionsChart :entries="filteredTransactions" />
