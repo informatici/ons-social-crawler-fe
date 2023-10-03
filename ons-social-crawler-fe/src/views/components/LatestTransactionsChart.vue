@@ -15,6 +15,9 @@ export default {
         // Create an object to store the aggregated data grouped by isHate value
         const aggregatedData = {};
 
+        // Create an object to store the series names
+        const seriesNames = {};
+
         // Iterate through transactions and group data by isHate value
         this.entries.forEach((transaction) => {
           const isHateValue = transaction.isHate ? true : false;
@@ -31,11 +34,15 @@ export default {
           }
 
           aggregatedData[isHateValue][day]++;
+
+          // Track series names
+          seriesNames[isHateValue] = `isHate = ${isHateValue}`;
         });
 
         // Convert the aggregated data object to the desired array format
         const result = Object.keys(aggregatedData).map((isHateValue) => {
           return {
+            text: seriesNames[isHateValue], // Set the "text" property for each series
             values: Object.entries(aggregatedData[isHateValue]).map(([day, count]) => [
               new Date(day).getTime(),
               count,
@@ -43,7 +50,7 @@ export default {
           };
         });
 
-        //console.log(result);
+        console.log(result);
         return result
     },
     chartConfig() {
@@ -51,7 +58,8 @@ export default {
       return {
         type: 'bar',
         title: {
-          text: 'Transactions per day'
+          text: 'Contenuti al giorno ',
+          position: 'top',
         },
         plot: {
           stacked: true
@@ -64,18 +72,36 @@ export default {
           },
           item: {
             fontSize: 10
-          }
+          },
+          step: 'day'
         },
         scaleY: {
           label: {
-            text: 'Number',
+            text: 'Numero',
           },
           //short:true,
           //shortUnit: 'K',
           item: {
             fontSize: 10
           }
-        }
+        },
+        legend: {
+          toggleAction: 'hide', // Optional: Hide or show the series on click
+          layout: 'float',
+          align: 'center',
+          borderWidth: 0,
+          backgroundColor: 'none',
+          item: {
+            fontSize: 12
+          },
+          verticalAlign: 'bottom',
+        },
+        crosshairX: {
+          lineColor: '#f00', // Customize the crosshair line color
+          scaleLabel: {
+            backgroundColor: '#f00', // Customize the background color of the scale label
+          },
+        },
       }
     },
   }
