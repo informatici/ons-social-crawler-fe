@@ -9,9 +9,8 @@ import ElementPlus from 'element-plus'
 
 import 'bootstrap'
 
-import VCalendar from 'v-calendar';
-import 'v-calendar/style.css';
-
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const app = createApp(App)
 
@@ -20,8 +19,7 @@ app.use(router)
 app.use(ElementPlus)
 app.use(i18n)
 
-// Use plugin with optional defaults
-app.use(VCalendar, {})
+app.component('VueDatePicker', VueDatePicker);
 
 ApiService.init(app)
 initVeeValidate()
