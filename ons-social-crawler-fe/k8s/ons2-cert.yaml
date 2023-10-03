@@ -9,7 +9,8 @@ spec:
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: ons2-cert-pippo
+  name: ons2-cert-ls
 spec:
   domains:
-    - pippo.34-95-74-41.nip.io
+    - ls-34-95-74-41.nip.io
+    
