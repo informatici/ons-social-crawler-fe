@@ -10,71 +10,74 @@ export default {
   computed: {
     values() {
         // return this.entries[0].values;
-        return this.entries.map(o => {
-          return [o.timestamp, parseFloat(o.amount.slice(1,-1))]
-          
-       });
+        //console.log(this.entries)
+
+        // Create an object to store the aggregated data grouped by isHate value
+        const aggregatedData = {};
+
+        // Iterate through transactions and group data by isHate value
+        this.entries.forEach((transaction) => {
+          const isHateValue = transaction.isHate ? true : false;
+          const date = new Date(transaction.timestamp);
+          const timestamp = date.getTime(); // Timestamp
+          const day = date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
+
+          if (!aggregatedData[isHateValue]) {
+            aggregatedData[isHateValue] = {};
+          }
+
+          if (!aggregatedData[isHateValue][day]) {
+            aggregatedData[isHateValue][day] = 0;
+          }
+
+          aggregatedData[isHateValue][day]++;
+        });
+
+        // Convert the aggregated data object to the desired array format
+        const result = Object.keys(aggregatedData).map((isHateValue) => {
+          return {
+            values: Object.entries(aggregatedData[isHateValue]).map(([day, count]) => [
+              new Date(day).getTime(),
+              count,
+            ]),
+          };
+        });
+
+        //console.log(result);
+        return result
     },
     chartConfig() {
       // TODO: Add a series object
       return {
-        type: 'line',
+        type: 'bar',
         title: {
-          text: 'Latest Transactions',
-          adjustLayout: true,
-          align: 'left',
-          margin: 0,
-          fontColor: '#5d7d9a'
-        },
-        subtitle: {
-          text: 'Last 30 days',
-          align: 'left',
-          fontColor: '#5d7d9a'
+          text: 'Transactions per day'
         },
         plot: {
-          aspect: 'spline',
-          marker: {
-            visible: false,
-          },
-
+          stacked: true
         },
-        crosshairX:{
-          plotLabel :{
-            negation: "currency",
-            text: '$%v',
-            'thousands-separator': ","
-          },
-          marker: {
-            visible: false,
-          }
-        },
-        tooltip: { 
-          visible: false,
-
-        },
-        plotarea: {
-          margin: '35 35 60 60'
-
-        },
+        series: this.values,
         scaleX: {
           transform: {
             type: 'date',
-            all: '%M %d',
+            all: '%d/%m/%y'
+          },
+          item: {
+            fontSize: 10
           }
         },
         scaleY: {
           label: {
-            text: 'Amount in USD',
+            text: 'Number',
           },
-          short:true,
-          shortUnit: 'K',
-        },
-        // TODO: Format the values for the series.
-        series: [{
-           values: this.values, 
-        }],
-      };
-    }
-  },
+          //short:true,
+          //shortUnit: 'K',
+          item: {
+            fontSize: 10
+          }
+        }
+      }
+    },
+  }
 }
 </script>

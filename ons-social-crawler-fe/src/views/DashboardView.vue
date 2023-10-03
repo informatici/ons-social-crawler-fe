@@ -75,8 +75,8 @@ const init = async () => {
     transactions.value = data.value.map((hit) => hit?._source?.comment) ?? []
     transactions.value = data.value.map((item) => {
       let newItem = {}
-      newItem.amount = "1884.46"
-      newItem.purchase_type = item.predictionScore
+      newItem.social = "youtube"
+      newItem.isHate = item.predictionScore
       newItem.timestamp = toTimestamp(item.publishedAt)
       newItem.score = item.predictionScore
       newItem.response = item.response
