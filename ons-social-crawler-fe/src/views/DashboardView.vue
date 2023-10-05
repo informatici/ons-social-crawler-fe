@@ -37,6 +37,7 @@ const filteredTransactions = computed(() => {
 const updateRange = (modelData) => {
   range.value.start = modelData[0]
   range.value.end = modelData[1]
+  init()
 }
 
 const size = ref(4000)
@@ -51,25 +52,26 @@ const data = ref([])
 const init = async () => {
   loading.show()
   try {
-    const youtube = await ApiService.get(
-      'youtube/comments',
-      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+    const comments = await ApiService.get(
+      'elasticsearch/query',
+      `?dateFrom=${range.value.start}&dateTo=${range.value.end}`
     )
-    //console.log(youtube)
-    data.value = youtube.data.hits ?? []
-    data.value = data.value.map((hit) => hit?._source?.comment) ?? []
-    data.value = data.value.map((item) => {
-      // per sorting score
+    //console.log("in init, query result : ", comments)
+    data.value = comments.data.hits ?? []
+    data.value = data.value.map((hit) => { //hit?._source?.comment || hit?._source?.data) ?? []
+      let item = {}
+      item = hit._source?.comment || hit._source?.data
+      item.social = hit._index == "twitchcomment" ? "twitch" : hit._index == "youtubecomment" ? "youtube" : "twitter"
       item.predictionScore = 0
       if (item.prediction) {
         item.predictionScore = item.prediction.score
       }
       return item
     })
-    total.value = youtube.data.total.value ?? 0
+    total.value = comments.data.total.value ?? 0
 
     //per grafici
-    transactions.value = youtube.data.hits ?? []
+    transactions.value = comments.data ?? []
     transactions.value = data.value.map((hit) => hit?._source?.comment) ?? []
     transactions.value = data.value.map((item) => {
       let newItem = {}
@@ -82,7 +84,7 @@ const init = async () => {
       newItem.tokens = item.prediction ? item.prediction.tokens : ""
       return newItem
     })
-    //console.log(transactions.value)
+    //console.log("in init, transactions for graphs : ", transactions.value)
   } catch (e) {
     dangerAlert(e)
   } finally {
