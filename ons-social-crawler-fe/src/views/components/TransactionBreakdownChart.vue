@@ -2,47 +2,44 @@
 import ZingChartVue from 'zingchart-vue';
 </script>
 <template>
-   <ZingChartVue :data="chartConfig" /> 
+    <ZingChartVue :data="chartConfig" /> 
 </template>
 <script>
 export default {
   props: ['entries'],
   computed: {
     values() {
-      const categories = this.entries.reduce((acc, transaction) => {
-        acc[transaction.purchase_type] = acc[transaction.purchase_type] || 0;
-        acc[transaction.purchase_type]++;
-        return acc;
-      }, {});
-      return Object.keys(categories).map((name) => {
-        return {
-          values: [categories[name]],
-          text: name
-        }
-      })
-     },
+      // return this.entries[0].values;
+      //console.log(this.entries)
+
+      // Create an object to store the aggregated data grouped by isHate value
+      const aggregatedData = {
+        true: 0, // Initialize counts for isHate = true
+        false: 0, // Initialize counts for isHate = false
+      };
+      
+      // Iterate through transactions and increment counts based on isHate value
+      this.entries.forEach((transaction) => {
+        const isHateValue = transaction.isHate ? true : false;
+        aggregatedData[isHateValue]++;
+      });
+
+      const result = Object.entries(aggregatedData).map(([isHateValue, count]) => ({
+        values: [count],
+        text: `isHate = ${isHateValue}`,
+      }));
+
+      // Manually reorder the result array
+      result.sort((a, b) => {
+        if (a.text === 'isHate = true') return 1;
+        if (a.text === 'isHate = false') return -1;
+        return 0;
+      });
+
+      return result
+    },
     chartConfig() {
-      const colors = [
-        {
-          backgroundColor: '#04A3F5',
-          hoverState: {
-            backgroundColor: '#45D6C4'
-          }
-        },
-        {
-          backgroundColor: '#98D1EE',
-          hoverState: {
-            backgroundColor: '#45D6C4'
-          }
-        },
-                {
-          backgroundColor: '#295A73',
-          hoverState: {
-            backgroundColor: '#45D6C4'
-          }
-        },
-      ];
-      const config ={
+      const config = {
         type: 'pie',
         tooltip: {
           text: '%npv%'
@@ -60,7 +57,7 @@ export default {
           }
         },
         // TODO: Format the data and pass it to the series.
-        series: this.values.map((o,index) => Object.assign(o, colors[index])),
+        series: this.values,
       };
       return config;
     },
