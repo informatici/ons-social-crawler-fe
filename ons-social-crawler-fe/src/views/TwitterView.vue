@@ -114,6 +114,10 @@ const streamButtonUpdate = (data) => {
     }, 5000)
   } else if (!twitterStatus) {
     clearInterval(interval)
+    if (typeof interval === 'number') {
+      interval = null
+      init()
+    }
   }
 }
 

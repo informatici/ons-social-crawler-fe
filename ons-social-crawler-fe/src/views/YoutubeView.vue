@@ -115,6 +115,10 @@ const streamButtonUpdate = (data) => {
     }, 5000)
   } else if (!youTubeStatus) {
     clearInterval(interval)
+    if (typeof interval === 'number') {
+      interval = null
+      init()
+    }
   }
 }
 
