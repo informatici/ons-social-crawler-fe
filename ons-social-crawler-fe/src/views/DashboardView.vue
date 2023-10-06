@@ -70,8 +70,8 @@ const init = async () => {
     transactions.value = data.value.map((item) => {
       let newItem = {}
       newItem.social = item.social
-      newItem.isHate = item.predictionScore
-      newItem.timestamp = toTimestamp(item.publishedAt)
+      newItem.isHate = item.predictionScore > 0 ? 1 : 0
+      newItem.timestamp = toTimestamp(item.publishedAt) || toTimestamp(item.created_at)
       newItem.score = item.predictionScore
       newItem.response = item.response
       newItem.dimension = item.prediction ? item.prediction.dimension : ""

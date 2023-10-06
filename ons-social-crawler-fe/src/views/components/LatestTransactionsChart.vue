@@ -39,17 +39,29 @@ export default {
           seriesNames[isHateValue] = `isHate = ${isHateValue}`;
         });
 
-        // Convert the aggregated data object to the desired array format
-        const result = Object.keys(aggregatedData).map((isHateValue) => {
-          return {
-            text: seriesNames[isHateValue], // Set the "text" property for each series
-            values: Object.entries(aggregatedData[isHateValue]).map(([day, count]) => [
+        // Convert the aggregated data object to the desired ordered array format
+        const result = [];
+
+        if (aggregatedData[false]) {
+          result.push({
+            text: seriesNames[false],
+            values: Object.entries(aggregatedData[false]).map(([day, count]) => [
               new Date(day).getTime(),
               count,
             ]),
-          };
-        });
+          });
+        }
 
+        if (aggregatedData[true]) {
+          result.push({
+            text: seriesNames[true],
+            values: Object.entries(aggregatedData[true]).map(([day, count]) => [
+              new Date(day).getTime(),
+              count,
+            ]),
+          });
+        }
+        
         //console.log(result);
         return result
     },
