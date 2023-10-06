@@ -40,12 +40,6 @@ const updateRange = (modelData) => {
   init()
 }
 
-const size = ref(4000)
-const page = ref(1)
-const sortLabel = ref('')
-const sortOrder = ref('')
-const search = ref('')
-const predictionId = ref(0)
 const total = ref(0)
 const data = ref([])
 
@@ -61,7 +55,7 @@ const init = async () => {
     data.value = data.value.map((hit) => { //hit?._source?.comment || hit?._source?.data) ?? []
       let item = {}
       item = hit._source?.comment || hit._source?.data
-      item.social = hit._index == "twitchcomment" ? "twitch" : hit._index == "youtubecomment" ? "youtube" : "twitter"
+      item.social = hit._index == "twitchcomments" ? "twitch" : hit._index == "youtubecomments" ? "youtube" : "twitter"
       item.predictionScore = 0
       if (item.prediction) {
         item.predictionScore = item.prediction.score
@@ -75,7 +69,7 @@ const init = async () => {
     transactions.value = data.value.map((hit) => hit?._source?.comment) ?? []
     transactions.value = data.value.map((item) => {
       let newItem = {}
-      newItem.social = "youtube"
+      newItem.social = item.social
       newItem.isHate = item.predictionScore
       newItem.timestamp = toTimestamp(item.publishedAt)
       newItem.score = item.predictionScore
