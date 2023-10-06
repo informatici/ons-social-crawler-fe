@@ -30,7 +30,7 @@ export default {
       }));
 
       // Manually reorder the result array
-      result.sort((a, b) => {
+      result.sort((a) => {
         if (a.text === 'isHate = true') return 1;
         if (a.text === 'isHate = false') return -1;
         return 0;
@@ -56,7 +56,6 @@ export default {
          	  borderWidth: 2,
           }
         },
-        // TODO: Format the data and pass it to the series.
         series: this.values,
       };
       return config;

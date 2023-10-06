@@ -66,7 +66,6 @@ export default {
         return result
     },
     chartConfig() {
-      // TODO: Add a series object
       return {
         type: 'bar',
         title: {
