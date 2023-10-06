@@ -116,6 +116,10 @@ const streamButtonUpdate = (data) => {
     }, 5000)
   } else if (!twitchStatus) {
     clearInterval(interval)
+    if (typeof interval === 'number') {
+      interval = null
+      init()
+    }
   }
 }
 

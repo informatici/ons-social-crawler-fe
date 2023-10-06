@@ -45,17 +45,23 @@ const onUpdateStream = (stream, active = null) => {
 }
 
 const init = async () => {
-  const tempStreamsStatus = await ApiService.get('/stream/status')
-  statusData.value = tempStreamsStatus?.data ?? {}
+  try {
+    const tempStreamsStatus = await ApiService.get('/stream/status')
+    statusData.value = tempStreamsStatus?.data ?? {}
 
-  formData.value.youTubeStatus = statusData.value?.youTubeFlag ?? false
-  formData.value.twitterStatus = statusData.value?.twitterFlag ?? false
-  formData.value.twitchStatus = statusData.value?.twitchFlag ?? false
+    formData.value.youTubeStatus = statusData.value?.youTubeFlag ?? false
+    formData.value.twitterStatus = statusData.value?.twitterFlag ?? false
+    formData.value.twitchStatus = statusData.value?.twitchFlag ?? false
 
-  let fallBackNumber = 250
-  formData.value.youTubeRecordLength = statusData.value?.youTubeLength ?? fallBackNumber
-  formData.value.twitterRecordLength = statusData.value?.twitterLength ?? fallBackNumber
-  formData.value.twitchRecordLength = statusData.value?.twitchLength ?? fallBackNumber
+    let fallBackNumber = 250
+    formData.value.youTubeRecordLength = statusData.value?.youTubeLength ?? fallBackNumber
+    formData.value.twitterRecordLength = statusData.value?.twitterLength ?? fallBackNumber
+    formData.value.twitchRecordLength = statusData.value?.twitchLength ?? fallBackNumber
+  } catch (e) {
+    dangerAlert(e)
+  } finally {
+    loading.hide()
+  }
 }
 
 onMounted(async () => {
