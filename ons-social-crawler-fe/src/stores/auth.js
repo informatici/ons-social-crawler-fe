@@ -38,6 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(credentials = {}) {
     loading.show()
     try {
+      console.log('auth', auth)
       const res = await signInWithEmailAndPassword(
         auth,
         credentials?.email.value,
