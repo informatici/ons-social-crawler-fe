@@ -2,6 +2,7 @@
 import DateRange from "./components/DateRange.vue"
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
+import LatestTransactionsChartClustered from "./components/LatestTransactionsChartClustered.vue"
 
 import { useRoute } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
@@ -113,6 +114,9 @@ onMounted(async () => {
       </div>
       <div>
         <LatestTransactionsChart :entries="filteredTransactions" />
+      </div>
+      <div>
+        <LatestTransactionsChartClustered :entries="filteredTransactions" />
       </div>
       <div>
         <TransactionBreakdownChart :entries="filteredTransactions" />
