@@ -9,11 +9,17 @@ import ZingChartVue from 'zingchart-vue';
 export default {
   props: ['entries'],
   computed: {
-    formatValueBox(p) {
-        //console.log('p %O', p.values)
-        //return p.values.seriesData[0].percentages[0]
-        return [[p.values.seriesData[0].percentages[0],p.values.seriesData[0].percentages[1],p.values.seriesData[0].percentages[2]],
-                [p.values.seriesData[1].percentages[0],p.values.seriesData[1].percentages[1],p.values.seriesData[1].percentages[2]]]
+    formatValueBox() {
+      const formatArray = [];
+      this.values.socialCategories.forEach((social, idx) => {
+        this.values.seriesData.forEach((series, isHateValue) => {
+          formatArray.push({
+            rule: `%p == ${isHateValue} && "%kl" == "${social}"`,
+            text: `${series.percentages[idx]}%`,
+          });
+        });
+      });
+      return formatArray;
     },
     values() {
         // return this.entries[0].values;
@@ -91,32 +97,7 @@ export default {
         plot: {
           stacked: false,
           valueBox: {
-          rules:[ // TODO: didn't find a better way to optimize this, maybe using jsRule?
-                {
-                  rule: '%p == 0 && "%kl" == "twitter"',
-                  text: this.formatValueBox[0][0] + '%'
-                },
-                {
-                  rule: '%p == 1 && "%kl" == "twitter"',
-                  text: this.formatValueBox[1][0] + '%'
-                },
-                {
-                  rule: '%p == 0 && "%kl" == "twitch"',
-                  text: this.formatValueBox[0][1] + '%'
-                },
-                {
-                  rule: '%p == 1 && "%kl" == "twitch"',
-                  text: this.formatValueBox[1][1] + '%'
-                },
-                {
-                  rule: '%p == 0 && "%kl" == "youtube"',
-                  text: this.formatValueBox[0][2] + '%'
-                },
-                {
-                  rule: '%p == 1 && "%kl" == "youtube"',
-                  text: this.formatValueBox[1][2] + '%'
-                },
-              ]
+          rules: this.formatValueBox
           },
           tooltip: {
             text: '%v',
