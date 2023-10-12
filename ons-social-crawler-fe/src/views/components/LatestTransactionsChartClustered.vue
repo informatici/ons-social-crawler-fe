@@ -63,7 +63,7 @@ export default {
             text: 'isHate = ' + isHateValue.toString(),
             percentages: socialCategories.map((social) => {
               const total = data[social]['true'] + data[social]['false'];
-              return ((data[social][isHateValue] / total) * 100).toFixed(2);
+              return ((data[social][isHateValue] / total) * 100).toFixed(1);
             })
           };
         }

@@ -1,4 +1,5 @@
 <script setup>
+import SocialFilter from "./components/SocialFilter.vue"
 import DateRange from "./components/DateRange.vue"
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
@@ -16,10 +17,12 @@ const loading = useLoadingStore()
 const { dangerAlert } = alert()
 const transactions = ref([])
 
+//filters
 const range = ref({
   end: new Date(),
   start: new Date(new Date().setHours(-672, 0, 0, 0)) //4 week
 })
+const selectedSocial = ref('all');
 
 const toTimestamp = (strDate) => {
   const dt = Date.parse(strDate)
@@ -28,12 +31,22 @@ const toTimestamp = (strDate) => {
 
 const filteredTransactions = computed(() => {
   return transactions.value.filter(entry => {
+    //console.log(entry)
+    //console.log('entry.social : %s', entry.social)
+    //console.log('selectedSocial : %s', selectedSocial.value)
     return (
       entry.timestamp >= range.value.start.getTime() &&
-      entry.timestamp < range.value.end.getTime()
+      entry.timestamp < range.value.end.getTime() && 
+      selectedSocial.value == 'all' ? true : entry.social == selectedSocial.value
     )
   })
 })
+
+const updateSocial = (social) => {
+  //console.log('in updateSocial -> %s', social)
+  selectedSocial.value = social;
+  init()
+};
 
 const updateRange = (modelData) => {
   range.value.start = modelData[0]
@@ -52,6 +65,7 @@ const init = async () => {
       `?dateFrom=${range.value.start}&dateTo=${range.value.end}`
     )
     //console.log("in init, query result : ", comments)
+    //console.log('selectedSocial : %s', selectedSocial.value)
     data.value = comments.data.hits ?? []
     data.value = data.value.map((hit) => { //hit?._source?.comment || hit?._source?.data) ?? []
       let item = {}
@@ -108,57 +122,50 @@ onMounted(async () => {
         {{ route?.meta?.label }}
       </h1>
     </div>
-    <div>
-      <div>
-        <DateRange :entries="range" @update:model-value="updateRange"/>
-      </div>
-      <div>
-        <LatestTransactionsChart :entries="filteredTransactions" />
-      </div>
-      <div>
-        <LatestTransactionsChartClustered :entries="filteredTransactions" />
-      </div>
-      <div>
-        <TransactionBreakdownChart :entries="filteredTransactions" />
+    <div class="section">
+      <div class="section-content">
+        <div class="grid-container">
+          <div>
+            <DateRange :entries="range" @update:model-value="updateRange" />
+          </div>
+          <div>
+            <SocialFilter @on-social="updateSocial" />
+          </div>
+        </div>
+        <div>
+          <LatestTransactionsChart :entries="filteredTransactions" />
+        </div>
+        <div>
+          <LatestTransactionsChartClustered :entries="filteredTransactions" />
+        </div>
+        <div>
+          <TransactionBreakdownChart :entries="filteredTransactions" />
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <style lang="scss">
-.dashboard-view {
+.page-container {
   .section {
     margin-bottom: 3.2rem;
-
-    &.page-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
+    
     .section-title {
       margin-bottom: 1rem;
     }
 
     .section-content {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr; /* Single column layout */
       gap: 3rem;
-
-      border: 1px solid lightgrey;
-      border-radius: 6px;
     }
-  }
 
-  @media screen and (max-width: 1400px) {
-    .section {}
-  }
-
-  @media screen and (max-width: 992px) {
-    .section {}
-  }
-
-  @media screen and (max-width: 768px) {
-    .section {}
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Two columns layout for DateRange and SocialFilter */
+      gap: 1rem;
+    }
   }
 }
 </style>
