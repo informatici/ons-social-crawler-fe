@@ -2,8 +2,9 @@
 import SocialFilter from "./components/SocialFilter.vue"
 import DateRange from "./components/DateRange.vue"
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
-import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
 import LatestTransactionsChartClustered from "./components/LatestTransactionsChartClustered.vue"
+import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
+import TransactionWordsCloud from "./components/TransactionWordsCloud.vue"
 
 import { useRoute } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
@@ -140,6 +141,9 @@ onMounted(async () => {
         </div>
         <div>
           <TransactionBreakdownChart :entries="filteredTransactions" />
+        </div>
+        <div>
+          <TransactionWordsCloud :entries="filteredTransactions" />
         </div>
       </div>
     </div>
