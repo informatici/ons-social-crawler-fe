@@ -41,7 +41,7 @@ export default {
       const config = {
         type: 'pie',
         tooltip: {
-          text: '%npv%'
+          text: '%t'
         },
         plotarea: {
           margin: '5'
@@ -49,7 +49,7 @@ export default {
         plot: {
           valueBox: {
             fontSize: 10,
-            text: '%t'
+            text: '%npv%'
           },
           hoverState: {
          	  borderWidth: 2,
