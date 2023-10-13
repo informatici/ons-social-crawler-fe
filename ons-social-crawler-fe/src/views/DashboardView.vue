@@ -52,6 +52,11 @@ const updateSocial = (social) => {
   selectedSocial.value = social;
 };
 
+const updateRangeFromZoom = (object) => {
+  const modelData = [new Date(object.kmin), new Date(object.kmax)]
+  updateRange(modelData)
+}
+
 const updateRange = (modelData) => {
   //console.log("maxRange : %s - %s", maxRange.value.start, maxRange.value.end)
   range.value.start = modelData[0]
@@ -142,7 +147,7 @@ onMounted(async () => {
           </div>
         </div>
         <div>
-          <LatestTransactionsChart :entries="filteredTransactions" :range="range" />
+          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom"/>
         </div>
         <div>
           <LatestTransactionsChartClustered :entries="filteredTransactions" />

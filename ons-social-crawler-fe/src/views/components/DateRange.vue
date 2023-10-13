@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRefs, onMounted } from 'vue';
+import { ref, toRefs, onMounted, watchEffect } from 'vue';
 import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns';
 
 const props = defineProps({
@@ -53,6 +53,11 @@ const presetDates = ref([
 onMounted(() => {
   // Set a default date range when the component is mounted
   date.value = [entries.value.start, entries.value.end]
+});
+
+// Watch the entries prop for changes and update the date ref accordingly
+watchEffect(() => {
+  date.value = [entries.value.start, entries.value.end];
 });
 </script>
 

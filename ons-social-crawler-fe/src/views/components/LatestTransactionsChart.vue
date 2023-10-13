@@ -88,6 +88,7 @@ export default {
           step: 'day',
           minValue: this.range.start.getTime(),
           maxValue: this.range.end.getTime(),
+          zooming: true,
         },
         scaleY: {
           label: {
