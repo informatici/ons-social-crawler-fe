@@ -24,6 +24,10 @@ const range = ref({
   start: new Date(new Date().setHours(-672, 0, 0, 0)) //4 week
 })
 const selectedSocial = ref('all');
+const maxRange = ref({
+  end: new Date(),
+  start: new Date(new Date().setHours(-672, 0, 0, 0)) //4 week
+})
 
 const toTimestamp = (strDate) => {
   const dt = Date.parse(strDate)
@@ -46,13 +50,25 @@ const filteredTransactions = computed(() => {
 const updateSocial = (social) => {
   //console.log('in updateSocial -> %s', social)
   selectedSocial.value = social;
-  init()
 };
 
 const updateRange = (modelData) => {
+  //console.log("maxRange : %s - %s", maxRange.value.start, maxRange.value.end)
+  let update = false
   range.value.start = modelData[0]
   range.value.end = modelData[1]
-  init()
+  if (range.value.start < maxRange.value.start) {
+    maxRange.value.start = range.value.start
+    update = true
+  }
+  if (range.value.end > maxRange.value.end) {
+    maxRange.value.end = range.value.end
+    update = true
+  }
+  if (update) {
+    //console.log("maxRange changed : %s - %s", maxRange.value.start, maxRange.value.end)
+    init()
+  }
 }
 
 const total = ref(0)
