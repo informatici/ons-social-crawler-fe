@@ -6,11 +6,12 @@ import ZingChartVue from 'zingchart-vue';
 </template>
 <script>
 export default {
-  props: ['entries'],
+  props: ['entries','range'],
   computed: {
     values() {
         // return this.entries[0].values;
         //console.log(this.entries)
+        //console.log(this.range)
 
         // Create an object to store the aggregated data grouped by isHate value
         const aggregatedData = {};
@@ -84,7 +85,9 @@ export default {
           item: {
             fontSize: 10
           },
-          step: 'day'
+          step: 'day',
+          minValue: this.range.start.getTime(),
+          maxValue: this.range.end.getTime(),
         },
         scaleY: {
           label: {

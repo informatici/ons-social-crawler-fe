@@ -150,7 +150,7 @@ onMounted(async () => {
           </div>
         </div>
         <div>
-          <LatestTransactionsChart :entries="filteredTransactions" />
+          <LatestTransactionsChart :entries="filteredTransactions" :range="range" />
         </div>
         <div>
           <LatestTransactionsChartClustered :entries="filteredTransactions" />
