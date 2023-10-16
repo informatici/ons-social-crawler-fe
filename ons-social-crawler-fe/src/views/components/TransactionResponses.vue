@@ -57,7 +57,7 @@ export default {
       const config = {
         type: 'hbar',
         title: {
-          text: "Top 10 Responses",
+          text: "Top " + bars_to_show + " Responses",
         },
         plot: {
           tooltip: {
@@ -70,9 +70,9 @@ export default {
             color: "black",
           },
           dataResponse: labels.reverse(),
-          // animation: {
-          //   effect: "ANIMATION_SLIDE_BOTTOM",
-          // },
+          animation: {
+            effect: "ANIMATION_SLIDE_BOTTOM",
+          },
         },
         scaleX: {
           values: values.reverse(),

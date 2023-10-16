@@ -53,7 +53,10 @@ export default {
           },
           hoverState: {
          	  borderWidth: 2,
-          }
+          },
+          animation: {
+            effect: "ANIMATION_SLIDE_BOTTOM",
+          },
         },
         series: this.values,
       }

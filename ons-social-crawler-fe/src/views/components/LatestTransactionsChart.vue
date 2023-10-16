@@ -74,7 +74,10 @@ export default {
           position: 'top',
         },
         plot: {
-          stacked: true
+          stacked: true,
+          animation: {
+            effect: "ANIMATION_SLIDE_BOTTOM",
+          },
         },
         series: this.values,
         scaleX: {

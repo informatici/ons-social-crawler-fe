@@ -103,6 +103,9 @@ export default {
             text: '%v',
             //decimals: 2, // Set the number of decimal places for values
           },
+          animation: {
+            effect: "ANIMATION_SLIDE_BOTTOM",
+          },
         },
         scaleX: {
           labels: this.values.socialCategories, // X-axis labels based on social categories

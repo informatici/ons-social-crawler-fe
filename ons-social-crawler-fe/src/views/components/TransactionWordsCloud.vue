@@ -93,6 +93,9 @@ export default {
 
       const config = {
         type: 'bar',
+        title: {
+          text: "Top " + bars_to_show + " Words",
+        },
         plot: {
           aspect: 'horizontal',
           styles: colors,
