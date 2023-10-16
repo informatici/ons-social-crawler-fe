@@ -97,7 +97,7 @@ export default {
         plot: {
           stacked: false,
           valueBox: {
-          rules: this.formatValueBox
+            rules: this.formatValueBox
           },
           tooltip: {
             text: '%v',
