@@ -1,5 +1,5 @@
 <script setup>
-import ZingChartVue from 'zingchart-vue';
+import ZingChartVue from 'zingchart-vue'
 </script>
 <template>
     <ZingChartVue :data="chartConfig"/>
@@ -9,39 +9,39 @@ export default {
   props: ['entries','range'],
   computed: {
     values() {
-        // return this.entries[0].values;
+        // return this.entries[0].values
         //console.log(this.entries)
         //console.log(this.range)
 
         // Create an object to store the aggregated data grouped by isHate value
-        const aggregatedData = {};
+        const aggregatedData = {}
 
         // Create an object to store the series names
-        const seriesNames = {};
+        const seriesNames = {}
 
         // Iterate through transactions and group data by isHate value
         this.entries.forEach((transaction) => {
-          const isHateValue = transaction.isHate ? true : false;
-          const date = new Date(transaction.timestamp);
-          const timestamp = date.getTime(); // Timestamp
-          const day = date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
+          const isHateValue = transaction.isHate ? true : false
+          const date = new Date(transaction.timestamp)
+          const timestamp = date.getTime() // Timestamp
+          const day = date.toISOString().split('T')[0] // Extract YYYY-MM-DD
 
           if (!aggregatedData[isHateValue]) {
-            aggregatedData[isHateValue] = {};
+            aggregatedData[isHateValue] = {}
           }
 
           if (!aggregatedData[isHateValue][day]) {
-            aggregatedData[isHateValue][day] = 0;
+            aggregatedData[isHateValue][day] = 0
           }
 
-          aggregatedData[isHateValue][day]++;
+          aggregatedData[isHateValue][day]++
 
           // Track series names
-          seriesNames[isHateValue] = `isHate = ${isHateValue}`;
-        });
+          seriesNames[isHateValue] = `isHate = ${isHateValue}`
+        })
 
         // Convert the aggregated data object to the desired ordered array format
-        const result = [];
+        const result = []
 
         if (aggregatedData[false]) {
           result.push({
@@ -50,7 +50,7 @@ export default {
               new Date(day).getTime(),
               count,
             ]),
-          });
+          })
         }
 
         if (aggregatedData[true]) {
@@ -60,10 +60,10 @@ export default {
               new Date(day).getTime(),
               count,
             ]),
-          });
+          })
         }
         
-        //console.log(result);
+        //console.log(result)
         return result
     },
     chartConfig() {

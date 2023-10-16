@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import ZingChartVue from 'zingchart-vue';
+import { ref } from 'vue'
+import ZingChartVue from 'zingchart-vue'
 </script>
 <template>
     <ZingChartVue :data="chartConfig"/>
@@ -10,19 +10,19 @@ export default {
   props: ['entries'],
   computed: {
     formatValueBox() {
-      const formatArray = [];
+      const formatArray = []
       this.values.socialCategories.forEach((social, idx) => {
         this.values.seriesData.forEach((series, isHateValue) => {
           formatArray.push({
             rule: `%p == ${isHateValue} && "%kl" == "${social}"`,
             text: `${series.percentages[idx]}%`,
-          });
-        });
-      });
-      return formatArray;
+          })
+        })
+      })
+      return formatArray
     },
     values() {
-        // return this.entries[0].values;
+        // return this.entries[0].values
         //console.log(this.entries)
 
         // Create an object to store the aggregated data grouped by isHate value
@@ -33,15 +33,15 @@ export default {
         // Iterate through transactions and group data by "social" and "isHate" values
         this.entries.forEach((transaction) => {
           const social = transaction.social
-          const isHateValue = transaction.isHate ? 'true' : 'false';
+          const isHateValue = transaction.isHate ? 'true' : 'false'
 
           if (!socialCategories.includes(social)) {
             socialCategories.push(social)
             data[social] = {'true': 0, 'false': 0}
           }
 
-          data[social][isHateValue]++;
-        });
+          data[social][isHateValue]++
+        })
 
         //console.log('%O', socialCategories)
         //console.log('%O', data)
@@ -58,27 +58,27 @@ export default {
         //     text: 'true',
         //     percentages: [30, 20, 50]
         //   },
-        // ];
+        // ]
 
         // Function to create series data
         function createSeriesData(data, socialCategories, isHateValue) {
-          const total = socialCategories.reduce((acc, social) => acc + data[social][isHateValue], 0);
+          const total = socialCategories.reduce((acc, social) => acc + data[social][isHateValue], 0)
 
           return {
             values: socialCategories.map((social) => data[social][isHateValue]),
             text: 'isHate = ' + isHateValue.toString(),
             percentages: socialCategories.map((social) => {
-              const total = data[social]['true'] + data[social]['false'];
-              return ((data[social][isHateValue] / total) * 100).toFixed(1);
+              const total = data[social]['true'] + data[social]['false']
+              return ((data[social][isHateValue] / total) * 100).toFixed(1)
             })
-          };
+          }
         }
 
         // // Create series data for the chart
         seriesData = [
           createSeriesData(data, socialCategories, 'false'),
           createSeriesData(data, socialCategories, 'true'),
-        ];
+        ]
 
         //console.log(seriesData)
 
