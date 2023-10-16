@@ -5,6 +5,7 @@ import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
 import LatestTransactionsChartClustered from "./components/LatestTransactionsChartClustered.vue"
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
 import TransactionWordsCloud from "./components/TransactionWordsCloud.vue"
+import TransactionResponses from "./components/TransactionResponses.vue"
 
 import { useRoute } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
@@ -157,6 +158,9 @@ onMounted(async () => {
         </div>
         <div>
           <TransactionWordsCloud :entries="filteredTransactions" />
+        </div>
+        <div>
+          <TransactionResponses :entries="filteredTransactions" />
         </div>
       </div>
     </div>
