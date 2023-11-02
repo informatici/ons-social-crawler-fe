@@ -26,7 +26,7 @@ const navList = ref([
   },
   {
     label: 'Twitter',
-    icon: 'fa-brands fa-square-twitter',
+    icon: 'fa-brands fa-square-x-twitter',
     routerName: 'twitter'
   },
   {

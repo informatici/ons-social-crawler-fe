@@ -12,7 +12,7 @@ import alert from '@/core/helpers/alert'
 const loading = useLoadingStore()
 const { dangerAlert } = alert()
 const route = useRoute()
-const { dateTimeFormatter } = global()
+const { dateTimeFormatter, decodeHtml } = global()
 const total = ref(0)
 const data = ref([])
 const size = ref(10)
@@ -143,7 +143,7 @@ const changeSort = (sort) => {
   <main class="page-container">
     <div class="page-title">
       <h1>
-        <span><i class="title-icon fa-brands fa-twitter"></i></span> {{ route?.meta?.label }}
+        <span><i class="title-icon fa-brands fa-x-twitter"></i></span> {{ route?.meta?.label }}
       </h1>
       <StreamButton name="twitter" @on-update="streamButtonUpdate" />
     </div>
@@ -172,7 +172,7 @@ const changeSort = (sort) => {
         @on-sort="changeSort"
       >
         <template v-slot:twit="{ row: row }">
-          {{ row._source.data.text }}
+          <div v-html="decodeHtml(row._source.data.text)"></div>
           <template v-if="row._source.data.response">
             <hr />
             <span class="text-success">{{ row._source.data.response }}</span>

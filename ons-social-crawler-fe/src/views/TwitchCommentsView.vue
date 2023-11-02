@@ -11,7 +11,7 @@ import alert from '@/core/helpers/alert'
 
 const { dangerAlert } = alert()
 const route = useRoute()
-const { dateTimeFormatter } = global()
+const { dateTimeFormatter, decodeHtml } = global()
 const total = ref(0)
 const commentsData = ref([])
 const videoData = ref({})
@@ -269,7 +269,7 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:textDisplay="{ row: row }">
-            {{ row.textDisplay }}
+            <div v-html="decodeHtml(row.textDisplay)"></div>
             <template v-if="row.response">
               <hr />
               <span class="text-success">{{ row.response }}</span>
@@ -330,7 +330,7 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:textDisplay="{ row: row }">
-            {{ row.textDisplay }}
+            <div v-html="decodeHtml(row.textDisplay)"></div>
             <template v-if="row.response">
               <hr />
               <span class="text-success">{{ row.response }}</span>

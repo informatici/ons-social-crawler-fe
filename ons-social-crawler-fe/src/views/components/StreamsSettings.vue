@@ -137,7 +137,7 @@ const btnMessage = ref('')
         </div>
 
         <div class="stream-control__container">
-          <h4><i class="title-icon fa-brands fa-twitter"></i> Twitter</h4>
+          <h4><i class="title-icon fa-brands fa-x-twitter"></i> Twitter</h4>
           <StreamSwitch
             label="Aggiornamento"
             label-icon=""

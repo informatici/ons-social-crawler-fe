@@ -1,3 +1,5 @@
+import he from 'he'
+
 const global = () => {
   const dateFormatter = (date) => {
     if (date) {
@@ -23,9 +25,18 @@ const global = () => {
     return
   }
 
+  const decodeHtml = (value) => {
+    try {
+      return he.decode(value)
+    } catch {
+      return value
+    }
+  }
+
   return {
     dateFormatter,
-    dateTimeFormatter
+    dateTimeFormatter,
+    decodeHtml
   }
 }
 
