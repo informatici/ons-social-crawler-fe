@@ -2,7 +2,7 @@
 import ZingChartVue from 'zingchart-vue'
 </script>
 <template>
-  <ZingChartVue :data="chartConfig"/>
+  <ZingChartVue :data="chartConfigNorm"/>
 </template>
 <script>
 export default {
@@ -88,18 +88,26 @@ export default {
       // console.log(result)
       return result
     },
-    chartConfig() {
+    chartConfigNorm() {
       return {
         type: 'bar',
         title: {
-          text: 'Contenuti al giorno ',
+          text: '% isHate = true  ',
           position: 'top',
         },
         plot: {
           stacked: true,
+          stackType: '100%',
           animation: {
             effect: "ANIMATION_SLIDE_BOTTOM",
           },
+          valueBox: {
+            text:"%npv%",
+            decimals: 0,
+            //backgroundColor: 'black',
+            placement: 'middle',
+            color: 'white',
+          }
         },
         series: this.values,
         scaleX: {
@@ -112,8 +120,8 @@ export default {
           },
           step: 'day',
           // minValue: this.range.start.getTime() - new Date(this.range.start).getTimezoneOffset() * 60 * 1000, // reconvert to user's TZ
-          // maxValue: this.range.end.getTime() - 24 * 60 * 60 * 1000, // workaround for extra day
-          zooming: true,
+          // maxValue: this.range.end.getTime() - 1000 * 60 * 60 * 24, // workaround for extra day
+          //zooming: true,
         },
         scaleY: {
           label: {
@@ -122,9 +130,10 @@ export default {
           item: {
             fontSize: 10
           },
+          values: "0:100",
         },
         legend: {
-          toggleAction: 'remove', // Optional: Hide or show the series on click
+          toggleAction: 'hide', // Optional: Hide or show the series on click
           layout: 'float',
           align: 'center',
           borderWidth: 0,

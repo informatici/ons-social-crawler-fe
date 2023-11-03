@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import ZingChartVue from 'zingchart-vue'
 </script>
 <template>

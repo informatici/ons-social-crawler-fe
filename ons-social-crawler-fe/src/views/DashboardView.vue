@@ -2,6 +2,7 @@
 import SocialFilter from "./components/SocialFilter.vue"
 import DateRange from "./components/DateRange.vue"
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
+import LatestTransactionsChartNorm from "./components/LatestTransactionsChartNorm.vue"
 import LatestTransactionsChartClustered from "./components/LatestTransactionsChartClustered.vue"
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
 import TransactionWordsCloud from "./components/TransactionWordsCloud.vue"
@@ -57,13 +58,15 @@ const updateSocial = (social) => {
 }
 
 const updateRangeFromZoom = (object) => {
-  console.log('in zoom : %o', object)
-  const modelData = [new Date(object.kmin), new Date(object.kmax)]
+  // console.log('in zoom : %o', object)
+  const modelData = [new Date(new Date(object.kmin).setHours(0, 0, 0, 0)), new Date(new Date(object.kmax).setHours(23, 59, 59, 999))]
+  // console.log("modelData : %O", modelData)
   updateRange(modelData)
 }
 
 const updateRange = (modelData) => {
-  //console.log("maxRange : %s - %s", maxRange.value.start, maxRange.value.end)
+  // console.log("maxRange : %s - %s", maxRange.value.start, maxRange.value.end)
+  // console.log("modelData : %O", modelData)
   range.value.start = modelData[0]
   range.value.end = modelData[1]
   if (range.value.start < maxRange.value.start || range.value.end > maxRange.value.end) {
@@ -153,6 +156,9 @@ onMounted(async () => {
         </div>
         <div>
           <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom"/>
+        </div>
+        <div>
+          <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom"/>
         </div>
         <div>
           <LatestTransactionsChartClustered :entries="filteredTransactions" />
