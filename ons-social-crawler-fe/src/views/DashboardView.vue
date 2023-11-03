@@ -21,13 +21,13 @@ const transactions = ref([])
 
 //filters
 const range = ref({
-  end: new Date(),
-  start: new Date(new Date().setHours(-672, 0, 0, 0)) //4 weeks
+  end: new Date(new Date(new Date().setHours(-24)).setHours(23, 59, 59, 999)), // yesterday, end of the day
+  start: new Date(new Date().setHours(-168, 0, 0, 0)) //1 week
 })
 const selectedSocial = ref('all')
 const maxRange = ref({
-  end: new Date(),
-  start: new Date(new Date().setHours(-672, 0, 0, 0)) //4 weeks
+  end: new Date(new Date(new Date().setHours(-24)).setHours(23, 59, 59, 999)), // yesterday, end of the day
+  start: new Date(new Date().setHours(-168, 0, 0, 0)) //1 week
 })
 
 const toTimestamp = (strDate) => {
@@ -36,6 +36,9 @@ const toTimestamp = (strDate) => {
 }
 
 const filteredTransactions = computed(() => {
+  //console.log('range %O', range)
+  //console.log('start %O', range.value.start)
+  //console.log('end %O', range.value.end)
   return transactions.value.filter(entry => {
     //console.log(entry)
     //console.log('entry.social : %s', entry.social)
@@ -54,6 +57,7 @@ const updateSocial = (social) => {
 }
 
 const updateRangeFromZoom = (object) => {
+  console.log('in zoom : %o', object)
   const modelData = [new Date(object.kmin), new Date(object.kmax)]
   updateRange(modelData)
 }
@@ -79,8 +83,8 @@ const init = async () => {
       'elasticsearch/query',
       `?dateFrom=${range.value.start}&dateTo=${range.value.end}`
     )
-    console.log("in init, query result : ", comments)
-    //console.log('selectedSocial : %s', selectedSocial.value)
+    // console.log("in init, query result : ", comments)
+    // console.log('selectedSocial : %s', selectedSocial.value)
     data.value = comments.data.hits ?? []
     data.value = data.value.map((hit) => { //hit?._source?.comment || hit?._source?.data) ?? []
       let item = {}
