@@ -7,6 +7,7 @@ import LatestTransactionsChartClustered from "./components/LatestTransactionsCha
 import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
 import TransactionWordsCloud from "./components/TransactionWordsCloud.vue"
 import TransactionResponses from "./components/TransactionResponses.vue"
+import LatestTransactionsChartWithScores from "./components/LatestTransactionsChartWithScores.vue"
 
 import { useRoute } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
@@ -155,10 +156,10 @@ onMounted(async () => {
           </div>
         </div>
         <div>
-          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom"/>
+          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" />
         </div>
         <div>
-          <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom"/>
+          <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" />
         </div>
         <div>
           <LatestTransactionsChartClustered :entries="filteredTransactions" />
@@ -171,6 +172,9 @@ onMounted(async () => {
         </div>
         <div>
           <TransactionResponses :entries="filteredTransactions" />
+        </div>
+        <div>
+          <LatestTransactionsChartWithScores :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" />
         </div>
       </div>
     </div>
