@@ -21,11 +21,11 @@ export default function alert() {
   }
 
   const dangerAlert = (error) => {
-    const status = error?.response?.status || 500
+    const status = error?.response?.status || 403
     if (status === 403 || status === 401) {
       setTimeout(() => {
         store.logout()
-        router.push({ name: 'sign-in' })
+        router.push({ name: 'login' })
       }, 150)
     } else {
       const text = error.response.data.message

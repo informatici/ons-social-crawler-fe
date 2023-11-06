@@ -1,6 +1,9 @@
 import he from 'he'
+import { useI18n } from 'vue-i18n'
 
 const global = () => {
+  const { t, te } = useI18n()
+
   const dateFormatter = (date) => {
     if (date) {
       const objDate = new Date(date)
@@ -33,10 +36,16 @@ const global = () => {
     }
   }
 
+  const translate = (key, value) => {
+    const word = `${key}.${value}`
+    return te(word) ? t(word) : value
+  }
+
   return {
     dateFormatter,
     dateTimeFormatter,
-    decodeHtml
+    decodeHtml,
+    translate
   }
 }
 

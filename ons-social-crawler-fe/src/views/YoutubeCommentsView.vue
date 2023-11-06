@@ -3,16 +3,15 @@ import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
-// import ModalUserEdit from '@/components/modals/ModalUserEdit.vue'
 import global from '../core/helpers/functions.js'
-import { useLoadingStore } from "@/stores/loading";
-import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
+import { useLoadingStore } from '@/stores/loading'
+import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import alert from '@/core/helpers/alert'
 
 const { dangerAlert } = alert()
-const loading = useLoadingStore();
+const loading = useLoadingStore()
 const route = useRoute()
-const { dateTimeFormatter, decodeHtml } = global()
+const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
 const commentsData = ref([])
 const videoData = ref({})
@@ -22,13 +21,6 @@ const size = ref(10)
 const page = ref(1)
 const sortLabel = ref('')
 const sortOrder = ref('')
-
-// const openItem = (id, modal) => {
-//   selectedId.value = id;
-//   setTimeout(() => {
-//     showModal(modal);
-//   }, 100);
-// };
 
 const init = async () => {
   loading.show()
@@ -41,16 +33,18 @@ const init = async () => {
     videoData.value = res.data.video ?? {}
 
     commentsData.value = res.data.comments ?? []
-    commentsData.value = commentsData.value.map(comment => {
-      return {
-        ...comment?._source?.comment,
-        score: comment?._score,
-      }
-    }) ?? [];
+    commentsData.value =
+      commentsData.value.map((comment) => {
+        return {
+          ...comment?._source?.comment,
+          score: comment?._score
+        }
+      }) ?? []
 
-    commentsData.value = commentsData.value.map(item => { // per sorting score
+    commentsData.value = commentsData.value.map((item) => {
+      // per sorting score
       item.predictionScore = 0
-      if(item.prediction) {
+      if (item.prediction) {
         item.predictionScore = item.prediction.score
       }
       return item
@@ -64,10 +58,14 @@ const init = async () => {
     //   return item
     // })
     // #qui::END
-    selectedCommentData.value = Object.keys(selectedCommentData.value).length > 0 ? selectedCommentData.value : (commentsData.value.find(comment => comment.id === route.params.id) ?? {})
-    otherCommentsData.value = commentsData.value.filter(comment => comment.id !== route.params.id) ?? []
+    selectedCommentData.value =
+      Object.keys(selectedCommentData.value).length > 0
+        ? selectedCommentData.value
+        : commentsData.value.find((comment) => comment.id === route.params.id) ?? {}
+    otherCommentsData.value =
+      commentsData.value.filter((comment) => comment.id !== route.params.id) ?? []
 
-    total.value = res.data.totalComments - 1;
+    total.value = res.data.totalComments - 1
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -80,12 +78,6 @@ const search = ref('')
 const predictionId = ref(0)
 
 const headerConfig = ref([
-  // {
-  //   columnName: '',
-  //   columnLabel: 'actions',
-  //   sortEnabled: false,
-  //   columnMinWidth: 50,
-  // },
   {
     columnName: 'Data',
     columnLabel: 'publishedAt',
@@ -103,13 +95,22 @@ const headerConfig = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Categorie',
+    columnLabel: 'dimension',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Parole Chiave',
+    columnLabel: 'tokens',
+    sortEnabled: false
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
-    tdClass: 'bg-warning text-center'
-  },
+    tdClass: 'text-center'
+  }
 ])
-
 
 const headerConfigTableSelected = ref([
   {
@@ -129,11 +130,21 @@ const headerConfigTableSelected = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Categorie',
+    columnLabel: 'dimension',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Parole Chiave',
+    columnLabel: 'tokens',
+    sortEnabled: false
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
-    sortEnabled: false,
-    tdClass: 'bg-warning text-center'
-  },
+    sortEnabled: true,
+    tdClass: 'text-center'
+  }
 ])
 
 const onSearch = (newValue) => {
@@ -169,85 +180,85 @@ const changeSort = (sort) => {
   sortOrder.value = sort.order
   init()
 }
+
+const getPrediction = (row) => {
+  const prediction = row.prediction?.dimension || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
+
+const getTokens = (row) => {
+  const prediction = row.prediction?.tokens || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
 </script>
 <template>
   <main class="page-container">
     <div class="section page-title">
       <h1>
-        <span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }} <br>
+        <span><i class="title-icon fa-brands fa-youtube"></i></span> {{ route?.meta?.label }} <br />
       </h1>
-      <router-link :to="{name: 'youTube'}">
-        <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
+      <router-link :to="{ name: 'youTube' }">
+        <button class="btn btn-primary" style="background-color: var(--primary-color) !important">
+          Indietro
+        </button>
       </router-link>
     </div>
 
     <div class="page-content">
-
       <section class="section video-info">
         <h2 class="section-title">Il video</h2>
         <div class="section-content">
           <div class="section-content__video">
-
-                  <div>
-                    <iframe
-                        class="embedded-video"
-                        :src="'https://www.youtube.com/embed/' + videoData.id"
-                        :title="videoData.title" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen
-                    >
-                    </iframe>
-                  </div>
-
-  <!--                <div class="embedded-video-container">-->
-  <!--                  <div v-html="videoData.player"></div>-->
-  <!--                </div>-->
+            <div>
+              <iframe
+                class="embedded-video"
+                :src="'https://www.youtube.com/embed/' + videoData.id"
+                :title="videoData.title"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              >
+              </iframe>
+            </div>
           </div>
 
           <div class="section-content__info">
-            <p class="video-info__row">
+            <div class="video-info__row">
               <h4>Titolo</h4>
-              <span>{{videoData.title}}</span>
-            </p>
+              <span>{{ videoData.title }}</span>
+            </div>
 
-            <p class="video-info__row" v-if="videoData.description">
+            <div class="video-info__row" v-if="videoData.description">
               <h4>Descrizione</h4>
-              <span>{{videoData.description}}</span>
-            </p>
+              <span>{{ videoData.description }}</span>
+            </div>
 
-            <p class="video-info__row">
+            <div class="video-info__row">
               <h4>Data e ora di pubblicazione</h4>
-              <span>{{dateTimeFormatter(videoData.publishedAt)}}</span>
-            </p>
+              <span>{{ dateTimeFormatter(videoData.publishedAt) }}</span>
+            </div>
           </div>
         </div>
-
-
       </section>
 
       <section class="section comments-info">
         <h2 class="section-title">Il commento</h2>
-  <!--      <div class="col-12 text-end">-->
-  <!--        <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span-->
-  <!--        >-->
-  <!--      </div>-->
-        <DigiTable
-            :data="[selectedCommentData]"
-            :header="headerConfigTableSelected"
-            :search="search"
-            :tableFooter="false"
-            :only-display="true"
-        >
-          <!--      <template v-slot:actions="{ row: row }">-->
-          <!--        <div class="d-flex gap-3">-->
-          <!--          <a-->
-          <!--              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"-->
-          <!--              style="color: #f00;"-->
-          <!--          ><i class="fa-brands fa-youtube fs-5"></i-->
-          <!--          ></a>-->
-          <!--        </div>-->
-          <!--      </template>-->
 
+        <DigiTable
+          :data="[selectedCommentData]"
+          :header="headerConfigTableSelected"
+          :search="search"
+          :tableFooter="false"
+          :only-display="true"
+        >
           <template v-slot:publishedAt="{ row: row }">
             {{ dateTimeFormatter(row.publishedAt) }}
           </template>
@@ -266,49 +277,47 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:score="{ row: row }">
-          <span v-if="row.prediction" class="">
-            {{ row.prediction.score }}</span
-          >
+            <span v-if="row.prediction">{{ row.prediction.score }}</span>
             <span v-else></span>
+          </template>
+          <template v-slot:dimension="{ row: row }">
+            <ul class="m-0">
+              <li v-for="prd in getPrediction(row)" :key="prd">
+                {{ translate('categories', prd) }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:tokens="{ row: row }">
+            <ul class="m-0">
+              <li v-for="tkn in getTokens(row)" :key="tkn">{{ tkn }}</li>
+            </ul>
           </template>
         </DigiTable>
       </section>
 
       <section class="section comments-info">
         <h2 class="section-title">Gli altri commenti</h2>
-        <!--   FILTRI::START   -->
-        <FiltersToolbar
-            @on-search="onSearch"
-            @on-prediction="onPrediction"
-        />
-        <!--   FILTRI::END   -->
+
+        <FiltersToolbar @on-search="onSearch" @on-prediction="onPrediction" />
+
         <div class="col-12 text-end">
-          <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
+          <span class="fs-5 text-gray-800"
+            >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
           >
         </div>
         <DigiTable
-            :data="otherCommentsData"
-            :header="headerConfig"
-            :searched-fields="searchedFields"
-            :search="search"
-            :prediction-filter="predictionId"
-            :total="total"
-            :cPage="page"
-            sort-label="publishedAt"
-            @on-items-per-page-change="changeItemPerPage"
-            @page-change="changePage"
-            @on-sort="changeSort"
+          :data="otherCommentsData"
+          :header="headerConfig"
+          :searched-fields="searchedFields"
+          :search="search"
+          :prediction-filter="predictionId"
+          :total="total"
+          :cPage="page"
+          sort-label="publishedAt"
+          @on-items-per-page-change="changeItemPerPage"
+          @page-change="changePage"
+          @on-sort="changeSort"
         >
-          <!--      <template v-slot:actions="{ row: row }">-->
-          <!--        <div class="d-flex gap-3">-->
-          <!--          <a-->
-          <!--              :href="'https://www.youtube.com/watch?v=' + row.videoId" target="_blank"-->
-          <!--              style="color: #f00;"-->
-          <!--          ><i class="fa-brands fa-youtube fs-5"></i-->
-          <!--          ></a>-->
-          <!--        </div>-->
-          <!--      </template>-->
-
           <template v-slot:publishedAt="{ row: row }">
             {{ dateTimeFormatter(row.publishedAt) }}
           </template>
@@ -327,18 +336,25 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:score="{ row: row }">
-          <span v-if="row.prediction" class="">
-            {{ row.prediction.score }}</span
-          >
+            <span v-if="row.prediction">{{ row.prediction.score }}</span>
             <span v-else></span>
+          </template>
+          <template v-slot:dimension="{ row: row }">
+            <ul class="m-0">
+              <li v-for="prd in getPrediction(row)" :key="prd">
+                {{ translate('categories', prd) }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:tokens="{ row: row }">
+            <ul class="m-0">
+              <li v-for="tkn in getTokens(row)" :key="tkn">{{ tkn }}</li>
+            </ul>
           </template>
         </DigiTable>
       </section>
-
     </div>
-
   </main>
-  <!--  <ModalUserEdit :id="selectedId" @close-modal="init"></ModalUserEdit>-->
 </template>
 <style lang="scss">
 .videoTitle,
@@ -385,19 +401,14 @@ const changeSort = (sort) => {
         margin-bottom: 2.2rem;
         max-width: 70rem;
       }
-
     }
     .section-content__video {
       height: var(--section-video-height);
     }
   }
-
-
-
 }
 
-@media screen and (max-width: 1400px)  {
-
+@media screen and (max-width: 1400px) {
   .section {
     &.video-info {
       .section-content {
@@ -412,8 +423,7 @@ const changeSort = (sort) => {
   }
 }
 
-@media screen and (max-width: 992px)  {
-
+@media screen and (max-width: 992px) {
   .section {
     --video-height: 300px;
     --video-width: calc(300px * 1.9);
@@ -421,13 +431,11 @@ const changeSort = (sort) => {
   }
 }
 
-@media screen and (max-width: 768px)  {
-
+@media screen and (max-width: 768px) {
   .section {
     --video-height: 220px;
     --video-width: calc(220px * 1.9);
     --section-video-height: var(--video-height);
   }
 }
-
 </style>

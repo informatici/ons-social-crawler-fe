@@ -39,7 +39,7 @@ const navList = ref([
 </script>
 <template>
   <nav class="nav-list">
-    <ul>
+    <ul class="nav-list-ul">
       <li v-for="(item, ix) in navList" :key="ix">
         <router-link
           :to="{ name: item.routerName }"
