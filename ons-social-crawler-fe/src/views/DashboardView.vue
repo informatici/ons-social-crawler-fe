@@ -9,7 +9,7 @@ import TransactionWordsCloud from "./components/TransactionWordsCloud.vue"
 import TransactionResponses from "./components/TransactionResponses.vue"
 import LatestTransactionsChartWithScores from "./components/LatestTransactionsChartWithScores.vue"
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
 import ApiService from '../core/services/ApiService'
 import { useLoadingStore } from "@/stores/loading"
@@ -17,9 +17,11 @@ import alert from '@/core/helpers/alert'
 import 'zingchart/es6'
 
 const route = useRoute()
+const router = useRouter();
 const loading = useLoadingStore()
 const { dangerAlert } = alert()
 const transactions = ref([])
+const socialFilter = ref(null);
 
 //filters
 const range = ref({
@@ -58,6 +60,12 @@ const updateSocial = (social) => {
   selectedSocial.value = social
 }
 
+const doubleClick = (object) => {
+  // console.log('in doubleClick -> %O', object)
+  const modelData = [new Date(new Date(object.key).setHours(0, 0, 0, 0)), new Date(new Date(object.key).setHours(23, 59, 59, 999))]
+  updateRange(modelData) 
+}
+
 const updateRangeFromZoom = (object) => {
   // console.log('in zoom : %o', object)
   const modelData = [new Date(new Date(object.kmin).setHours(0, 0, 0, 0)), new Date(new Date(object.kmax).setHours(23, 59, 59, 999))]
@@ -76,6 +84,25 @@ const updateRange = (modelData) => {
     init()
   }
 }
+
+const navigateToPage = (dateRange) => {
+    let routeName;
+    switch (selectedSocial.value) {
+      case 'youtube':
+        routeName = 'youTube';
+        break;
+      case 'twitter':
+        routeName = 'twitter';
+        break;
+      case 'twitch':
+        routeName = 'twitch';
+        break;
+      default:
+        socialFilter.value.focus();
+        return;
+    }
+    router.push({ name: routeName, params: { dateRange: dateRange } });
+  }
 
 const total = ref(0)
 const data = ref([])
@@ -147,19 +174,22 @@ onMounted(async () => {
     </div>
     <div class="section">
       <div class="section-content">
-        <div class="grid-container">
-          <div>
+        <div class="filter-toolbar d-flex">
+          <div class="search-element d-flex align-items-center position-relative my-1">
             <DateRange :entries="range" @update:model-value="updateRange" />
           </div>
-          <div>
-            <SocialFilter @on-social="updateSocial" />
+          <div class="filter-element d-flex align-items-center position-relative my-1">
+            <SocialFilter ref="socialFilter" @on-social="updateSocial" />
+          </div>
+          <div class="filter-element d-flex align-items-center position-relative my-1">
+            <button ref="goButton"  class="btn btn-primary" style="background-color: var(--primary-color) !important; text-align: start;" @click="navigateToPage">Vai ai contenuti</button>
           </div>
         </div>
         <div>
-          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" />
+          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick"/>
         </div>
         <div>
-          <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" />
+          <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
         </div>
         <div>
           <LatestTransactionsChartClustered :entries="filteredTransactions" />
@@ -174,7 +204,7 @@ onMounted(async () => {
           <TransactionResponses :entries="filteredTransactions" />
         </div>
         <div>
-          <LatestTransactionsChartWithScores :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" />
+          <LatestTransactionsChartWithScores :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
         </div>
       </div>
     </div>
@@ -194,12 +224,6 @@ onMounted(async () => {
       display: grid;
       grid-template-columns: 1fr; /* Single column layout */
       gap: 3rem;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr; /* Two columns layout for DateRange and SocialFilter */
-      gap: 1rem;
     }
   }
 }

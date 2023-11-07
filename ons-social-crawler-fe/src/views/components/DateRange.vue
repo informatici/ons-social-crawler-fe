@@ -71,9 +71,24 @@ watchEffect(() => {
     transform: translateY(-115%); /* was -50% */
     color: var(--dp-icon-color);
 }
+.filter-toolbar {
+  display: flex;
+  gap: 2rem;
+  
+  .filter-element {
+    display: flex;
+    align-items: center; /* Vertically center the label with the select */
+    
+    .filter-element__label {
+      padding: 0.5rem;
+    }
+  }
+}
 </style>
 
 <template>
+  <div class="filter-element">
+    <label class="filter-element__label">Period:</label>
     <VueDatePicker v-model="date" range :preset-dates="presetDates" :format=masks.input >
       <template #preset-date-range-button="{ label, value, presetDate }">
         <span 
@@ -86,5 +101,5 @@ watchEffect(() => {
         </span>
       </template>
     </VueDatePicker>
+  </div>
 </template>
-
