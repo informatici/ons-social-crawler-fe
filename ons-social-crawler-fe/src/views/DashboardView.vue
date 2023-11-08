@@ -175,7 +175,7 @@ onMounted(async () => {
     <div class="section">
       <div class="section-content">
         <div class="filter-toolbar d-flex">
-          <div class="search-element d-flex align-items-center position-relative my-1">
+          <div class="filter-element d-flex align-items-center position-relative my-1">
             <DateRange :entries="range" @update:model-value="updateRange" />
           </div>
           <div class="filter-element d-flex align-items-center position-relative my-1">

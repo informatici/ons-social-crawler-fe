@@ -78,7 +78,7 @@ watch(
     .filter-element__label {
       font-size: 1.2rem;
       font-weight: 400;
-      text-transform: uppercase;
+      //text-transform: uppercase;
       display: inline-block;
       padding: 0.5rem;
     }
