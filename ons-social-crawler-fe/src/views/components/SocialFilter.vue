@@ -43,4 +43,24 @@ defineExpose({
   </div>
 </template>
 
+<style lang="scss">
+.filter-toolbar {
+  display: flex;
+  gap: 2rem;
+  
+  .filter-element {
+    display: flex;
+    align-items: center; /* Vertically center the label with the select */
+    
+    .filter-element__label {
+      padding: 0.5rem;
+    }
+    
+    .filter-element__input {
+      /* Add any additional styles for the select component here */
+    }
+  }
+}
+</style>
+
 

@@ -86,23 +86,23 @@ const updateRange = (modelData) => {
 }
 
 const navigateToPage = (dateRange) => {
-  let routeName;
-  switch (selectedSocial.value) {
-    case 'youtube':
-      routeName = 'youTube';
-      break;
-    case 'twitter':
-      routeName = 'twitter';
-      break;
-    case 'twitch':
-      routeName = 'twitch';
-      break;
-    default:
-      socialFilter.value.focus();
-      return;
+    let routeName;
+    switch (selectedSocial.value) {
+      case 'youtube':
+        routeName = 'youTube';
+        break;
+      case 'twitter':
+        routeName = 'twitter';
+        break;
+      case 'twitch':
+        routeName = 'twitch';
+        break;
+      default:
+        socialFilter.value.focus();
+        return;
+    }
+    router.push({ name: routeName, params: { dateRange: dateRange } });
   }
-  router.push({ name: routeName, params: { dateRange: dateRange } });
-}
 
 const total = ref(0)
 const data = ref([])
@@ -175,14 +175,14 @@ onMounted(async () => {
     <div class="section">
       <div class="section-content">
         <div class="filter-toolbar d-flex">
-          <div class="filter-element d-flex align-items-center position-relative my-1">
+          <div class="search-element d-flex align-items-center position-relative my-1">
             <DateRange :entries="range" @update:model-value="updateRange" />
           </div>
           <div class="filter-element d-flex align-items-center position-relative my-1">
             <SocialFilter ref="socialFilter" @on-social="updateSocial" />
           </div>
           <div class="filter-element d-flex align-items-center position-relative my-1">
-            <button ref="goButton" class="btn btn-primary" style="background-color: var(--primary-color) !important;" @click="navigateToPage">Vai ai contenuti</button>
+            <button ref="goButton"  class="btn btn-primary" style="background-color: var(--primary-color) !important; text-align: start;" @click="navigateToPage">Vai ai contenuti</button>
           </div>
         </div>
         <div>
