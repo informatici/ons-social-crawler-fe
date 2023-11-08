@@ -56,7 +56,6 @@ watch(
       <span class="filter-element__label">Odio: </span>
       <select
         class="filter-element__input form-select form-select-solid w-250px ps-15"
-        :placeholder="$t('Filtra')"
         v-model="predictionId"
       >
         <option v-for="(a, ix) in predictions" :key="ix" :value="a.value">
@@ -78,7 +77,7 @@ watch(
     .filter-element__label {
       font-size: 1.2rem;
       font-weight: 400;
-      text-transform: uppercase;
+      //text-transform: uppercase;
       display: inline-block;
       padding: 0.5rem;
     }
