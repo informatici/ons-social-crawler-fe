@@ -108,7 +108,7 @@ const headerConfig = ref([
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
-    tdClass: 'text-center'
+    tdClass: 'text-center bg-warning'
   }
 ])
 
@@ -143,7 +143,7 @@ const headerConfigTableSelected = ref([
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
-    tdClass: 'text-center'
+    tdClass: 'text-center bg-warning'
   }
 ])
 
