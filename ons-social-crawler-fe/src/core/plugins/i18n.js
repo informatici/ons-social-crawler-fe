@@ -2,6 +2,21 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   it: {
+    entities: {
+      users: {
+        add: 'Aggiungi',
+        edit: 'Modifica Utente',
+        detail: 'User Detail',
+        name: 'User',
+        email: 'E-mail',
+        roles: 'Roles',
+        password: 'Password',
+        passwordConfirmation: 'Conferma Password',
+        fullName: 'Nome Cognome',
+        crmUserRoles: 'User Roles',
+        passwordMinLength: 'La password deve contenere almeno 6 caratteri'
+      }
+    },
     common: {
       search: 'Search',
       confirm: 'Conferma',
