@@ -1,5 +1,5 @@
 <script setup>
-import { ref, toRefs, onMounted, watchEffect } from 'vue';
+import { ref, toRefs, onMounted, watchEffect, defineEmits } from 'vue';
 import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns';
 
 const props = defineProps({
@@ -11,6 +11,8 @@ const { entries } = toRefs(props);
 const masks = {
   input: 'dd/MM/yyyy',
 };
+
+const emit = defineEmits(['update:model-value']);
 
 const date = ref();
 
@@ -57,8 +59,14 @@ onMounted(() => {
 
 // Watch the entries prop for changes and update the date ref accordingly
 watchEffect(() => {
-  date.value = [entries.value.start, entries.value.end];
+  date.value = [entries.value.start, entries.value.end]
 });
+
+const updateDate = (newDate) => {
+  //console.log('in updateDate : %O', newDate)
+  date.value = newDate;
+  emit('update:model-value', newDate);
+};
 </script>
 
 <style scoped>
@@ -71,25 +79,11 @@ watchEffect(() => {
     transform: translateY(-115%); /* was -50% */
     color: var(--dp-icon-color);
 }
-.filter-toolbar {
-  display: flex;
-  gap: 2rem;
-  
-  .filter-element {
-    display: flex;
-    align-items: center; /* Vertically center the label with the select */
-    
-    .filter-element__label {
-      padding: 0.5rem;
-    }
-  }
-}
 </style>
 
 <template>
-  <div class="filter-element">
-    <label class="filter-element__label">Period:</label>
-    <VueDatePicker v-model="date" range :preset-dates="presetDates" :format=masks.input >
+    <label class="dashboard-element__label">Periodo:</label>
+    <VueDatePicker v-model="date" range :preset-dates="presetDates" :format=masks.input @update:model-value="updateDate">
       <template #preset-date-range-button="{ label, value, presetDate }">
         <span 
             role="button"
@@ -101,5 +95,4 @@ watchEffect(() => {
         </span>
       </template>
     </VueDatePicker>
-  </div>
 </template>

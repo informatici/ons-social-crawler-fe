@@ -1,6 +1,5 @@
 <script setup>
-import SocialFilter from "./components/SocialFilter.vue"
-import DateRange from "./components/DateRange.vue"
+import DashboardToolbar from "./components/DashboardToolbar.vue"
 import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
 import LatestTransactionsChartNorm from "./components/LatestTransactionsChartNorm.vue"
 import LatestTransactionsChartClustered from "./components/LatestTransactionsChartClustered.vue"
@@ -21,7 +20,7 @@ const router = useRouter();
 const loading = useLoadingStore()
 const { dangerAlert } = alert()
 const transactions = ref([])
-const socialFilter = ref(null);
+const dashboardToolbarRef = ref(null);
 
 //filters
 const range = ref({
@@ -75,9 +74,10 @@ const updateRangeFromZoom = (object) => {
 
 const updateRange = (modelData) => {
   // console.log("maxRange : %s - %s", maxRange.value.start, maxRange.value.end)
-  // console.log("modelData : %O", modelData)
+  // console.log("in updateRange : %O", modelData)
   range.value.start = modelData[0]
   range.value.end = modelData[1]
+  // console.log("new range : %O", range.value)
   if (range.value.start < maxRange.value.start || range.value.end > maxRange.value.end) {
     maxRange.value.start = range.value.start
     maxRange.value.end = range.value.end
@@ -85,8 +85,13 @@ const updateRange = (modelData) => {
   }
 }
 
+const focusOnChildComponent = () => {
+  dashboardToolbarRef.value.focusSocialFilter();
+};
+
 const navigateToPage = (dateRange) => {
     let routeName;
+    // console.log('in navigateToPage %O', dateRange)
     switch (selectedSocial.value) {
       case 'youtube':
         routeName = 'youTube';
@@ -98,7 +103,7 @@ const navigateToPage = (dateRange) => {
         routeName = 'twitch';
         break;
       default:
-        socialFilter.value.focus();
+        focusOnChildComponent()
         return;
     }
     router.push({ name: routeName, params: { dateRange: dateRange } });
@@ -174,19 +179,11 @@ onMounted(async () => {
     </div>
     <div class="section">
       <div class="section-content">
-        <div class="filter-toolbar d-flex">
-          <div class="filter-element d-flex align-items-center position-relative my-1">
-            <DateRange :entries="range" @update:model-value="updateRange" />
-          </div>
-          <div class="filter-element d-flex align-items-center position-relative my-1">
-            <SocialFilter ref="socialFilter" @on-social="updateSocial" />
-          </div>
-          <div class="filter-element d-flex align-items-center position-relative my-1">
-            <button ref="goButton"  class="btn btn-primary" style="background-color: var(--primary-color) !important; text-align: start;" @click="navigateToPage">Vai ai contenuti</button>
-          </div>
+        <div>
+          <DashboardToolbar ref="dashboardToolbarRef" :range="range" @updateRange="updateRange" @updateSocial="updateSocial" @navigateToPage="navigateToPage"  />
         </div>
         <div>
-          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick"/>
+          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
         </div>
         <div>
           <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
