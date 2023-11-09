@@ -5,33 +5,32 @@ import ApiService from '../core/services/ApiService'
 import { onMounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
 import global from '../core/helpers/functions.js'
-import { useLoadingStore } from "@/stores/loading";
-import FiltersToolbar from "@/views/components/FiltersToolbar.vue";
+import { useLoadingStore } from '@/stores/loading'
+import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import alert from '@/core/helpers/alert'
 
 const { dangerAlert } = alert()
 const route = useRoute()
-const { dateTimeFormatter } = global()
+const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
 const commentsData = ref([])
 const videoData = ref({})
-const channelName = ref("")
-const channelSlug = ref("")
+const channelName = ref('')
+const channelSlug = ref('')
 const selectedCommentData = ref({})
 const otherCommentsData = ref([])
-const parentDomain = ref("")
-const loading = useLoadingStore();
+const parentDomain = ref('')
+const loading = useLoadingStore()
 const isVideo = ref(false)
 const size = ref(10)
 const page = ref(1)
 const sortLabel = ref('')
 const sortOrder = ref('')
 
-
 const init = async () => {
   loading.show()
   try {
-    parentDomain.value = window.location.hostname        
+    parentDomain.value = window.location.hostname
     const res = await ApiService.get(
       `twitch/streams/${route.query.streamId}`,
       `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
@@ -39,24 +38,25 @@ const init = async () => {
 
     videoData.value = res.data.video ?? {}
     isVideo.value = res.data.video ? true : false
-    channelName.value = res.data?.stream?.user_name ?? ""
-    channelSlug.value = res.data?.stream?.user_login ?? ""
+    channelName.value = res.data?.stream?.user_name ?? ''
+    channelSlug.value = res.data?.stream?.user_login ?? ''
 
     commentsData.value = res.data.comments ?? []
-    commentsData.value = commentsData.value.map(comment => {
-      return {
-        ...comment?._source?.comment,
-        score: comment?._score,
-      }
-    }) ?? [];
-    commentsData.value = commentsData.value.map(item => { // per sorting score
+    commentsData.value =
+      commentsData.value.map((comment) => {
+        return {
+          ...comment?._source?.comment,
+          score: comment?._score
+        }
+      }) ?? []
+    commentsData.value = commentsData.value.map((item) => {
+      // per sorting score
       item.predictionScore = 0
-      if(item.prediction) {
+      if (item.prediction) {
         item.predictionScore = item.prediction.score
       }
       return item
     })
-
 
     // #qui::START aggiungere normalizzazione dati per filtri e search
     // data.value = data.value.map(item => { // per sorting score
@@ -67,10 +67,14 @@ const init = async () => {
     //   return item
     // })
     // #qui::END
-    selectedCommentData.value = Object.keys(selectedCommentData.value).length > 0 ? selectedCommentData.value : (commentsData.value.find(comment => comment.id === route.params.id) ?? {})
-    otherCommentsData.value = commentsData.value.filter(comment => comment.id !== route.params.id) ?? []
+    selectedCommentData.value =
+      Object.keys(selectedCommentData.value).length > 0
+        ? selectedCommentData.value
+        : commentsData.value.find((comment) => comment.id === route.params.id) ?? {}
+    otherCommentsData.value =
+      commentsData.value.filter((comment) => comment.id !== route.params.id) ?? []
 
-    total.value = res.data.totalComments - 1;    
+    total.value = res.data.totalComments - 1
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -106,13 +110,22 @@ const headerConfig = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Categorie',
+    columnLabel: 'dimension',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Parole Chiave',
+    columnLabel: 'tokens',
+    sortEnabled: false
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
-    tdClass: 'bg-warning text-center'
-  },
+    tdClass: 'text-center'
+  }
 ])
-
 
 const headerConfigTableSelected = ref([
   {
@@ -132,11 +145,21 @@ const headerConfigTableSelected = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Categorie',
+    columnLabel: 'dimension',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Parole Chiave',
+    columnLabel: 'tokens',
+    sortEnabled: false
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
-    sortEnabled: false,
-    tdClass: 'bg-warning text-center'
-  },
+    sortEnabled: true,
+    tdClass: 'text-center'
+  }
 ])
 
 const onSearch = (newValue) => {
@@ -172,32 +195,51 @@ const changeSort = (sort) => {
   sortOrder.value = sort.order
   init()
 }
+
+const getPrediction = (row) => {
+  const prediction = row.prediction?.dimension || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
+
+const getTokens = (row) => {
+  const prediction = row.prediction?.tokens || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
 </script>
 <template>
   <main class="page-container">
     <div class="section page-title">
       <h1>
-        <span><i class="title-icon fa-brands fa-twitch"></i></span> {{ route?.meta?.label }} <br>
+        <span><i class="title-icon fa-brands fa-twitch"></i></span> {{ route?.meta?.label }} <br />
       </h1>
-      <router-link :to="{name: 'twitch'}">
-        <button class="btn btn-primary" style="background-color: var(--primary-color) !important;">Indietro</button>
+      <router-link :to="{ name: 'twitch' }">
+        <button class="btn btn-primary" style="background-color: var(--primary-color) !important">
+          Indietro
+        </button>
       </router-link>
     </div>
 
     <div class="page-content">
-
       <section class="section video-info">
         <h2 class="section-title">Il video</h2>
         <div class="section-content">
           <div class="section-content__video">
-
             <div v-if="isVideo">
               <iframe
-                  class="embedded-video"
-                  :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}&autoplay=false`"
-                  frameborder="0" allowfullscreen="true" scrolling="no"
+                class="embedded-video"
+                :src="`https://player.twitch.tv/?video=v${videoData.id}&parent=${parentDomain}&autoplay=false`"
+                frameborder="0"
+                allowfullscreen="true"
+                scrolling="no"
               ></iframe>
-
             </div>
             <div v-else>
               <div class="embedded-video no-video-placeholder">
@@ -205,35 +247,36 @@ const changeSort = (sort) => {
                 <i class="no-video-placeholder__icon title-icon fa-brands fa-twitch"></i>
               </div>
             </div>
-
           </div>
 
           <div class="section-content__info" v-if="isVideo">
-            <p class="video-info__row">
+            <div class="video-info__row">
               <h4>Titolo</h4>
-              <span>{{videoData.title}}</span>
-            </p>
+              <span>{{ videoData.title }}</span>
+            </div>
 
-            <p class="video-info__row" v-if="videoData.description">
+            <div class="video-info__row" v-if="videoData.description">
               <h4>Descrizione</h4>
-              <span>{{videoData.description}}</span>
-            </p>
+              <span>{{ videoData.description }}</span>
+            </div>
 
-            <p class="video-info__row">
+            <div class="video-info__row">
               <h4>Data e ora di pubblicazione</h4>
-              <span>{{dateTimeFormatter(videoData.published_at)}}</span>
-            </p>
+              <span>{{ dateTimeFormatter(videoData.published_at) }}</span>
+            </div>
           </div>
 
           <div class="section-content__info" v-else>
-            <p class="video-info__row">
+            <div class="video-info__row">
               <h4>Canale</h4>
-              <span><a :href="'https://www.twitch.tv/' + channelSlug" target="_blank">{{ channelName }}</a></span>
-            </p>
+              <span
+                ><a :href="'https://www.twitch.tv/' + channelSlug" target="_blank">{{
+                  channelName
+                }}</a></span
+              >
+            </div>
           </div>
         </div>
-
-
       </section>
 
       <section class="section comments-info">
@@ -243,11 +286,11 @@ const changeSort = (sort) => {
         <!--        >-->
         <!--      </div>-->
         <DigiTable
-            :data="[selectedCommentData]"
-            :header="headerConfigTableSelected"
-            :search="search"
-            :tableFooter="false"
-            :only-display="true"
+          :data="[selectedCommentData]"
+          :header="headerConfigTableSelected"
+          :search="search"
+          :tableFooter="false"
+          :only-display="true"
         >
           <!--      <template v-slot:actions="{ row: row }">-->
           <!--        <div class="d-flex gap-3">-->
@@ -269,18 +312,27 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:textDisplay="{ row: row }">
-            {{ row.textDisplay }}
+            <div v-html="decodeHtml(row.textDisplay)"></div>
             <template v-if="row.response">
               <hr />
               <span class="text-success">{{ row.response }}</span>
             </template>
           </template>
-
           <template v-slot:score="{ row: row }">
-        <span v-if="row.prediction" class="">
-          {{ row.prediction.score }}</span
-        >
+            <span v-if="row.prediction">{{ row.prediction.score }}</span>
             <span v-else></span>
+          </template>
+          <template v-slot:dimension="{ row: row }">
+            <ul class="m-0">
+              <li v-for="prd in getPrediction(row)" :key="prd">
+                {{ translate('categories', prd) }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:tokens="{ row: row }">
+            <ul class="m-0">
+              <li v-for="tkn in getTokens(row)" :key="tkn">{{ tkn }}</li>
+            </ul>
           </template>
         </DigiTable>
       </section>
@@ -288,27 +340,25 @@ const changeSort = (sort) => {
       <section class="section comments-info">
         <h2 class="section-title">Gli altri commenti</h2>
         <!--   FILTRI::START   -->
-        <FiltersToolbar
-            @on-search="onSearch"
-            @on-prediction="onPrediction"
-        />
+        <FiltersToolbar @on-search="onSearch" @on-prediction="onPrediction" />
         <!--   FILTRI::END   -->
         <div class="col-12 text-end">
-          <span class="fs-5 text-gray-800">Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
+          <span class="fs-5 text-gray-800"
+            >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
           >
         </div>
         <DigiTable
-            :data="otherCommentsData"
-            :header="headerConfig"
-            :searched-fields="searchedFields"
-            :search="search"
-            :prediction-filter="predictionId"
-            :total="total"
-            :cPage="page"
-            sort-label="publishedAt"
-            @on-items-per-page-change="changeItemPerPage"
-            @page-change="changePage"
-            @on-sort="changeSort"
+          :data="otherCommentsData"
+          :header="headerConfig"
+          :searched-fields="searchedFields"
+          :search="search"
+          :prediction-filter="predictionId"
+          :total="total"
+          :cPage="page"
+          sort-label="publishedAt"
+          @on-items-per-page-change="changeItemPerPage"
+          @page-change="changePage"
+          @on-sort="changeSort"
         >
           <!--      <template v-slot:actions="{ row: row }">-->
           <!--        <div class="d-flex gap-3">-->
@@ -330,7 +380,7 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:textDisplay="{ row: row }">
-            {{ row.textDisplay }}
+            <div v-html="decodeHtml(row.textDisplay)"></div>
             <template v-if="row.response">
               <hr />
               <span class="text-success">{{ row.response }}</span>
@@ -338,16 +388,24 @@ const changeSort = (sort) => {
           </template>
 
           <template v-slot:score="{ row: row }">
-          <span v-if="row.prediction" class="">
-            {{ row.prediction.score }}</span
-          >
+            <span v-if="row.prediction">{{ row.prediction.score }}</span>
             <span v-else></span>
+          </template>
+          <template v-slot:dimension="{ row: row }">
+            <ul class="m-0">
+              <li v-for="prd in getPrediction(row)" :key="prd">
+                {{ translate('categories', prd) }}
+              </li>
+            </ul>
+          </template>
+          <template v-slot:tokens="{ row: row }">
+            <ul class="m-0">
+              <li v-for="tkn in getTokens(row)" :key="tkn">{{ tkn }}</li>
+            </ul>
           </template>
         </DigiTable>
       </section>
-
     </div>
-
   </main>
 </template>
 <style lang="scss">
@@ -387,7 +445,7 @@ const changeSort = (sort) => {
       width: var(--video-width);
 
       &.no-video-placeholder {
-        background-color: #EEE;
+        background-color: #eee;
         border-radius: 6px;
         display: flex;
         align-items: center;
@@ -414,19 +472,14 @@ const changeSort = (sort) => {
         margin-bottom: 2.2rem;
         max-width: 70rem;
       }
-
     }
     .section-content__video {
       height: var(--section-video-height);
     }
   }
-
-
-
 }
 
-@media screen and (max-width: 1400px)  {
-
+@media screen and (max-width: 1400px) {
   .section {
     &.video-info {
       .section-content {
@@ -441,8 +494,7 @@ const changeSort = (sort) => {
   }
 }
 
-@media screen and (max-width: 992px)  {
-
+@media screen and (max-width: 992px) {
   .section {
     --video-height: 300px;
     --video-width: calc(300px * 1.9);
@@ -450,13 +502,11 @@ const changeSort = (sort) => {
   }
 }
 
-@media screen and (max-width: 768px)  {
-
+@media screen and (max-width: 768px) {
   .section {
     --video-height: 220px;
     --video-width: calc(220px * 1.9);
     --section-video-height: var(--video-height);
   }
 }
-
 </style>

@@ -5,7 +5,7 @@ body {
   min-width: 576px;
 }
 
-ul {
+.nav-list-ul {
   list-style: none;
 }
 

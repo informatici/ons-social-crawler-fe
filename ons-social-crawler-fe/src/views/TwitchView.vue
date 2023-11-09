@@ -12,7 +12,7 @@ import alert from '@/core/helpers/alert'
 const loading = useLoadingStore()
 const { dangerAlert } = alert()
 const route = useRoute()
-const { dateTimeFormatter } = global()
+const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
 const data = ref([])
 const size = ref(10)
@@ -74,16 +74,21 @@ const headerConfig = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Categorie',
+    columnLabel: 'dimension',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Parole Chiave',
+    columnLabel: 'tokens',
+    sortEnabled: false
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
-    tdClass: 'bg-warning text-center'
+    tdClass: 'text-center'
   }
-  // {
-  //   columnName: 'Canale',
-  //   columnLabel: 'channelTitle',
-  //   sortEnabled: false
-  // },
 ])
 
 const onSearch = (newValue) => {
@@ -139,6 +144,24 @@ const changeSort = (sort) => {
   sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
   sortOrder.value = sort.order
   init()
+}
+
+const getPrediction = (row) => {
+  const prediction = row.prediction?.dimension || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
+
+const getTokens = (row) => {
+  const prediction = row.prediction?.tokens || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
 }
 </script>
 <template>
@@ -206,7 +229,7 @@ const changeSort = (sort) => {
         </template>
 
         <template v-slot:textDisplay="{ row: row }">
-          {{ row.textDisplay }}
+          <div v-html="decodeHtml(row.textDisplay)"></div>
           <template v-if="row.response">
             <hr />
             <span class="text-success">{{ row.response }}</span>
@@ -214,8 +237,20 @@ const changeSort = (sort) => {
         </template>
 
         <template v-slot:score="{ row: row }">
-          <span v-if="row.prediction" class=""> {{ row.prediction.score }}</span>
+          <span v-if="row.prediction">{{ row.prediction.score }}</span>
           <span v-else></span>
+        </template>
+        <template v-slot:dimension="{ row: row }">
+          <ul class="m-0">
+            <li v-for="prd in getPrediction(row)" :key="prd">
+              {{ translate('categories', prd) }}
+            </li>
+          </ul>
+        </template>
+        <template v-slot:tokens="{ row: row }">
+          <ul class="m-0">
+            <li v-for="tkn in getTokens(row)" :key="tkn">{{ tkn }}</li>
+          </ul>
         </template>
       </DigiTable>
     </div>
