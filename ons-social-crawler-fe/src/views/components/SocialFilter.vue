@@ -2,7 +2,7 @@
 
 import { ref, watch } from 'vue'
 
-const emits = defineEmits(['onSearch', 'onSocial'])
+const emits = defineEmits(['onSocial'])
 const socialId = ref('all')
 const socials = [
   { label: 'Tutti i social', value: 'all' },
