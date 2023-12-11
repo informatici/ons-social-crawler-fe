@@ -12,7 +12,7 @@ import alert from '@/core/helpers/alert'
 const loading = useLoadingStore()
 const { dangerAlert } = alert()
 const route = useRoute()
-const { dateTimeFormatter } = global()
+const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
 const data = ref([])
 const size = ref(10)
@@ -77,10 +77,20 @@ const headerConfig = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Categorie',
+    columnLabel: 'dimension',
+    sortEnabled: false
+  },
+  {
+    columnName: 'Parole Chiave',
+    columnLabel: 'tokens',
+    sortEnabled: false
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
-    tdClass: 'bg-warning text-center'
+    tdClass: 'text-center bg-warning'
   }
 ])
 
@@ -138,12 +148,30 @@ const changeSort = (sort) => {
   sortOrder.value = sort.order
   init()
 }
+
+const getPrediction = (row) => {
+  const prediction = row._source.data.prediction?.dimension || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
+
+const getTokens = (row) => {
+  const prediction = row._source.data.prediction?.tokens || ''
+  if (prediction) {
+    return prediction.split(' ')
+  }
+
+  return []
+}
 </script>
 <template>
   <main class="page-container">
     <div class="page-title">
       <h1>
-        <span><i class="title-icon fa-brands fa-twitter"></i></span> {{ route?.meta?.label }}
+        <span><i class="title-icon fa-brands fa-x-twitter"></i></span> {{ route?.meta?.label }}
       </h1>
       <StreamButton name="twitter" @on-update="streamButtonUpdate" />
     </div>
@@ -172,7 +200,7 @@ const changeSort = (sort) => {
         @on-sort="changeSort"
       >
         <template v-slot:twit="{ row: row }">
-          {{ row._source.data.text }}
+          <div v-html="decodeHtml(row._source.data.text)"></div>
           <template v-if="row._source.data.response">
             <hr />
             <span class="text-success">{{ row._source.data.response }}</span>
@@ -185,11 +213,29 @@ const changeSort = (sort) => {
           <span v-if="row._source.data.prediction" class="badge bg-success">Si</span>
           <span v-else class="badge bg-danger">No</span>
         </template>
-        <template v-slot:score="{ row: row }">
+
+        <!-- <template v-slot:score="{ row: row }">
           <span v-if="row._source.data.prediction" class="">
             {{ row._source.data.prediction.score }}</span
           >
           <span v-else></span>
+        </template> -->
+
+        <template v-slot:score="{ row: row }">
+          <span v-if="row._source.data.prediction">{{ row._source.data.prediction.score }}</span>
+          <span v-else></span>
+        </template>
+        <template v-slot:dimension="{ row: row }">
+          <ul class="m-0">
+            <li v-for="prd in getPrediction(row)" :key="prd">
+              {{ translate('categories', prd) }}
+            </li>
+          </ul>
+        </template>
+        <template v-slot:tokens="{ row: row }">
+          <ul class="m-0">
+            <li v-for="tkn in getTokens(row)" :key="tkn">{{ tkn }}</li>
+          </ul>
         </template>
       </DigiTable>
     </div>

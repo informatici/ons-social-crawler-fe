@@ -26,7 +26,7 @@ const navList = ref([
   },
   {
     label: 'Twitter',
-    icon: 'fa-brands fa-square-twitter',
+    icon: 'fa-brands fa-square-x-twitter',
     routerName: 'twitter'
   },
   {
@@ -39,7 +39,7 @@ const navList = ref([
 </script>
 <template>
   <nav class="nav-list">
-    <ul>
+    <ul class="nav-list-ul">
       <li v-for="(item, ix) in navList" :key="ix">
         <router-link
           :to="{ name: item.routerName }"

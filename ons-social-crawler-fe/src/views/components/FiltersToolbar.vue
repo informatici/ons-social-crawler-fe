@@ -56,7 +56,7 @@ watch(
       <span class="filter-element__label">Odio: </span>
       <select
         class="filter-element__input form-select form-select-solid w-250px ps-15"
-        :placeholder="$t('Filtra')"
+        :placeholder="$t('common.filter')"
         v-model="predictionId"
       >
         <option v-for="(a, ix) in predictions" :key="ix" :value="a.value">
