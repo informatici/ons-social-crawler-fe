@@ -9,12 +9,17 @@ import ElementPlus from 'element-plus'
 
 import 'bootstrap'
 
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
 app.use(i18n)
+
+app.component('VueDatePicker', VueDatePicker);
 
 ApiService.init(app)
 initVeeValidate()
