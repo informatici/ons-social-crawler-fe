@@ -6,11 +6,15 @@ import ApiService from '@/core/services/ApiService'
 import { initVeeValidate } from '@/core/plugins/vee-validate'
 import i18n from '@/core/plugins/i18n'
 import ElementPlus from 'element-plus'
+import VueGtag from 'vue-gtag'
 
 import 'bootstrap'
 
 const app = createApp(App)
 
+app.use(VueGtag, {
+  config: { id: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID }
+})
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
