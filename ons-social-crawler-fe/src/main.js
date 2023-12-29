@@ -19,6 +19,8 @@ app.use(i18n)
 app.use(
   VueGtag,
   {
+    appName: 'ONES2-AID012318-02-04-WEB',
+    pageTrackerScreenviewEnabled: true,
     config: { id: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID }
   },
   router
