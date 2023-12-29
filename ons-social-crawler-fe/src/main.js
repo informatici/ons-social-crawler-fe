@@ -29,6 +29,6 @@ app.use(VueGtag, {
 ApiService.init(app)
 initVeeValidate()
 
-app.provide('gtag', app.config.globalProperties.$gtag)
+// app.provide('gtag', app.config.globalProperties.$gtag)
 
 app.mount('#app')
