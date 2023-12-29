@@ -40,6 +40,8 @@ $header-height: var(--header-height);
   min-height: 100vh;
   padding: $sidebar-padding 1rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
 
   .logo {
   }
@@ -106,6 +108,12 @@ $header-height: var(--header-height);
     bottom: 0;
     left: calc((100% - $width) / 2);
     transition: 0.25s;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 }
 

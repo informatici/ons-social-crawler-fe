@@ -14,6 +14,7 @@ const loading = useLoadingStore()
 const route = useRoute()
 const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
+const totalComments = ref(0)
 const data = ref([])
 const size = ref(10)
 const page = ref(1)
@@ -38,6 +39,7 @@ const init = async () => {
       return item
     })
     total.value = res.data.total.value ?? 0
+    totalComments.value = res.data.totalComments ?? 0
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -179,7 +181,8 @@ const getTokens = (row) => {
 
       <div class="col-12 text-end">
         <span class="fs-5 text-gray-800"
-          >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
+          >Ultimi <span class="fw-bold text-primary">10000</span> di
+          <span class="fw-bold text-primary">{{ totalComments }}</span></span
         >
       </div>
       <DigiTable
