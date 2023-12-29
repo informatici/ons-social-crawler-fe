@@ -12,13 +12,17 @@ import 'bootstrap'
 
 const app = createApp(App)
 
-app.use(VueGtag, {
-  config: { id: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID }
-})
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
 app.use(i18n)
+app.use(
+  VueGtag,
+  {
+    config: { id: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID }
+  },
+  router
+)
 
 ApiService.init(app)
 initVeeValidate()
