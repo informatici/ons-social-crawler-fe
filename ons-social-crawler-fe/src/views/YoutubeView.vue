@@ -147,9 +147,23 @@ const changeSort = (sort) => {
   init()
 }
 
+const getResponse = (row) => {
+  const response = row?.response || null
+
+  if (response && typeof response === 'object') {
+    return response[0]?.answer || ''
+  }
+
+  return response
+}
+
 const getPrediction = (row) => {
-  const prediction = row.prediction?.dimension || ''
-  if (prediction) {
+  const prediction = row.prediction?.dimension || row.prediction?.dimensions || null
+  if (prediction && typeof prediction === 'object') {
+    return Object.entries(prediction)
+      .filter(([key, value]) => value > 0)
+      .map(([key, value]) => key)
+  } else if (prediction) {
     return prediction.split(' ')
   }
 
@@ -246,7 +260,7 @@ const getTokens = (row) => {
           <div v-html="decodeHtml(row.textDisplay)"></div>
           <template v-if="row.response">
             <hr />
-            <span class="text-success">{{ row.response }}</span>
+            <span class="text-success">{{ getResponse(row) }}</span>
           </template>
         </template>
 
