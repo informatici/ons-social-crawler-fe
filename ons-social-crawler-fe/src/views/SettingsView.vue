@@ -12,11 +12,13 @@ import { useI18n } from 'vue-i18n'
 import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamsSettings from '@/views/components/StreamsSettings.vue'
+import Editor from '@tinymce/tinymce-vue'
 
 const loading = useLoadingStore()
 const { t } = useI18n()
 const route = useRoute()
 const data = ref([])
+const howItWorks = ref('')
 const selectedId = ref('')
 
 const init = async () => {
@@ -25,6 +27,33 @@ const init = async () => {
     selectedId.value = ''
     const res = await ApiService.get('/auth/')
     data.value = res.data.users ?? []
+  } catch (e) {
+    dangerAlert(e)
+  } finally {
+    loading.hide()
+  }
+}
+
+const onEditorReady = async (editor) => {
+  loading.show()
+  try {
+    const resHowItWorks = await ApiService.get('/howitworks')
+    howItWorks.value = resHowItWorks.data.howItWorks || ''
+  } catch (e) {
+    dangerAlert(e)
+  } finally {
+    loading.hide()
+  }
+}
+
+const saveEditor = async () => {
+  loading.show()
+  try {
+    const data = {
+      text: howItWorks.value
+    }
+    await ApiService.put('/howitworks', data)
+    operationConfirm()
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -120,7 +149,7 @@ onMounted(async () => {
           <StreamsSettings />
         </div>
       </section>
-
+      <hr />
       <section class="section users-info">
         <h2 class="section-title">Utenti</h2>
 
@@ -162,6 +191,34 @@ onMounted(async () => {
             {{ getRoles(row?.customClaims?.user) }}
           </template>
         </DigiTable>
+      </section>
+      <hr />
+      <section class="section users-info">
+        <h2 class="section-title">Come funziona</h2>
+        <Editor
+          apiKey="xmk2k73g7ent4rr5i6qgrnma4vzs5gk3h1ispuegt6unb3to"
+          :init="{
+            toolbar_mode: 'sliding',
+            plugins:
+              'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+            toolbar:
+              'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+              { value: 'First.Name', title: 'First Name' },
+              { value: 'Email', title: 'Email' }
+            ],
+            language: 'it'
+          }"
+          @init="onEditorReady"
+          v-model="howItWorks"
+        />
+        <div class="row pt-3">
+          <div class="col-12 text-end">
+            <button class="btn btn-primary" type="button" @click="saveEditor">Salva</button>
+          </div>
+        </div>
       </section>
     </div>
   </main>

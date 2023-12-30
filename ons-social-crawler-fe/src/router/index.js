@@ -37,6 +37,12 @@ const router = createRouter({
           meta: { label: 'Dashboard' }
         },
         {
+          path: '/howitworks',
+          name: 'howitworks',
+          component: () => import('../views/HowItWorksView.vue'),
+          meta: { label: 'Come Funziona' }
+        },
+        {
           path: '/settings',
           name: 'settings',
           component: () => import('../views/SettingsView.vue'),

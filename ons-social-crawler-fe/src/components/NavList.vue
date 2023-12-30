@@ -34,6 +34,11 @@ const navList = ref([
     icon: 'fa-solid fa-chart-line',
     routerName: 'dashboard',
     roles: ['Admin']
+  },
+  {
+    label: 'Come Funziona',
+    icon: 'fa-solid fa-circle-question',
+    routerName: 'howitworks'
   }
 ])
 
