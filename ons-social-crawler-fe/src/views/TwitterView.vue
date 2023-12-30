@@ -151,9 +151,24 @@ const changeSort = (sort) => {
   init()
 }
 
+const getResponse = (row) => {
+  const response = row._source.data?.response || null
+
+  if (response && typeof response === 'object') {
+    return response[0]?.answer || ''
+  }
+
+  return response
+}
+
 const getPrediction = (row) => {
-  const prediction = row._source.data.prediction?.dimension || ''
-  if (prediction) {
+  const prediction =
+    row._source.data.prediction?.dimension || row._source.data.prediction?.dimensions || null
+  if (prediction && typeof prediction === 'object') {
+    return Object.entries(prediction)
+      .filter(([key, value]) => value > 0)
+      .map(([key, value]) => key)
+  } else if (prediction) {
     return prediction.split(' ')
   }
 
@@ -206,7 +221,7 @@ const getTokens = (row) => {
           <div v-html="decodeHtml(row._source.data.text)"></div>
           <template v-if="row._source.data.response">
             <hr />
-            <span class="text-success">{{ row._source.data.response }}</span>
+            <span class="text-success">{{ getResponse(row) }}</span>
           </template>
         </template>
         <template v-slot:createdAt="{ row: row }">
