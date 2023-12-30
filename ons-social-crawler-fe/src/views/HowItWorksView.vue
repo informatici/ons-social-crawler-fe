@@ -5,11 +5,6 @@ import { onMounted, ref } from 'vue'
 import alert from '@/core/helpers/alert'
 import { useLoadingStore } from '@/stores/loading'
 
-const modules = {
-  name: 'htmlEditButton',
-  module: htmlEditButton
-}
-
 const loading = useLoadingStore()
 const route = useRoute()
 const howItWorks = ref('')
