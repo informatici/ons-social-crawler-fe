@@ -5,6 +5,9 @@ import { onMounted, ref } from 'vue'
 import alert from '@/core/helpers/alert'
 import { useLoadingStore } from '@/stores/loading'
 import { computed } from 'vue'
+import QuizGeneratorTrueFalse from './components/QuizGeneratorTrueFalse.vue'
+import QuizGeneratorAnswer from './components/QuizGeneratorAnswer.vue'
+import QuizGeneratorCategories from './components/QuizGeneratorCategories.vue'
 
 const loading = useLoadingStore()
 const route = useRoute()
@@ -125,7 +128,21 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
         <h3>Quiz Generati</h3>
         <div class="row">
           <div v-for="(q, index) in createdQuiz" :key="q.id" class="col-12">
-            {{ index + 1 }}. {{ q.id }} - {{ q.type }}
+            <QuizGeneratorTrueFalse
+              v-if="q.type === 1"
+              :index="index + 1"
+              :quiz="q"
+            ></QuizGeneratorTrueFalse>
+            <QuizGeneratorAnswer
+              v-else-if="q.type === 2"
+              :index="index + 1"
+              :quiz="q"
+            ></QuizGeneratorAnswer>
+            <QuizGeneratorCategories
+              v-else-if="q.type === 3"
+              :index="index + 1"
+              :quiz="q"
+            ></QuizGeneratorCategories>
           </div>
         </div>
       </template>
