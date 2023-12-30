@@ -14,6 +14,7 @@ const { dangerAlert } = alert()
 const route = useRoute()
 const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
+const totalComments = ref(0)
 const data = ref([])
 const size = ref(10)
 const page = ref(1)
@@ -48,6 +49,7 @@ const init = async () => {
     })
 
     total.value = res.data.hits.total.value ?? 0
+    totalComments.value = res.data.totalComments ?? 0
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -149,9 +151,24 @@ const changeSort = (sort) => {
   init()
 }
 
+const getResponse = (row) => {
+  const response = row._source.data?.response || null
+
+  if (response && typeof response === 'object') {
+    return response[0]?.answer || ''
+  }
+
+  return response
+}
+
 const getPrediction = (row) => {
-  const prediction = row._source.data.prediction?.dimension || ''
-  if (prediction) {
+  const prediction =
+    row._source.data.prediction?.dimension || row._source.data.prediction?.dimensions || null
+  if (prediction && typeof prediction === 'object') {
+    return Object.entries(prediction)
+      .filter(([key, value]) => value > 0)
+      .map(([key, value]) => key)
+  } else if (prediction) {
     return prediction.split(' ')
   }
 
@@ -183,7 +200,8 @@ const getTokens = (row) => {
 
       <div class="col-12 text-end">
         <span class="fs-5 text-gray-800"
-          >Tweet processati: <span class="fw-bold text-primary">{{ total }}</span></span
+          >Ultimi <span class="fw-bold text-primary">10000</span> di
+          <span class="fw-bold text-primary">{{ totalComments }}</span></span
         >
       </div>
       <DigiTable
@@ -203,7 +221,7 @@ const getTokens = (row) => {
           <div v-html="decodeHtml(row._source.data.text)"></div>
           <template v-if="row._source.data.response">
             <hr />
-            <span class="text-success">{{ row._source.data.response }}</span>
+            <span class="text-success">{{ getResponse(row) }}</span>
           </template>
         </template>
         <template v-slot:createdAt="{ row: row }">

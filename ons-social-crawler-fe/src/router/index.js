@@ -31,6 +31,18 @@ const router = createRouter({
           meta: { label: 'Twitch' }
         },
         {
+          path: '/dashboard',
+          name: 'dashboard',
+          component: () => import('../views/DashboardView.vue'),
+          meta: { label: 'Dashboard' }
+        },
+        {
+          path: '/howitworks',
+          name: 'howitworks',
+          component: () => import('../views/HowItWorksView.vue'),
+          meta: { label: 'Come Funziona' }
+        },
+        {
           path: '/settings',
           name: 'settings',
           component: () => import('../views/SettingsView.vue'),
