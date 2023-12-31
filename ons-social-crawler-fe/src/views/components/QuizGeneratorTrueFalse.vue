@@ -1,28 +1,82 @@
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, computed, defineProps } from 'vue'
+import global from '../../core/helpers/functions.js'
 
+const { decodeHtml } = global()
 const props = defineProps(['index', 'quiz'])
-const index = ref(props.index)
-const quiz = ref(props.quiz)
+const index = computed(() => props.index)
+const quiz = computed(() => props.quiz)
+const hasAnswered = ref(false)
+const right = ref(false)
+
+const checkAnswer = (value) => {
+  hasAnswered.value = true
+
+  if (value == quiz.value.hasHate) {
+    right.value = true
+  } else {
+    right.value = false
+  }
+}
 </script>
 
 <template>
   <div class="quiz-title-container">
     <span class="quiz-round-number">{{ index }}</span>
     <span>Vero o Falso</span>
+    <svg
+      v-if="hasAnswered && right"
+      xmlns="http://www.w3.org/2000/svg"
+      height="30"
+      width="30"
+      fill="turquoise"
+      viewBox="0 0 512 512"
+    >
+      <path
+        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
+      />
+    </svg>
+    <svg
+      v-if="hasAnswered && !right"
+      xmlns="http://www.w3.org/2000/svg"
+      height="30"
+      width="30"
+      fill="tomato"
+      viewBox="0 0 512 512"
+    >
+      <path
+        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"
+      />
+    </svg>
   </div>
-  <p>
-    "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-    passages, and more recently with desktop publishing software like Aldus PageMaker including
-    versions of Lorem Ipsum."
-  </p>
+  <p>"{{ decodeHtml(quiz.description) }}"</p>
   <b>Il messaggio contiene odio?</b>
   <div class="row mt-2">
     <div class="col-12 col-md-6">
-      <button class="quiz-answer-button">Vero</button>
+      <button
+        class="quiz-answer-button"
+        :class="{
+          right: hasAnswered && quiz.hasHate,
+          wrong: hasAnswered && !quiz.hasHate
+        }"
+        @click="checkAnswer(true)"
+        :disabled="hasAnswered"
+      >
+        Vero
+      </button>
     </div>
     <div class="col-12 col-md-6">
-      <button class="quiz-answer-button">Falso</button>
+      <button
+        class="quiz-answer-button"
+        :class="{
+          right: hasAnswered && !quiz.hasHate,
+          wrong: hasAnswered && quiz.hasHate
+        }"
+        @click="checkAnswer(false)"
+        :disabled="hasAnswered"
+      >
+        Falso
+      </button>
     </div>
   </div>
   <hr />
@@ -32,6 +86,7 @@ const quiz = ref(props.quiz)
 .quiz-title-container {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 .quiz-round-number {
   height: 25px;
@@ -58,5 +113,20 @@ const quiz = ref(props.quiz)
   border: 2px solid #005b9c;
   background-color: #005b9c;
   color: white;
+}
+
+.quiz-answer-button.right {
+  border: 2px solid turquoise;
+  background-color: turquoise;
+  color: white;
+}
+.quiz-answer-button.wrong {
+  border: 2px solid tomato;
+  background-color: tomato;
+  color: white;
+}
+
+.quiz-answer-button.wrong:disabled {
+  opacity: 0.2;
 }
 </style>

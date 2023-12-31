@@ -43,12 +43,27 @@ const generateQuiz = async () => {
         type: quizType.value
       }
       const res = await ApiService.post('/quiz', data)
+      const quiz = res.data
+      createdQuiz.value.push(quiz)
+    }
+    operationConfirm()
+  } catch (e) {
+    dangerAlert(e)
+  } finally {
+    loading.hide()
+  }
+}
 
-      const quiz = {
-        id: Date.now(),
-        type: quizType.value
+const generateRandomQuiz = async () => {
+  loading.show()
+  try {
+    for (let i = 0; i < quizQta.value; i++) {
+      const type = Math.floor(Math.random() * 3) + 1
+      const data = {
+        type
       }
-
+      const res = await ApiService.post('/quiz', data)
+      const quiz = res.data
       createdQuiz.value.push(quiz)
     }
     operationConfirm()
@@ -121,11 +136,21 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             Genera
           </button>
         </div>
+        <div class="col-12 col-md-4">
+          <button class="generator-quiz-button" @click="generateRandomQuiz">Genera random</button>
+        </div>
       </div>
 
       <template v-if="existCreatedQuiz">
         <hr />
-        <h3>Quiz Generati</h3>
+        <div class="row">
+          <div class="col-12 col-md-8">
+            <h3>Quiz Generati</h3>
+          </div>
+          <div class="col-12 col-md-4">
+            <button class="generator-quiz-export">Esporta Excel</button>
+          </div>
+        </div>
         <div class="row">
           <div v-for="(q, index) in createdQuiz" :key="q.id" class="col-12">
             <QuizGeneratorTrueFalse
@@ -182,6 +207,19 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
   width: 100%;
   border: 2px solid #005b9c;
   background-color: #005b9c;
+  border-radius: 8px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  color: white;
+}
+
+.generator-quiz-export {
+  width: 100%;
+  border: 2px solid #33c481;
+  background-color: #33c481;
   border-radius: 8px;
   padding: 15px 32px;
   text-align: center;
