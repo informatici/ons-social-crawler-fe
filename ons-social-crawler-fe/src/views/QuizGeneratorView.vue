@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import ApiService from '../core/services/ApiService'
+import FileSaver from 'file-saver'
 import { onMounted, ref } from 'vue'
 import alert from '@/core/helpers/alert'
 import { useLoadingStore } from '@/stores/loading'
@@ -8,6 +9,7 @@ import { computed } from 'vue'
 import QuizGeneratorTrueFalse from './components/QuizGeneratorTrueFalse.vue'
 import QuizGeneratorAnswer from './components/QuizGeneratorAnswer.vue'
 import QuizGeneratorCategories from './components/QuizGeneratorCategories.vue'
+import axios from 'axios'
 
 const loading = useLoadingStore()
 const route = useRoute()
@@ -22,8 +24,6 @@ const init = async () => {
   try {
     quizType.value = 0
     quizQta.value = 1
-    // const resHowItWorks = await ApiService.get('/howitworks')
-    // howItWorks.value = resHowItWorks.data.howItWorks || ''
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -71,6 +71,40 @@ const generateRandomQuiz = async () => {
     dangerAlert(e)
   } finally {
     loading.hide()
+  }
+}
+
+const exportQuiz = async () => {
+  loading.show()
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_API_URL}/quiz/export`,
+      {
+        quiz: createdQuiz.value
+      },
+      {
+        responseType: 'blob'
+      }
+    )
+    handleDownload(response)
+  } catch (e) {
+    dangerAlert(e)
+  } finally {
+    loading.hide()
+  }
+}
+
+const handleDownload = (response) => {
+  try {
+    const filename = `quiz_${Date.now()}.xlsx`
+
+    const blob = new Blob([response.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    })
+
+    FileSaver.saveAs(blob, filename)
+  } catch (err) {
+    console.log(err)
   }
 }
 
@@ -148,7 +182,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             <h3>Quiz Generati</h3>
           </div>
           <div class="col-12 col-md-4">
-            <button class="generator-quiz-export">Esporta Excel</button>
+            <button class="generator-quiz-export" @click="exportQuiz">Esporta Excel</button>
           </div>
         </div>
         <div class="row">

@@ -125,7 +125,6 @@ const checkAnswer = (value) => {
   background-color: tomato;
   color: white;
 }
-
 .quiz-answer-button.wrong:disabled {
   opacity: 0.2;
 }
