@@ -43,6 +43,12 @@ const router = createRouter({
           meta: { label: 'Come Funziona' }
         },
         {
+          path: '/quizgenerator',
+          name: 'quizgenerator',
+          component: () => import('../views/QuizGeneratorView.vue'),
+          meta: { label: 'Generatore Quiz' }
+        },
+        {
           path: '/settings',
           name: 'settings',
           component: () => import('../views/SettingsView.vue'),
