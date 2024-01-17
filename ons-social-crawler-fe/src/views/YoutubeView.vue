@@ -1,5 +1,5 @@
 <script setup>
-import { useRoute, RouterLink, RouterView } from 'vue-router'
+import { useRoute, RouterLink } from 'vue-router'
 import ApiService from '../core/services/ApiService'
 import { onMounted, onUnmounted, ref } from 'vue'
 import DigiTable from '@/components/kt-datatable/DigiTable.vue'
@@ -20,13 +20,17 @@ const size = ref(10)
 const page = ref(1)
 const sortLabel = ref('')
 const sortOrder = ref('')
+const range = ref({
+  end: new Date(new Date(new Date().setHours(-24)).setHours(23, 59, 59, 999)), // yesterday, end of the day
+  start: new Date(new Date().setHours(-168, 0, 0, 0)) //1 week
+})
 
 const init = async () => {
   loading.show()
   try {
     const res = await ApiService.get(
       'youtube/comments',
-      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${range.value.start}&dateTo=${range.value.end}`
     )
     data.value = res.data.hits ?? []
     data.value = data.value.map((hit) => hit?._source?.comment) ?? []
@@ -147,6 +151,16 @@ const changeSort = (sort) => {
   init()
 }
 
+const updateRange = (modelData) => {
+  range.value.start = modelData[0]
+  range.value.end = modelData[1]
+  // if (range.value.start < maxRange.value.start || range.value.end > maxRange.value.end) {
+  //   maxRange.value.start = range.value.start
+  //   maxRange.value.end = range.value.end
+  //   init()
+  // }
+  init()
+}
 const getResponse = (row) => {
   const response = row?.response || null
 
@@ -190,13 +204,21 @@ const getTokens = (row) => {
 
     <div class="page-content">
       <!--   FILTRI::START   -->
-      <FiltersToolbar @on-search="onSearch" @on-prediction="onPrediction" />
+      <FiltersToolbar
+        @on-search="onSearch"
+        @on-prediction="onPrediction"
+        @update-range="updateRange"
+        :range="range"
+      />
       <!--   FILTRI::END   -->
 
       <div class="col-12 text-end">
-        <span class="fs-5 text-gray-800"
+        <span v-if="total >= 10000" class="fs-5 text-gray-800"
           >Ultimi <span class="fw-bold text-primary">10000</span> di
           <span class="fw-bold text-primary">{{ totalComments }}</span></span
+        >
+        <span v-else class="fs-5 text-gray-800"
+          >Commenti: <span class="fw-bold text-primary">{{ total }}</span></span
         >
       </div>
       <DigiTable

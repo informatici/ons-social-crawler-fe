@@ -1,12 +1,17 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, toRaw } from 'vue'
+import DateRange from './DateRange.vue'
 
-const emits = defineEmits(['onSearch', 'onPrediction'])
+const emits = defineEmits(['onSearch', 'onPrediction', 'updateRange'])
 const props = defineProps({
   predictionFilter: {
     type: Boolean,
     required: false,
     default: true
+  },
+  range: {
+    type: Object,
+    required: false
   }
 })
 
@@ -17,6 +22,11 @@ const predictions = [
   { label: 'No', value: 1 },
   { label: 'Sì', value: 2 }
 ]
+const range = ref(props.range)
+
+const updateRange = (value) => {
+  emits('updateRange', toRaw(value))
+}
 
 watch(
   () => search.value,
@@ -34,11 +44,7 @@ watch(
 </script>
 <template>
   <div class="filter-toolbar">
-    <!--     search::START     -->
     <div class="search-element d-flex align-items-center position-relative my-1">
-      <!--          <span class="position-absolute ms-6">-->
-      <!--            <i class="fa-solid fa-magnifying-glass fs-4"></i>-->
-      <!--          </span>-->
       <input
         type="text"
         class="form-control form-control-solid w-250px ps-15"
@@ -46,9 +52,7 @@ watch(
         v-model="search"
       />
     </div>
-    <!--     search::END     -->
 
-    <!--     filtro select odio::START     -->
     <div
       class="filter-element d-flex align-items-center position-relative my-1"
       v-if="props.predictionFilter"
@@ -63,7 +67,10 @@ watch(
         </option>
       </select>
     </div>
-    <!--     filtro select odio::END     -->
+
+    <div class="filter-element d-flex align-items-center position-relative my-1">
+      <DateRange :entries="range" @update:model-value="updateRange" />
+    </div>
   </div>
 </template>
 <style lang="scss">
