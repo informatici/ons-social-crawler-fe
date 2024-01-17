@@ -182,12 +182,9 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             <h3>Quiz Generati</h3>
           </div>
           <div class="col-12 col-md-4">
-            <button
-              class="generator-quiz-export"
-              @click="exportQuiz"
-              :disabled="true"
-              style="opacity: 0.3"
-            >
+            <button class="generator-quiz-export" @click="exportQuiz">
+              <!-- :disabled="true"
+              style="opacity: 0.3" -->
               Esporta Excel
             </button>
           </div>
