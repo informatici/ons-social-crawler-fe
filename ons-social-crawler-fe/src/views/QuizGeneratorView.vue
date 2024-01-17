@@ -78,7 +78,7 @@ const exportQuiz = async () => {
   loading.show()
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/quiz/export`,
+      `${import.meta.env.VITE_APP_API_URL}quiz/export`,
       {
         quiz: createdQuiz.value
       },
