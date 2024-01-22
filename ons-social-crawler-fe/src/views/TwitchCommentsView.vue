@@ -26,6 +26,10 @@ const size = ref(10)
 const page = ref(1)
 const sortLabel = ref('')
 const sortOrder = ref('')
+const range = ref({
+  end: new Date(new Date(new Date().setHours(-24)).setHours(23, 59, 59, 999)), // yesterday, end of the day
+  start: new Date(new Date().setHours(-168, 0, 0, 0)) //1 week
+})
 
 const init = async () => {
   loading.show()
@@ -33,7 +37,7 @@ const init = async () => {
     parentDomain.value = window.location.hostname
     const res = await ApiService.get(
       `twitch/streams/${route.query.streamId}`,
-      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}`
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${range.value.start}&dateTo=${range.value.end}`
     )
 
     videoData.value = res.data.video ?? {}
@@ -74,7 +78,7 @@ const init = async () => {
     otherCommentsData.value =
       commentsData.value.filter((comment) => comment.id !== route.params.id) ?? []
 
-    total.value = res.data.totalComments - 1
+    total.value = res.data.totalComments > 0 ? res.data.totalComments - 1 : 0
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -193,6 +197,17 @@ const changeSort = (sort) => {
   page.value = 1
   sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
   sortOrder.value = sort.order
+  init()
+}
+
+const updateRange = (modelData) => {
+  range.value.start = modelData[0]
+  range.value.end = modelData[1]
+  // if (range.value.start < maxRange.value.start || range.value.end > maxRange.value.end) {
+  //   maxRange.value.start = range.value.start
+  //   maxRange.value.end = range.value.end
+  //   init()
+  // }
   init()
 }
 
@@ -357,11 +372,16 @@ const getTokens = (row) => {
       <section class="section comments-info">
         <h2 class="section-title">Gli altri commenti</h2>
         <!--   FILTRI::START   -->
-        <FiltersToolbar @on-search="onSearch" @on-prediction="onPrediction" />
+        <FiltersToolbar
+          @on-search="onSearch"
+          @on-prediction="onPrediction"
+          @update-range="updateRange"
+          :range="range"
+        />
         <!--   FILTRI::END   -->
         <div class="col-12 text-end">
           <span class="fs-5 text-gray-800"
-            >Commenti processati: <span class="fw-bold text-primary">{{ total }}</span></span
+            >Commenti: <span class="fw-bold text-primary">{{ total }}</span></span
           >
         </div>
         <DigiTable
