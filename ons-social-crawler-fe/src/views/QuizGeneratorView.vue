@@ -78,7 +78,7 @@ const exportQuiz = async () => {
   loading.show()
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/quiz/export`,
+      `${import.meta.env.VITE_APP_API_URL}quiz/export`,
       {
         quiz: createdQuiz.value
       },
@@ -182,12 +182,9 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             <h3>Quiz Generati</h3>
           </div>
           <div class="col-12 col-md-4">
-            <button
-              class="generator-quiz-export"
-              @click="exportQuiz"
-              :disabled="true"
-              style="opacity: 0.3"
-            >
+            <button class="generator-quiz-export" @click="exportQuiz">
+              <!-- :disabled="true"
+              style="opacity: 0.3" -->
               Esporta Excel
             </button>
           </div>

@@ -282,7 +282,10 @@ const getTokens = (row) => {
           <div v-html="decodeHtml(row.textDisplay)"></div>
           <template v-if="row.response">
             <hr />
-            <span class="text-success">{{ getResponse(row) }}</span>
+            <span v-if="getResponse(row) !== 'miss'" class="text-success">{{
+              getResponse(row)
+            }}</span>
+            <span v-else class="text-danger"> Dati insufficienti per elaborare una risposta</span>
           </template>
         </template>
 
