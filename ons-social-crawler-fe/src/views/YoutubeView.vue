@@ -8,9 +8,11 @@ import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamButton from '@/views/components/StreamButton.vue'
 import alert from '@/core/helpers/alert'
+import { useFilterStore } from '../stores/filter'
 
 const { dangerAlert } = alert()
 const loading = useLoadingStore()
+const filter = useFilterStore()
 const route = useRoute()
 const { dateTimeFormatter, decodeHtml, translate } = global()
 const total = ref(0)
@@ -20,17 +22,13 @@ const size = ref(10)
 const page = ref(1)
 const sortLabel = ref('')
 const sortOrder = ref('')
-const range = ref({
-  end: new Date(new Date(new Date().setHours(-24)).setHours(23, 59, 59, 999)), // yesterday, end of the day
-  start: new Date(new Date().setHours(-168, 0, 0, 0)) //1 week
-})
 
 const init = async () => {
   loading.show()
   try {
     const res = await ApiService.get(
       'youtube/comments',
-      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${range.value.start}&dateTo=${range.value.end}`
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${filter.getYouTubeDateRange.start}&dateTo=${filter.getYouTubeDateRange.end}`
     )
     data.value = res.data.hits ?? []
     data.value = data.value.map((hit) => hit?._source?.comment) ?? []
@@ -152,8 +150,10 @@ const changeSort = (sort) => {
 }
 
 const updateRange = (modelData) => {
-  range.value.start = modelData[0]
-  range.value.end = modelData[1]
+  filter.setYouTubeDateRange({
+    end: modelData[1],
+    start: modelData[0]
+  })
   // if (range.value.start < maxRange.value.start || range.value.end > maxRange.value.end) {
   //   maxRange.value.start = range.value.start
   //   maxRange.value.end = range.value.end
@@ -208,7 +208,7 @@ const getTokens = (row) => {
         @on-search="onSearch"
         @on-prediction="onPrediction"
         @update-range="updateRange"
-        :range="range"
+        :range="filter.getYouTubeDateRange"
       />
       <!--   FILTRI::END   -->
 

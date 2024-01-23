@@ -1,26 +1,28 @@
 <script setup>
-import DashboardToolbar from "./components/DashboardToolbar.vue"
-import LatestTransactionsChart from "./components/LatestTransactionsChart.vue"
-import LatestTransactionsChartNorm from "./components/LatestTransactionsChartNorm.vue"
-import LatestTransactionsChartClustered from "./components/LatestTransactionsChartClustered.vue"
-import TransactionBreakdownChart from "./components/TransactionBreakdownChart.vue"
-import TransactionWordsCloud from "./components/TransactionWordsCloud.vue"
-import TransactionResponses from "./components/TransactionResponses.vue"
-import LatestTransactionsChartWithScores from "./components/LatestTransactionsChartWithScores.vue"
+import DashboardToolbar from './components/DashboardToolbar.vue'
+import LatestTransactionsChart from './components/LatestTransactionsChart.vue'
+import LatestTransactionsChartNorm from './components/LatestTransactionsChartNorm.vue'
+import LatestTransactionsChartClustered from './components/LatestTransactionsChartClustered.vue'
+import TransactionBreakdownChart from './components/TransactionBreakdownChart.vue'
+import TransactionWordsCloud from './components/TransactionWordsCloud.vue'
+import TransactionResponses from './components/TransactionResponses.vue'
+import LatestTransactionsChartWithScores from './components/LatestTransactionsChartWithScores.vue'
 
 import { useRoute, useRouter } from 'vue-router'
 import { computed, ref, onMounted } from 'vue'
 import ApiService from '../core/services/ApiService'
-import { useLoadingStore } from "@/stores/loading"
+import { useLoadingStore } from '@/stores/loading'
 import alert from '@/core/helpers/alert'
 import 'zingchart/es6'
+import { useFilterStore } from '../stores/filter'
 
 const route = useRoute()
-const router = useRouter();
+const router = useRouter()
 const loading = useLoadingStore()
+const filter = useFilterStore()
 const { dangerAlert } = alert()
 const transactions = ref([])
-const dashboardToolbarRef = ref(null);
+const dashboardToolbarRef = ref(null)
 
 //filters
 const range = ref({
@@ -42,15 +44,15 @@ const filteredTransactions = computed(() => {
   //console.log('range %O', range)
   //console.log('start %O', range.value.start)
   //console.log('end %O', range.value.end)
-  return transactions.value.filter(entry => {
+  return transactions.value.filter((entry) => {
     //console.log(entry)
     //console.log('entry.social : %s', entry.social)
     //console.log('selectedSocial : %s', selectedSocial.value)
-    return (
-      entry.timestamp >= range.value.start.getTime() &&
-      entry.timestamp < range.value.end.getTime() && 
-      selectedSocial.value == 'all' ? true : entry.social == selectedSocial.value
-    )
+    return entry.timestamp >= range.value.start.getTime() &&
+      entry.timestamp < range.value.end.getTime() &&
+      selectedSocial.value == 'all'
+      ? true
+      : entry.social == selectedSocial.value
   })
 })
 
@@ -61,13 +63,19 @@ const updateSocial = (social) => {
 
 const doubleClick = (object) => {
   // console.log('in doubleClick -> %O', object)
-  const modelData = [new Date(new Date(object.key).setHours(0, 0, 0, 0)), new Date(new Date(object.key).setHours(23, 59, 59, 999))]
-  updateRange(modelData) 
+  const modelData = [
+    new Date(new Date(object.key).setHours(0, 0, 0, 0)),
+    new Date(new Date(object.key).setHours(23, 59, 59, 999))
+  ]
+  updateRange(modelData)
 }
 
 const updateRangeFromZoom = (object) => {
   // console.log('in zoom : %o', object)
-  const modelData = [new Date(new Date(object.kmin).setHours(0, 0, 0, 0)), new Date(new Date(object.kmax).setHours(23, 59, 59, 999))]
+  const modelData = [
+    new Date(new Date(object.kmin).setHours(0, 0, 0, 0)),
+    new Date(new Date(object.kmax).setHours(23, 59, 59, 999))
+  ]
   // console.log("modelData : %O", modelData)
   updateRange(modelData)
 }
@@ -86,28 +94,30 @@ const updateRange = (modelData) => {
 }
 
 const focusOnChildComponent = () => {
-  dashboardToolbarRef.value.focusSocialFilter();
-};
+  dashboardToolbarRef.value.focusSocialFilter()
+}
 
-const navigateToPage = (dateRange) => {
-    let routeName;
-    // console.log('in navigateToPage %O', dateRange)
-    switch (selectedSocial.value) {
-      case 'youtube':
-        routeName = 'youTube';
-        break;
-      case 'twitter':
-        routeName = 'twitter';
-        break;
-      case 'twitch':
-        routeName = 'twitch';
-        break;
-      default:
-        focusOnChildComponent()
-        return;
-    }
-    router.push({ name: routeName, params: { dateRange: dateRange } });
+const navigateToPage = () => {
+  let routeName
+  switch (selectedSocial.value) {
+    case 'youtube':
+      routeName = 'youTube'
+      filter.setYouTubeDateRange(range.value)
+      break
+    case 'twitter':
+      routeName = 'twitter'
+      filter.setTwitterDateRange(range.value)
+      break
+    case 'twitch':
+      routeName = 'twitch'
+      filter.setTwitchDateRange(range.value)
+      break
+    default:
+      focusOnChildComponent()
+      return
   }
+  router.push({ name: routeName })
+}
 
 const total = ref(0)
 const data = ref([])
@@ -115,6 +125,8 @@ const data = ref([])
 const init = async () => {
   loading.show()
   try {
+    filter.resetAll()
+
     const comments = await ApiService.get(
       'elasticsearch/query',
       `?dateFrom=${range.value.start}&dateTo=${range.value.end}`
@@ -122,10 +134,16 @@ const init = async () => {
     // console.log("in init, query result : ", comments)
     // console.log('selectedSocial : %s', selectedSocial.value)
     data.value = comments.data.hits ?? []
-    data.value = data.value.map((hit) => { //hit?._source?.comment || hit?._source?.data) ?? []
+    data.value = data.value.map((hit) => {
+      //hit?._source?.comment || hit?._source?.data) ?? []
       let item = {}
       item = hit._source?.comment || hit._source?.data
-      item.social = hit._index == "twitchcomments" ? "twitch" : hit._index == "youtubecomments" ? "youtube" : "twitter"
+      item.social =
+        hit._index == 'twitchcomments'
+          ? 'twitch'
+          : hit._index == 'youtubecomments'
+          ? 'youtube'
+          : 'twitter'
       item.predictionScore = 0
       if (item.prediction) {
         item.predictionScore = item.prediction.score
@@ -144,8 +162,8 @@ const init = async () => {
       newItem.timestamp = toTimestamp(item.publishedAt) || toTimestamp(item.created_at)
       newItem.score = item.predictionScore
       newItem.response = item.response
-      newItem.dimension = item.prediction ? item.prediction.dimension : ""
-      newItem.tokens = item.prediction ? item.prediction.tokens : ""
+      newItem.dimension = item.prediction ? item.prediction.dimension : ''
+      newItem.tokens = item.prediction ? item.prediction.tokens : ''
       return newItem
     })
     //console.log("in init, transactions for graphs : ", transactions.value)
@@ -156,11 +174,9 @@ const init = async () => {
   }
 }
 
-
 onMounted(async () => {
   await init()
 })
-
 </script>
 
 <template>
@@ -171,7 +187,8 @@ onMounted(async () => {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
             <path
-              d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z" />
+              d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"
+            />
           </svg>
         </span>
         {{ route?.meta?.label }}
@@ -180,13 +197,29 @@ onMounted(async () => {
     <div class="section">
       <div class="section-content">
         <div>
-          <DashboardToolbar ref="dashboardToolbarRef" :range="range" @updateRange="updateRange" @updateSocial="updateSocial" @navigateToPage="navigateToPage"  />
+          <DashboardToolbar
+            ref="dashboardToolbarRef"
+            :range="range"
+            @updateRange="updateRange"
+            @updateSocial="updateSocial"
+            @navigateToPage="navigateToPage"
+          />
         </div>
         <div>
-          <LatestTransactionsChart :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
+          <LatestTransactionsChart
+            :entries="filteredTransactions"
+            :range="range"
+            @zoom="updateRangeFromZoom"
+            @node_doubleclick="doubleClick"
+          />
         </div>
         <div>
-          <LatestTransactionsChartNorm :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
+          <LatestTransactionsChartNorm
+            :entries="filteredTransactions"
+            :range="range"
+            @zoom="updateRangeFromZoom"
+            @node_doubleclick="doubleClick"
+          />
         </div>
         <div>
           <LatestTransactionsChartClustered :entries="filteredTransactions" />
@@ -201,7 +234,12 @@ onMounted(async () => {
           <TransactionResponses :entries="filteredTransactions" />
         </div>
         <div>
-          <LatestTransactionsChartWithScores :entries="filteredTransactions" :range="range" @zoom="updateRangeFromZoom" @node_doubleclick="doubleClick" />
+          <LatestTransactionsChartWithScores
+            :entries="filteredTransactions"
+            :range="range"
+            @zoom="updateRangeFromZoom"
+            @node_doubleclick="doubleClick"
+          />
         </div>
       </div>
     </div>
@@ -212,7 +250,7 @@ onMounted(async () => {
 .page-container {
   .section {
     margin-bottom: 3.2rem;
-    
+
     .section-title {
       margin-bottom: 1rem;
     }

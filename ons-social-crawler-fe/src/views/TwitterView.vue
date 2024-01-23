@@ -8,8 +8,10 @@ import { useLoadingStore } from '@/stores/loading'
 import FiltersToolbar from '@/views/components/FiltersToolbar.vue'
 import StreamButton from '@/views/components/StreamButton.vue'
 import alert from '@/core/helpers/alert'
+import { useFilterStore } from '../stores/filter'
 
 const loading = useLoadingStore()
+const filter = useFilterStore()
 const { dangerAlert } = alert()
 const route = useRoute()
 const { dateTimeFormatter, decodeHtml, translate } = global()
@@ -30,7 +32,7 @@ const init = async () => {
   try {
     const res = await ApiService.get(
       'twitter/twits',
-      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${range.value.start}&dateTo=${range.value.end}`
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${filter.getTwitterDateRange.start}&dateTo=${filter.getTwitterDateRange.end}`
     )
     data.value = res.data.hits.hits ?? []
     data.value = data.value.map((item) => {
@@ -156,13 +158,10 @@ const changeSort = (sort) => {
 }
 
 const updateRange = (modelData) => {
-  range.value.start = modelData[0]
-  range.value.end = modelData[1]
-  // if (range.value.start < maxRange.value.start || range.value.end > maxRange.value.end) {
-  //   maxRange.value.start = range.value.start
-  //   maxRange.value.end = range.value.end
-  //   init()
-  // }
+  filter.setTwitterDateRange({
+    end: modelData[1],
+    start: modelData[0]
+  })
   init()
 }
 
@@ -214,7 +213,7 @@ const getTokens = (row) => {
         @on-search="onSearch"
         @on-prediction="onPrediction"
         @update-range="updateRange"
-        :range="range"
+        :range="filter.getTwitterDateRange"
       />
       <!--   FILTRI::END   -->
 
