@@ -2,7 +2,7 @@
 import ZingChartVue from 'zingchart-vue'
 </script>
 <template>
-    <ZingChartVue :data="horizBarGraphConfig" />
+  <ZingChartVue :data="horizBarGraphConfig" />
 </template>
 <script>
 export default {
@@ -26,7 +26,7 @@ export default {
       // Convert the word count object into an array of objects
       const responses = Object.entries(responseCount).map(([text, count]) => ({
         text,
-        count,
+        count
       }))
 
       // Sort the array by decreasing count
@@ -39,7 +39,11 @@ export default {
       const bars_to_show = 10
 
       //console.log(this.values)
-      const labels = this.values.slice(0, bars_to_show).map((item) => item.text)
+      const labels = this.values
+        .slice(0, bars_to_show)
+        .map((item) =>
+          item.text !== 'miss' ? item.text : 'Dati insufficienti per elaborare una risposta'
+        )
       const values = this.values.slice(0, bars_to_show).map((item) => item.count)
       // const values = this.values.map((item) => item.count)
       // const labels = this.values.map((item) => item.text)
@@ -47,48 +51,50 @@ export default {
       //console.log(labels)
       //console.log(values)
 
-      const seriesData = [{
-        values: values,
-        text: labels,
-      }]
+      const seriesData = [
+        {
+          values: values,
+          text: labels
+        }
+      ]
 
       //console.log(seriesData)
 
       const config = {
         type: 'hbar',
         title: {
-          text: "Top " + bars_to_show + " Responses",
+          text: 'Top ' + bars_to_show + ' Responses'
         },
         plot: {
           tooltip: {
-            text: '',
+            text: ''
           },
           valueBox: {
             text: '%data-response',
             placement: 'bottom-in',
             align: 'left',
-            color: "black",
+            color: 'black'
           },
           dataResponse: labels.reverse(),
           animation: {
-            effect: "ANIMATION_SLIDE_BOTTOM",
-          },
+            effect: 'ANIMATION_SLIDE_BOTTOM'
+          }
         },
         scaleX: {
           values: values.reverse(),
           label: {
-            text: 'Numero', // X-axis labels
+            text: 'Numero' // X-axis labels
           }
         },
         scaleY: {
           item: {
-            text: '',
+            text: ''
           }
         },
-        series: seriesData,
+        series: seriesData
       }
       return config
-    },
+    }
   }
 }
 </script>

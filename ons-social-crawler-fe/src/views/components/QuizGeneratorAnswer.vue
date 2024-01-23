@@ -64,28 +64,9 @@ const checkAnswer = (index) => {
         @click="checkAnswer(index)"
         :disabled="hasAnswered"
       >
-        {{ a.answer }}
+        {{ a.answer !== 'miss' ? a.answer : 'Dati insufficienti per elaborare una risposta' }}
       </button>
     </div>
-    <!-- <div class="col-12 col-md-6">
-      <button class="quiz-answer-button">
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-        pa
-      </button>
-    </div>
-    <div class="col-12 col-md-6">
-      <button class="quiz-answer-button">
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-        pa
-      </button>
-    </div>
-    <div class="col-12 col-md-6">
-      <button class="quiz-answer-button">
-        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum
-        passages, and more recently with desktop publishing software like Aldus PageMaker including
-        versions of Lorem Ipsum.
-      </button>
-    </div> -->
   </div>
   <hr />
 </template>
