@@ -34,7 +34,7 @@ $sidebar-padding: var(--sidebar-padding);
 $header-height: var(--header-height);
 .sidebar {
   transition: 0.25s;
-  min-width: 5rem;
+  min-width: 15rem;
   flex: 0 1 $sidebar-opened-width;
   background-color: var(--primary-color);
   min-height: 100vh;
