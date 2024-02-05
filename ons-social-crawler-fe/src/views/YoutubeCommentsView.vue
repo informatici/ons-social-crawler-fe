@@ -30,7 +30,7 @@ const init = async () => {
   loading.show()
   try {
     const res = await ApiService.get(
-      `youtube/videos/${route.query.videoId}`,
+      `youtube/videos/${route.query.videoId}/${route.params.id}`,
       `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${range.value.start}&dateTo=${range.value.end}`
     )
 
@@ -53,24 +53,13 @@ const init = async () => {
       }
       return item
     })
-    // #qui::START aggiungere normalizzazione dati per filtri e search
-    // data.value = data.value.map(item => { // per sorting score
-    //   item.predictionScore = 0
-    //   if(item.prediction) {
-    //     item.predictionScore = item.prediction.score
-    //   }
-    //   return item
-    // })
-    // #qui::END
 
-    selectedCommentData.value =
-      Object.keys(selectedCommentData.value).length > 0
-        ? selectedCommentData.value
-        : commentsData.value.find((comment) => comment.id === route.params.id) ?? {}
     otherCommentsData.value =
       commentsData.value.filter((comment) => comment.id !== route.params.id) ?? []
 
     total.value = res.data.totalComments > 0 ? res.data.totalComments - 1 : 0
+
+    selectedCommentData.value = res.data.selectedComment || null
   } catch (e) {
     dangerAlert(e)
   } finally {
