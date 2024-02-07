@@ -113,6 +113,12 @@ const headerConfig = ref([
     sortEnabled: false
   },
   {
+    columnName: 'Similarità',
+    columnLabel: 'prediction_nnr',
+    sortEnabled: true,
+    tdClass: 'text-center bg-warning'
+  },
+  {
     columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
@@ -146,6 +152,12 @@ const headerConfigTableSelected = ref([
     columnName: 'Parole Chiave',
     columnLabel: 'tokens',
     sortEnabled: false
+  },
+  {
+    columnName: 'Similarità',
+    columnLabel: 'prediction_nnr',
+    sortEnabled: true,
+    tdClass: 'text-center bg-warning'
   },
   {
     columnName: 'Grado',
@@ -184,7 +196,18 @@ const changePage = (newPage) => {
 
 const changeSort = (sort) => {
   page.value = 1
-  sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
+
+  switch (sort.label) {
+    case 'score':
+      sortLabel.value = 'prediction.score'
+      break
+    case 'prediction_nnr':
+      sortLabel.value = 'prediction.prediction_nnr'
+      break
+    default:
+      sortLabel.value = sort.label
+  }
+  // sortLabel.value = sort.label === 'score' ? 'prediction.score' : sort.label
   sortOrder.value = sort.order
   init()
 }
@@ -208,6 +231,21 @@ const getResponse = (row) => {
   }
 
   return response
+}
+
+const hasResponse = (row) => {
+  const version = row?.version || 0
+
+  if (version === 11) {
+    const confidences_nnr_multi = row?.responseObj?.confidences_nnr_multi || 0
+    const confidences_nnr_multi_threshold = row?.responseObj?.confidences_nnr_multi_threshold || 0
+
+    return confidences_nnr_multi > confidences_nnr_multi_threshold
+  } else {
+    const response = row?.response || null
+
+    return response !== 'miss'
+  }
 }
 
 const getPrediction = (row) => {
@@ -333,12 +371,24 @@ const getTokens = (row) => {
             <div v-html="decodeHtml(row.textDisplay)"></div>
             <template v-if="row.response">
               <hr />
-              <span v-if="getResponse(row) !== 'miss'" class="text-success">{{
-                getResponse(row)
-              }}</span>
-              <span v-else class="text-danger"> Dati insufficienti per elaborare una risposta</span>
+              <span v-if="hasResponse(row)" class="text-success">{{ getResponse(row) }}</span>
+
+              <span v-else class="text-danger">Dati insufficienti per elaborare una risposta</span>
+
+              <template v-if="row.responseObj?.confidences_nnr_multi">
+                <br />
+                <span class="badge bg-warning"
+                  >Confidenza: {{ row.responseObj?.confidences_nnr_multi }}</span
+                >
+              </template>
             </template>
           </template>
+
+          <template v-slot:prediction_nnr="{ row: row }">
+            <span v-if="row.prediction">{{ row.prediction.prediction_nnr }}</span>
+            <span v-else></span>
+          </template>
+
           <template v-slot:score="{ row: row }">
             <span v-if="row.prediction">{{ row.prediction.score }}</span>
             <span v-else></span>
@@ -409,11 +459,22 @@ const getTokens = (row) => {
             <div v-html="decodeHtml(row.textDisplay)"></div>
             <template v-if="row.response">
               <hr />
-              <span v-if="getResponse(row) !== 'miss'" class="text-success">{{
-                getResponse(row)
-              }}</span>
-              <span v-else class="text-danger"> Dati insufficienti per elaborare una risposta</span>
+              <span v-if="hasResponse(row)" class="text-success">{{ getResponse(row) }}</span>
+
+              <span v-else class="text-danger">Dati insufficienti per elaborare una risposta</span>
+
+              <template v-if="row.responseObj?.confidences_nnr_multi">
+                <br />
+                <span class="badge bg-warning"
+                  >Confidenza: {{ row.responseObj?.confidences_nnr_multi }}</span
+                >
+              </template>
             </template>
+          </template>
+
+          <template v-slot:prediction_nnr="{ row: row }">
+            <span v-if="row.prediction">{{ row.prediction.prediction_nnr }}</span>
+            <span v-else></span>
           </template>
 
           <template v-slot:score="{ row: row }">

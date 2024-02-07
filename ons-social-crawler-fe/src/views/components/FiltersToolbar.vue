@@ -9,9 +9,18 @@ const props = defineProps({
     required: false,
     default: true
   },
+  rangeFilter: {
+    type: Boolean,
+    required: false,
+    default: true
+  },
   range: {
     type: Object,
-    required: false
+    required: false,
+    default: {
+      end: new Date(new Date(new Date().setHours(-24)).setHours(23, 59, 59, 999)), // yesterday, end of the day
+      start: new Date(new Date().setHours(-168, 0, 0, 0)) //1 week
+    }
   }
 })
 
@@ -68,7 +77,10 @@ watch(
       </select>
     </div>
 
-    <div class="filter-element d-flex align-items-center position-relative my-1">
+    <div
+      v-if="props.rangeFilter"
+      class="filter-element d-flex align-items-center position-relative my-1"
+    >
       <DateRange :entries="range" @update:model-value="updateRange" />
     </div>
   </div>

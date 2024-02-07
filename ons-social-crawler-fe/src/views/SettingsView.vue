@@ -153,12 +153,14 @@ onMounted(async () => {
       <section class="section users-info">
         <h2 class="section-title">Utenti</h2>
 
-        <!--   FILTRI::START   -->
-        <FiltersToolbar @on-search="onSearch" :prediction-filter="false" />
-        <!--   FILTRI::END   -->
-
         <div class="row pb-3">
-          <div class="col-6"></div>
+          <div class="col-6">
+            <!-- <FiltersToolbar
+              @on-search="onSearch"
+              :prediction-filter="false"
+              :range-filter="false"
+            /> -->
+          </div>
           <div class="col-6 text-end">
             <button
               type="button"
