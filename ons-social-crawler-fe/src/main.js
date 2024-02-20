@@ -19,12 +19,12 @@ app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
 app.use(i18n)
-// app.use(VueGtag, {
-//   pageTrackerScreenviewEnabled: true,
-//   config: { id: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID },
-//   router,
-//   enabled: true
-// })
+app.use(VueGtag, {
+  pageTrackerScreenviewEnabled: true,
+  config: { id: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID },
+  router,
+  enabled: true
+})
 app.component('VueDatePicker', VueDatePicker)
 
 ApiService.init(app)

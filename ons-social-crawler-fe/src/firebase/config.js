@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,7 +15,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig)
 
+// Initialize Firebase Analytics
+const analytics = getAnalytics(firebaseApp)
+
+// test log
+logEvent(analytics ,'config_read');
+
 //initialize firebase auth
 const auth = getAuth()
 
-export { firebaseApp, auth }
+export { firebaseApp, auth, analytics }
