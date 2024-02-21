@@ -19,9 +19,9 @@ const firebaseApp = initializeApp(firebaseConfig)
 const analytics = getAnalytics(firebaseApp)
 
 // test log
-logEvent(analytics ,'config_read');
+// logEvent(analytics ,'config_read');
 
 //initialize firebase auth
 const auth = getAuth()
 
-export { firebaseApp, auth, analytics }
+export { firebaseApp, auth }
