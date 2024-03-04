@@ -50,7 +50,7 @@ const checkAnswer = (index) => {
       />
     </svg>
   </div>
-  <div><b>Il seguente messaggio contiene dell'odio:</b></div>
+  <div><b>Il seguente messaggio contiene aggressività fisica, verbale, discriminazione e/o linguaggio volgare:</b></div>
   <p>"{{ decodeHtml(quiz.description) }}"</p>
   <b>Qual è la risposta più corretta?</b>
   <div class="row mt-2 gy-2">

@@ -50,7 +50,7 @@ const checkAnswer = (value) => {
     </svg>
   </div>
   <p>"{{ decodeHtml(quiz.description) }}"</p>
-  <b>Il messaggio contiene odio?</b>
+  <b>Il seguente messaggio contiene aggressività fisica, verbale, discriminazione oppure linguaggio volgare:</b>
   <div class="row mt-2">
     <div class="col-12 col-md-6">
       <button

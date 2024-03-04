@@ -69,7 +69,7 @@ const checkCorrect = (value) => {
       />
     </svg> -->
   </div>
-  <div><b>Il seguente messaggio contiene dell'odio:</b></div>
+  <div><b>Il seguente messaggio contiene una o più categorie di attenzione:</b></div>
   <p>"{{ decodeHtml(quiz.description) }}"</p>
   <b>Quali categorie assoceresti?</b>
   <div class="row mt-2 gy-2">
