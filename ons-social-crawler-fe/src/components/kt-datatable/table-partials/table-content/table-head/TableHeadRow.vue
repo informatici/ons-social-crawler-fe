@@ -16,8 +16,10 @@
             width: column.columnWidth ? `${column.columnWidth}px` : 'auto',
             cursor: column.sortEnabled ? 'pointer' : 'auto'
           }"
+          :class="{ 'd-flex': column?.htmlName }"
         >
-          {{ column.columnName }}
+          <div v-if="column?.htmlName" v-html="column.htmlName"></div>
+          <template v-else>{{ column.columnName }}</template>
           <span
             v-if="columnLabelAndOrder.label === column.columnLabel && column.sortEnabled"
             v-html="sortArrow"

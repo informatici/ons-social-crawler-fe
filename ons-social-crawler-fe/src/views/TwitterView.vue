@@ -32,7 +32,7 @@ const init = async () => {
   try {
     const res = await ApiService.get(
       'twitter/twits',
-      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${filter.getTwitterDateRange.start}&dateTo=${filter.getTwitterDateRange.end}`
+      `?size=${size.value}&page=${page.value}&search=${search.value}&prediction=${predictionId.value}&sortLabel=${sortLabel.value}&sortOrder=${sortOrder.value}&dateFrom=${filter.getTwitterDateRange.start}&dateTo=${filter.getTwitterDateRange.end}&category=${categoryId.value}`
     )
     data.value = res.data.hits.hits ?? []
     data.value = data.value.map((item) => {
@@ -66,6 +66,7 @@ const init = async () => {
 const searchedFields = ['text']
 const search = ref('')
 const predictionId = ref(0)
+const categoryId = ref('all')
 
 const headerConfig = ref([
   {
@@ -101,7 +102,8 @@ const headerConfig = ref([
     tdClass: 'text-center bg-warning'
   },
   {
-    columnName: 'Grado',
+    htmlName:
+      '<img src="/media/triangle-exclamation-solid.svg" class="mb-1" style="width: 25px; fill: #ff0000"/>',
     columnLabel: 'score',
     sortEnabled: true,
     tdClass: 'text-center bg-warning'
@@ -183,6 +185,12 @@ const updateRange = (modelData) => {
   init()
 }
 
+const updateCategory = (modelData) => {
+  categoryId.value = modelData
+  console.log(modelData)
+  init()
+}
+
 const getResponse = (row) => {
   const response = row._source.data?.response || null
 
@@ -247,6 +255,7 @@ const getTokens = (row) => {
         @on-search="onSearch"
         @on-prediction="onPrediction"
         @update-range="updateRange"
+        @update-category="updateCategory"
         :range="filter.getTwitterDateRange"
       />
       <!--   FILTRI::END   -->
