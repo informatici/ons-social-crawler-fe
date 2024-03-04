@@ -87,7 +87,7 @@ watch(
         ><img
           src="/media/triangle-exclamation-solid.svg"
           style="width: 25px; fill: #ff0000"
-        />&nbsp;:</span
+        />&nbsp;</span
       >
       <select
         class="filter-element__input form-select form-select-solid w-250px ps-15"

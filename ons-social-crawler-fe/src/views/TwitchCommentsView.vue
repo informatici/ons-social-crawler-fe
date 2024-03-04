@@ -94,7 +94,8 @@ const headerConfig = ref([
     columnMinWidth: 175
   },
   {
-    columnName: 'Odio',
+    htmlName:
+      '<img src="/media/triangle-exclamation-solid.svg" class="mb-1" style="width: 25px; fill: #ff0000"/>',
     columnLabel: 'prediction',
     sortEnabled: false
   },
@@ -120,8 +121,7 @@ const headerConfig = ref([
     tdClass: 'text-center bg-warning'
   },
   {
-    htmlName:
-      '<img src="/media/triangle-exclamation-solid.svg" class="mb-1" style="width: 25px; fill: #ff0000"/>',
+    columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
     tdClass: 'text-center bg-warning'
@@ -136,7 +136,8 @@ const headerConfigTableSelected = ref([
     columnMinWidth: 175
   },
   {
-    columnName: 'Odio',
+    htmlName:
+      '<img src="/media/triangle-exclamation-solid.svg" class="mb-1" style="width: 25px; fill: #ff0000"/>',
     columnLabel: 'prediction',
     sortEnabled: false
   },
@@ -162,8 +163,7 @@ const headerConfigTableSelected = ref([
     tdClass: 'text-center bg-warning'
   },
   {
-    htmlName:
-      '<img src="/media/triangle-exclamation-solid.svg" class="mb-1" style="width: 25px; fill: #ff0000"/>',
+    columnName: 'Grado',
     columnLabel: 'score',
     sortEnabled: true,
     tdClass: 'text-center bg-warning'
