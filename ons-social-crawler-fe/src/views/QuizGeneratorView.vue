@@ -31,6 +31,10 @@ const init = async () => {
   }
 }
 
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 const selecteQuizType = (type) => {
   quizType.value = type
 }
@@ -208,9 +212,15 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             ></QuizGeneratorCategories>
           </div>
         </div>
+        <div class="row justify-content-end">
+          <div class="col-12 col-md-4">
+            <button @click="scrollToTop" class="generator-quiz-button">Torna su</button>
+          </div>
+        </div>
       </template>
     </div>
   </main>
+  
 </template>
 
 <style scoped>
