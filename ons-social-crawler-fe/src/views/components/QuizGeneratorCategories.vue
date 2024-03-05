@@ -20,13 +20,6 @@ const selectedCategories = ref({
   incivility: false
 })
 
-const setAnswer = (value) => {
-  if (quiz.value.dimensions) {
-    right.value[value] = quiz.value.dimensions[value] > 0
-    selectedCategories.value[value] = true
-  }
-}
-
 const checkAnswer = () => {
   hasAnswered.value = true
 }
@@ -79,9 +72,9 @@ const checkCorrect = (value) => {
         :class="{
           right: hasAnswered && checkCorrect('aggr_phys'),
           wrong: hasAnswered && !checkCorrect('aggr_phys'),
-          select: !hasAnswered && selectedCategories.aggr_phys
+          select: selectedCategories.aggr_phys
         }"
-        @click="setAnswer('aggr_phys')"
+       @click="selectedCategories.aggr_phys = !selectedCategories.aggr_phys"
         :disabled="hasAnswered"
       >
         {{ translate('categories', 'aggr_phys') }}
@@ -93,9 +86,9 @@ const checkCorrect = (value) => {
         :class="{
           right: hasAnswered && checkCorrect('aggr_verb'),
           wrong: hasAnswered && !checkCorrect('aggr_verb'),
-          select: !hasAnswered && selectedCategories.aggr_verb
+          select: selectedCategories.aggr_verb
         }"
-        @click="setAnswer('aggr_verb')"
+        @click="selectedCategories.aggr_verb = !selectedCategories.aggr_verb"
         :disabled="hasAnswered"
       >
         {{ translate('categories', 'aggr_verb') }}
@@ -107,9 +100,9 @@ const checkCorrect = (value) => {
         :class="{
           right: hasAnswered && checkCorrect('discr'),
           wrong: hasAnswered && !checkCorrect('discr'),
-          select: !hasAnswered && selectedCategories.discr
+          select: selectedCategories.discr
         }"
-        @click="setAnswer('discr')"
+        @click="selectedCategories.discr = !selectedCategories.discr"
         :disabled="hasAnswered"
       >
         {{ translate('categories', 'discr') }}
@@ -121,9 +114,9 @@ const checkCorrect = (value) => {
         :class="{
           right: hasAnswered && checkCorrect('incivility'),
           wrong: hasAnswered && !checkCorrect('incivility'),
-          select: !hasAnswered && selectedCategories.incivility
+          select: selectedCategories.incivility
         }"
-        @click="setAnswer('incivility')"
+        @click="selectedCategories.incivility = !selectedCategories.incivility"
         :disabled="hasAnswered"
       >
         {{ translate('categories', 'incivility') }}
