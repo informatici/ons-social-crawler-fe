@@ -7,6 +7,7 @@ const props = defineProps(['index', 'quiz'])
 const index = computed(() => props.index)
 const quiz = computed(() => props.quiz)
 const hasAnswered = ref(false)
+const revealAnswer = ref(false)
 const right = ref({
   aggr_phys: false,
   aggr_verb: false,
@@ -31,14 +32,29 @@ const checkCorrect = (value) => {
 
   return false
 }
+
+const isAnyCategorySelected = computed(() => {
+  return Object.values(selectedCategories.value).some(category => category);
+});
+
+const isAllCategoriesCorrect = computed(() => {
+  return checkCategoriesCorrectness();
+});
+
+const checkCategoriesCorrectness = () => {
+  hasAnswered.value = true
+  return Object.keys(selectedCategories.value).every(category => {
+    return selectedCategories.value[category] ? checkCorrect(category) : true;
+  });
+};
 </script>
 
 <template>
   <div class="quiz-title-container">
     <span class="quiz-round-number">{{ index }}</span>
     <span>Scelta Categoria</span>
-    <!-- <svg
-      v-if="hasAnswered && right"
+    <svg
+      v-if="hasAnswered && isAllCategoriesCorrect"
       xmlns="http://www.w3.org/2000/svg"
       height="30"
       width="30"
@@ -50,7 +66,7 @@ const checkCorrect = (value) => {
       />
     </svg>
     <svg
-      v-if="hasAnswered && !right"
+      v-else-if="hasAnswered && !isAllCategoriesCorrect"
       xmlns="http://www.w3.org/2000/svg"
       height="30"
       width="30"
@@ -60,7 +76,7 @@ const checkCorrect = (value) => {
       <path
         d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"
       />
-    </svg> -->
+    </svg>
   </div>
   <div><b>Il seguente messaggio contiene una o più categorie di attenzione:</b></div>
   <p>"{{ decodeHtml(quiz.description) }}"</p>
@@ -74,10 +90,10 @@ const checkCorrect = (value) => {
           wrong: hasAnswered && !checkCorrect('aggr_phys'),
           select: selectedCategories.aggr_phys
         }"
-       @click="selectedCategories.aggr_phys = !selectedCategories.aggr_phys"
+        @click="selectedCategories.aggr_phys = !selectedCategories.aggr_phys"
         :disabled="hasAnswered"
       >
-        {{ translate('categories', 'aggr_phys') }}
+        {{ translate('categories', 'aggr_phys') }} {{ revealAnswer ? checkCorrect('aggr_phys') ? '✅' : '❌' : ""}}
       </button>
     </div>
     <div class="col-12 col-md-6">
@@ -91,7 +107,7 @@ const checkCorrect = (value) => {
         @click="selectedCategories.aggr_verb = !selectedCategories.aggr_verb"
         :disabled="hasAnswered"
       >
-        {{ translate('categories', 'aggr_verb') }}
+        {{ translate('categories', 'aggr_verb') }} {{ revealAnswer ? checkCorrect('aggr_verb') ? '✅' : '❌' : ""}}
       </button>
     </div>
     <div class="col-12 col-md-6">
@@ -105,7 +121,7 @@ const checkCorrect = (value) => {
         @click="selectedCategories.discr = !selectedCategories.discr"
         :disabled="hasAnswered"
       >
-        {{ translate('categories', 'discr') }}
+        {{ translate('categories', 'discr') }} {{ revealAnswer ? checkCorrect('discr') ? '✅' : '❌' : ""}}
       </button>
     </div>
     <div class="col-12 col-md-6">
@@ -119,13 +135,17 @@ const checkCorrect = (value) => {
         @click="selectedCategories.incivility = !selectedCategories.incivility"
         :disabled="hasAnswered"
       >
-        {{ translate('categories', 'incivility') }}
+        {{ translate('categories', 'incivility') }} {{ revealAnswer ? checkCorrect('incivility') ? '✅' : '❌' : ""}}
       </button>
     </div>
   </div>
   <div class="row mt-4">
     <div class="col-12">
-      <button class="quiz-answer-check-button" @click="checkAnswer">Verifica</button>
+      <button class="quiz-answer-check-button" 
+      @click="checkCategoriesCorrectness"
+      :disabled="!isAnyCategorySelected"
+      >Verifica
+    </button>
     </div>
   </div>
   <hr />
@@ -195,5 +215,11 @@ const checkCorrect = (value) => {
   border: 2px solid #005b9c;
   background-color: #005b9c;
   color: white;
+}
+.quiz-answer-check-button:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
 }
 </style>
