@@ -11,8 +11,11 @@ import QuizGeneratorAnswer from './components/QuizGeneratorAnswer.vue'
 import QuizGeneratorCategories from './components/QuizGeneratorCategories.vue'
 import axios from 'axios'
 import { nextTick } from 'vue';
+import { isArray } from '@vue/shared'
+import { useAuthStore } from '../stores/auth'
 
 const loading = useLoadingStore()
+const authStore = useAuthStore()
 const route = useRoute()
 const { dangerAlert, operationConfirm } = alert()
 
@@ -30,6 +33,12 @@ const init = async () => {
   } finally {
     loading.hide()
   }
+}
+
+const hasAccess = (roles) => {
+  console.log('check role:' + roles)
+  console.log('authStore.userRoles:' + authStore.userRoles)
+  return !isArray(roles) ? false : roles.some((x) => authStore.userRoles.includes(x))
 }
 
 const scrollToTop = () => {
@@ -201,7 +210,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             <h3>Quiz Generati</h3>
           </div>
           <div class="col-12 col-md-4">
-            <button class="generator-quiz-export" @click="exportQuiz">
+            <button v-if="hasAccess(['Admin', 'Teacher'])" class="generator-quiz-export" @click="exportQuiz">
               <!-- :disabled="true"
               style="opacity: 0.3" -->
               Esporta Excel
