@@ -38,7 +38,7 @@ const scrollToTop = () => {
 
 const scrollToNewQuiz = () => {
   setTimeout(() => {
-    //nextTick(() => {
+    //nextTick(() => { // to remove ?
       const firstNewQuizIndex = createdQuiz.value.length - quizQta.value + 1;
       const newQuizElement = document.getElementById(`quiz_${firstNewQuizIndex}`);
       if (newQuizElement) {
