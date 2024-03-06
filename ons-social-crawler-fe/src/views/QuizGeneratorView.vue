@@ -10,6 +10,7 @@ import QuizGeneratorTrueFalse from './components/QuizGeneratorTrueFalse.vue'
 import QuizGeneratorAnswer from './components/QuizGeneratorAnswer.vue'
 import QuizGeneratorCategories from './components/QuizGeneratorCategories.vue'
 import axios from 'axios'
+import { nextTick } from 'vue';
 
 const loading = useLoadingStore()
 const route = useRoute()
@@ -35,6 +36,21 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+const scrollToNewQuiz = () => {
+  setTimeout(() => {
+    //nextTick(() => {
+      const firstNewQuizIndex = createdQuiz.value.length - quizQta.value + 1;
+      console.log(firstNewQuizIndex);
+      const newQuizElement = document.getElementById(`quiz_${firstNewQuizIndex}`);
+      if (newQuizElement) {
+        newQuizElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        console.log("New quiz element not found.");
+      }
+    //});
+  }, 500); // delay needed despite nextTick() because of operationConfirm()
+};
+
 const selecteQuizType = (type) => {
   quizType.value = type
 }
@@ -50,7 +66,7 @@ const generateQuiz = async () => {
       const quiz = res.data
       createdQuiz.value.push(quiz)
     }
-    operationConfirm()
+    operationConfirm().then(scrollToNewQuiz);
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -70,7 +86,7 @@ const generateRandomQuiz = async () => {
       const quiz = res.data
       createdQuiz.value.push(quiz)
     }
-    operationConfirm()
+    operationConfirm().then(scrollToNewQuiz);
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -194,7 +210,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
           </div>
         </div>
         <div class="row">
-          <div v-for="(q, index) in createdQuiz" :key="q.id" class="col-12">
+          <div v-for="(q, index) in createdQuiz" :key="q.id" class="col-12" :id="'quiz_' + (index + 1)">
             <QuizGeneratorTrueFalse
               v-if="q.type === 1"
               :index="index + 1"
