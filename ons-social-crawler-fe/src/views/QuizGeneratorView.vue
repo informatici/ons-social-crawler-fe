@@ -40,7 +40,6 @@ const scrollToNewQuiz = () => {
   setTimeout(() => {
     //nextTick(() => {
       const firstNewQuizIndex = createdQuiz.value.length - quizQta.value + 1;
-      console.log(firstNewQuizIndex);
       const newQuizElement = document.getElementById(`quiz_${firstNewQuizIndex}`);
       if (newQuizElement) {
         newQuizElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
