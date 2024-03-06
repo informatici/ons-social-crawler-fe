@@ -183,7 +183,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
       <h3>Genera quiz</h3>
       <div class="row">
         <div class="col-12 col-md-4">
-          <input v-model="quizQta" type="number" class="generator-quiz-number" min="0" max="10" />
+          <input v-model="quizQta" type="number" class="generator-quiz-number" min="1" max="10" />
         </div>
         <div class="col-12 col-md-4">
           <button class="generator-quiz-button" :disabled="quizType === 0" @click="generateQuiz">
