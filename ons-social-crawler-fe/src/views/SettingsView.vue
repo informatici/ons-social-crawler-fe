@@ -20,6 +20,12 @@ const route = useRoute()
 const data = ref([])
 const howItWorks = ref('')
 const selectedId = ref('')
+const page = ref(1)
+const total = ref(0)
+
+const changePage = (newPage) => {
+  page.value = newPage
+}
 
 const init = async () => {
   loading.show()
@@ -27,6 +33,7 @@ const init = async () => {
     selectedId.value = ''
     const res = await ApiService.get('/auth/')
     data.value = res.data.users ?? []
+    total.value = res.data.users.length
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -178,6 +185,9 @@ onMounted(async () => {
           :header="headerConfig"
           :searched-fields="searchedFields"
           :search="search"
+          :cPage="page"
+          :total="total"
+          @page-change="changePage"
         >
           <template v-slot:actions="{ row: row }">
             <div class="d-flex gap-3">
