@@ -22,7 +22,13 @@ const displayUserName = computed(() => {
     localStorage.getItem('userName').length > 0
   ) {
     name = localStorage.getItem('userName')
-    parsedNamed = name.split(' ')[0][0].toUpperCase() + name.split(' ')[1][0].toUpperCase()
+    const parts = name.split(' ')
+    parsedNamed = parts[0][0].toUpperCase()
+    if (parts.length > 1) {
+      parsedNamed += parts[1][0].toUpperCase()
+    } else if (parts[0].length > 1) {
+      parsedNamed += parts[0][1].toUpperCase()
+    }
   } else {
     parsedNamed = 'ONS'
   }
