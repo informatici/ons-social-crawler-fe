@@ -34,6 +34,7 @@ const init = async () => {
   }
 }
 
+// TODO: could be global
 const hasAccess = (roles) => {
   return !isArray(roles) ? false : roles.some((x) => authStore.userRoles.includes(x))
 }
