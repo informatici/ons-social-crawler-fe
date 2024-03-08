@@ -10,7 +10,6 @@ import QuizGeneratorTrueFalse from './components/QuizGeneratorTrueFalse.vue'
 import QuizGeneratorAnswer from './components/QuizGeneratorAnswer.vue'
 import QuizGeneratorCategories from './components/QuizGeneratorCategories.vue'
 import axios from 'axios'
-import { nextTick } from 'vue';
 import { isArray } from '@vue/shared'
 import { useAuthStore } from '../stores/auth'
 
@@ -36,8 +35,6 @@ const init = async () => {
 }
 
 const hasAccess = (roles) => {
-  console.log('check role:' + roles)
-  console.log('authStore.userRoles:' + authStore.userRoles)
   return !isArray(roles) ? false : roles.some((x) => authStore.userRoles.includes(x))
 }
 
@@ -47,16 +44,14 @@ const scrollToTop = () => {
 
 const scrollToNewQuiz = () => {
   setTimeout(() => {
-    //nextTick(() => { // to remove ?
-      const firstNewQuizIndex = createdQuiz.value.length - quizQta.value + 1;
-      const newQuizElement = document.getElementById(`quiz_${firstNewQuizIndex}`);
-      if (newQuizElement) {
-        newQuizElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        console.log("New quiz element not found.");
-      }
-    //});
-  }, 500); // delay needed despite nextTick() because of operationConfirm()
+    const firstNewQuizIndex = createdQuiz.value.length - quizQta.value + 1;
+    const newQuizElement = document.getElementById(`quiz_${firstNewQuizIndex}`);
+    if (newQuizElement) {
+      newQuizElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      console.log("New quiz element not found.");
+    }
+  }, 500); // delay needed because of operationConfirm()
 };
 
 const selecteQuizType = (type) => {
