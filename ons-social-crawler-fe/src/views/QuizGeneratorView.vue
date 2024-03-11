@@ -10,8 +10,11 @@ import QuizGeneratorTrueFalse from './components/QuizGeneratorTrueFalse.vue'
 import QuizGeneratorAnswer from './components/QuizGeneratorAnswer.vue'
 import QuizGeneratorCategories from './components/QuizGeneratorCategories.vue'
 import axios from 'axios'
+import { isArray } from '@vue/shared'
+import { useAuthStore } from '../stores/auth'
 
 const loading = useLoadingStore()
+const authStore = useAuthStore()
 const route = useRoute()
 const { dangerAlert, operationConfirm } = alert()
 
@@ -31,6 +34,27 @@ const init = async () => {
   }
 }
 
+// TODO: could be global
+const hasAccess = (roles) => {
+  return !isArray(roles) ? false : roles.some((x) => authStore.userRoles.includes(x))
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const scrollToNewQuiz = () => {
+  setTimeout(() => {
+    const firstNewQuizIndex = createdQuiz.value.length - quizQta.value + 1;
+    const newQuizElement = document.getElementById(`quiz_${firstNewQuizIndex}`);
+    if (newQuizElement) {
+      newQuizElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      console.log("New quiz element not found.");
+    }
+  }, 500); // delay needed because of operationConfirm()
+};
+
 const selecteQuizType = (type) => {
   quizType.value = type
 }
@@ -46,7 +70,7 @@ const generateQuiz = async () => {
       const quiz = res.data
       createdQuiz.value.push(quiz)
     }
-    operationConfirm()
+    operationConfirm().then(scrollToNewQuiz);
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -66,7 +90,7 @@ const generateRandomQuiz = async () => {
       const quiz = res.data
       createdQuiz.value.push(quiz)
     }
-    operationConfirm()
+    operationConfirm().then(scrollToNewQuiz);
   } catch (e) {
     dangerAlert(e)
   } finally {
@@ -163,7 +187,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
       <h3>Genera quiz</h3>
       <div class="row">
         <div class="col-12 col-md-4">
-          <input v-model="quizQta" type="number" class="generator-quiz-number" min="0" max="10" />
+          <input v-model="quizQta" type="number" class="generator-quiz-number" min="1" max="10" />
         </div>
         <div class="col-12 col-md-4">
           <button class="generator-quiz-button" :disabled="quizType === 0" @click="generateQuiz">
@@ -182,7 +206,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             <h3>Quiz Generati</h3>
           </div>
           <div class="col-12 col-md-4">
-            <button class="generator-quiz-export" @click="exportQuiz">
+            <button v-if="hasAccess(['Admin', 'Teacher'])" class="generator-quiz-export" @click="exportQuiz">
               <!-- :disabled="true"
               style="opacity: 0.3" -->
               Esporta Excel
@@ -190,7 +214,7 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
           </div>
         </div>
         <div class="row">
-          <div v-for="(q, index) in createdQuiz" :key="q.id" class="col-12">
+          <div v-for="(q, index) in createdQuiz" :key="q.id" class="col-12" :id="'quiz_' + (index + 1)">
             <QuizGeneratorTrueFalse
               v-if="q.type === 1"
               :index="index + 1"
@@ -208,9 +232,15 @@ const existCreatedQuiz = computed(() => createdQuiz.value.length > 0)
             ></QuizGeneratorCategories>
           </div>
         </div>
+        <div class="row justify-content-end">
+          <div class="col-12 col-md-4">
+            <button @click="scrollToTop" class="generator-quiz-button">Torna su</button>
+          </div>
+        </div>
       </template>
     </div>
   </main>
+  
 </template>
 
 <style scoped>
