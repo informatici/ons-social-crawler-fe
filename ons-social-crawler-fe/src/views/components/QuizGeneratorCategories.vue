@@ -7,7 +7,7 @@ const props = defineProps(['index', 'quiz'])
 const index = computed(() => props.index)
 const quiz = computed(() => props.quiz)
 const hasAnswered = ref(false)
-const revealAnswer = ref(false)
+const revealAnswer = ref(false) // set true to debug quiz logic
 const right = ref({
   aggr_phys: false,
   aggr_verb: false,
