@@ -21,10 +21,6 @@ const selectedCategories = ref({
   incivility: false
 })
 
-const checkAnswer = () => {
-  hasAnswered.value = true
-}
-
 const checkCorrect = (value) => {
   if (quiz.value.dimensions) {
     return quiz.value.dimensions[value] > 0
@@ -44,7 +40,8 @@ const isAllCategoriesCorrect = computed(() => {
 const checkCategoriesCorrectness = () => {
   hasAnswered.value = true
   return Object.keys(selectedCategories.value).every(category => {
-    return selectedCategories.value[category] ? checkCorrect(category) : true;
+    const check = checkCorrect(category)
+    return selectedCategories.value[category] ? check : !check
   });
 };
 </script>
