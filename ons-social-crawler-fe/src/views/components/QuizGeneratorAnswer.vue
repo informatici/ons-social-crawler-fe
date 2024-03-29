@@ -2,13 +2,25 @@
 import { ref, computed, defineProps } from 'vue'
 import global from '../../core/helpers/functions.js'
 
-const { decodeHtml } = global()
+const { decodeHtml, translate } = global()
 const props = defineProps(['index', 'quiz'])
 const index = computed(() => props.index)
 const quiz = computed(() => props.quiz)
 const hasAnswered = ref(false)
 const right = ref(false)
 const answers = computed(() => quiz.value.answers || [])
+
+const formatDimensions = (categories) => {
+  let formattedDimensions = ''
+  for (const [key, value] of Object.entries(categories)) {
+    if (value !== 0) {
+      formattedDimensions += translate('categories', key) + ` +${value}, `
+    }
+  }
+  // Remove the trailing comma and space
+  formattedDimensions = formattedDimensions.slice(0, -2);
+  return formattedDimensions;
+}
 
 const checkAnswer = (index) => {
   hasAnswered.value = true
@@ -68,10 +80,30 @@ const checkAnswer = (index) => {
       </button>
     </div>
   </div>
+  <div class="row mt-2">
+    <div class="col-12">
+      <div v-if="hasAnswered" class="answer-details">
+        <p><strong>{{ right ? 'Corretto!' : 'Sbagliato!' }}</strong></p>
+        <p><strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
+          <strong>Dimensioni: </strong>{{ formatDimensions(quiz.dimensions) }}<br>
+          <strong>Grado:</strong> {{ quiz.grade }}<br>
+          <strong>Similarità:</strong> {{ quiz.similarity }}<br>
+          <strong>Risposta:</strong> {{ quiz.answer !== 'miss' ? quiz.answer : 'Dati insufficienti per elaborare una risposta' }}
+        </p>
+      </div>
+    </div>
+  </div>
   <hr />
 </template>
 
 <style scoped>
+.answer-details {
+  border-color: green;
+  border-style: dashed;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
 .quiz-title-container {
   display: flex;
   gap: 10px;
