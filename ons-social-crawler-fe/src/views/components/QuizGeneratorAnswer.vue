@@ -11,15 +11,9 @@ const right = ref(false)
 const answers = computed(() => quiz.value.answers || [])
 
 const formatDimensions = (categories) => {
-  let formattedDimensions = ''
-  for (const [key, value] of Object.entries(categories)) {
-    if (value !== 0) {
-      formattedDimensions += translate('categories', key) + ` +${value}, `
-    }
-  }
-  // Remove the trailing comma and space
-  formattedDimensions = formattedDimensions.slice(0, -2);
-  return formattedDimensions;
+  const categoryKeys = Object.keys(categories).filter(key => categories[key] !== 0);
+  const translatedCategories = categoryKeys.map(key => translate('categories', key));
+  return translatedCategories.join(', ');
 }
 
 const checkAnswer = (index) => {
@@ -84,11 +78,11 @@ const checkAnswer = (index) => {
     <div class="col-12">
       <div v-if="hasAnswered" class="answer-details">
         <p><strong>{{ right ? 'Corretto!' : 'Sbagliato!' }}</strong></p>
-        <p><strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
+        <p>
+          <strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
           <strong>Dimensioni: </strong>{{ formatDimensions(quiz.dimensions) }}<br>
           <strong>Grado:</strong> {{ quiz.grade }}<br>
           <strong>Similarità:</strong> {{ quiz.similarity }}<br>
-          <strong>Risposta:</strong> {{ quiz.answer !== 'miss' ? quiz.answer : 'Dati insufficienti per elaborare una risposta' }}
         </p>
       </div>
     </div>
