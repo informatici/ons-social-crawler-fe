@@ -2,7 +2,7 @@
 import { ref, computed, defineProps } from 'vue'
 import global from '../../core/helpers/functions.js'
 
-const { decodeHtml } = global()
+const { decodeHtml, translate } = global()
 const props = defineProps(['index', 'quiz'])
 const index = computed(() => props.index)
 const quiz = computed(() => props.quiz)
@@ -11,7 +11,7 @@ const right = ref(false)
 
 const checkAnswer = (value) => {
   hasAnswered.value = true
-
+  //console.log('Quiz Object:', quiz)
   if (value == quiz.value.hasHate) {
     right.value = true
   } else {
@@ -78,11 +78,38 @@ const checkAnswer = (value) => {
         Falso
       </button>
     </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <div v-if="hasAnswered && quiz.hasHate" class="answer-details">
+          <p><strong>Vero!</strong></p>
+          <p><strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
+            <strong>Dimensioni: </strong>
+            <span v-for="(value, key) in quiz.dimensions" :key="key">
+              <template v-if="value !== 0">{{ translate('categories', key) }} +{{ value }}</template>
+            </span><br>
+            <strong>Grado:</strong> {{ quiz.grade }}<br>
+            <strong>Similarità:</strong> {{ quiz.similarity }}<br>
+            <strong>Risposta:</strong> {{ quiz.answer !== 'miss' ? quiz.answer : 'Dati insufficienti per elaborare una risposta' }}</p>
+        </div>
+        <div v-if="hasAnswered && !quiz.hasHate" class="answer-details">
+          <p><strong>Falso!</strong></p>
+          <p>Non sono state trovate parole chiave o similarità con altri contenuti.</p>
+        </div>
+      </div>
+    </div>
   </div>
   <hr />
 </template>
 
 <style scoped>
+.answer-details {
+  border-color: green;
+  border-style: dashed;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
 .quiz-title-container {
   display: flex;
   gap: 10px;
