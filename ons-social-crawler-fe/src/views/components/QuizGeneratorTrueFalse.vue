@@ -9,6 +9,18 @@ const quiz = computed(() => props.quiz)
 const hasAnswered = ref(false)
 const right = ref(false)
 
+const formatDimensions = (categories) => {
+  let formattedDimensions = ''
+  for (const [key, value] of Object.entries(categories)) {
+    if (value !== 0) {
+      formattedDimensions += translate('categories', key) + ` +${value}, `
+    }
+  }
+  // Remove the trailing comma and space
+  formattedDimensions = formattedDimensions.slice(0, -2);
+  return formattedDimensions;
+}
+
 const checkAnswer = (value) => {
   hasAnswered.value = true
   //console.log('Quiz Object:', quiz)
@@ -81,18 +93,15 @@ const checkAnswer = (value) => {
     <div class="row mt-2">
       <div class="col-12">
         <div v-if="hasAnswered && quiz.hasHate" class="answer-details">
-          <p><strong>Vero!</strong></p>
+          <p><strong>{{ right ? 'Corretto!' : 'Sbagliato! Risposta corretta: Vero' }}</strong></p>
           <p><strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
-            <strong>Dimensioni: </strong>
-            <span v-for="(value, key) in quiz.dimensions" :key="key">
-              <template v-if="value !== 0">{{ translate('categories', key) }} +{{ value }}</template>
-            </span><br>
+            <strong>Dimensioni: </strong>{{ formatDimensions(quiz.dimensions) }}<br>
             <strong>Grado:</strong> {{ quiz.grade }}<br>
             <strong>Similarità:</strong> {{ quiz.similarity }}<br>
             <strong>Risposta:</strong> {{ quiz.answer !== 'miss' ? quiz.answer : 'Dati insufficienti per elaborare una risposta' }}</p>
         </div>
         <div v-if="hasAnswered && !quiz.hasHate" class="answer-details">
-          <p><strong>Falso!</strong></p>
+          <p><strong>{{ right ? 'Corretto!' : 'Sbagliato! Risposta corretta: Falso' }}</strong></p>
           <p>Non sono state trovate parole chiave o similarità con altri contenuti.</p>
         </div>
       </div>
