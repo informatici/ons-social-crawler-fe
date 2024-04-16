@@ -204,7 +204,7 @@ const getResponse = (row) => {
 const hasResponse = (row) => {
   const version = row._source.data?.version || 0
 
-  if (version === 11) {
+  if (version >= 11) {
     const confidences_nnr_multi = row._source.data?.responseObj?.confidences_nnr_multi || 0
     const confidences_nnr_multi_threshold =
       row._source.data?.responseObj?.confidences_nnr_multi_threshold || 0
