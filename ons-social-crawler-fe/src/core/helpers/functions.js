@@ -30,7 +30,7 @@ const global = () => {
 
   const decodeHtml = (value) => {
     try {
-      return he.decode(value.replaceAll('###REPLACED_USER_ONS###', '@utente_omesso'))
+      return he.decode(value.replaceAll('###REPLACED_USER_ONS###', '@utente'))
     } catch {
       return value
     }
