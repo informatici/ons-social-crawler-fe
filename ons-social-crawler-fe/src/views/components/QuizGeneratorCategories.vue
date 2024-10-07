@@ -145,10 +145,30 @@ const checkCategoriesCorrectness = () => {
     </button>
     </div>
   </div>
+  <div class="row mt-2">
+    <div class="col-12">
+      <div v-if="hasAnswered" class="answer-details">
+        <p><strong>{{ isAllCategoriesCorrect ? 'Corretto!' : 'Sbagliato!' }}</strong></p>
+        <p>
+          <strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
+          <strong>Grado:</strong> {{ quiz.grade }}<br>
+          <strong>Similarità:</strong> {{ quiz.similarity }}<br>
+          <strong>Risposta:</strong> {{ quiz.answer !== 'miss' ? quiz.answer : 'Dati insufficienti per elaborare una risposta' }}
+        </p>
+      </div>
+    </div>
+  </div>
   <hr />
 </template>
 
 <style scoped>
+.answer-details {
+  border-color: green;
+  border-style: dashed;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
 .quiz-title-container {
   display: flex;
   gap: 10px;

@@ -2,16 +2,22 @@
 import { ref, computed, defineProps } from 'vue'
 import global from '../../core/helpers/functions.js'
 
-const { decodeHtml } = global()
+const { decodeHtml, translate } = global()
 const props = defineProps(['index', 'quiz'])
 const index = computed(() => props.index)
 const quiz = computed(() => props.quiz)
 const hasAnswered = ref(false)
 const right = ref(false)
 
+const formatDimensions = (categories) => {
+  const categoryKeys = Object.keys(categories).filter(key => categories[key] !== 0);
+  const translatedCategories = categoryKeys.map(key => translate('categories', key));
+  return translatedCategories.join(', ');
+}
+
 const checkAnswer = (value) => {
   hasAnswered.value = true
-
+  //console.log('Quiz Object:', quiz)
   if (value == quiz.value.hasHate) {
     right.value = true
   } else {
@@ -78,11 +84,37 @@ const checkAnswer = (value) => {
         Falso
       </button>
     </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <div v-if="hasAnswered && quiz.hasHate" class="answer-details">
+          <p><strong>{{ right ? 'Corretto!' : 'Sbagliato! Risposta corretta: Vero' }}</strong></p>
+          <p>
+            <strong>Parole chiave trovate:</strong> {{ quiz.tokens }}<br>
+            <strong>Dimensioni: </strong>{{ formatDimensions(quiz.dimensions) }}<br>
+            <strong>Grado:</strong> {{ quiz.grade }}<br>
+            <strong>Similarità:</strong> {{ quiz.similarity }}<br>
+            <strong>Risposta:</strong> {{ quiz.answer !== 'miss' ? quiz.answer : 'Dati insufficienti per elaborare una risposta' }}
+          </p>
+        </div>
+        <div v-if="hasAnswered && !quiz.hasHate" class="answer-details">
+          <p><strong>{{ right ? 'Corretto!' : 'Sbagliato! Risposta corretta: Falso' }}</strong></p>
+          <p>Non sono state trovate parole chiave o similarità con altri contenuti.</p>
+        </div>
+      </div>
+    </div>
   </div>
   <hr />
 </template>
 
 <style scoped>
+.answer-details {
+  border-color: green;
+  border-style: dashed;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
 .quiz-title-container {
   display: flex;
   gap: 10px;
